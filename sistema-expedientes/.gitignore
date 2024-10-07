@@ -31,3 +31,11 @@ build/
 
 ### VS Code ###
 .vscode/
+
+
+# Ignorar todas las carpetas de build y target, pero no los archivos .gitkeep
+/target/
+!/target/.gitkeep
+
+/build/
+!/build/.gitkeep
