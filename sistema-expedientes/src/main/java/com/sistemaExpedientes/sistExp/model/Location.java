@@ -12,4 +12,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @Table(name = "locations")
 public class Location {
+    private String origin;
+    private String destiny;
+    private String date;
+
 }
