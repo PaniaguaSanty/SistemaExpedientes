@@ -2,17 +2,17 @@
 
 import { useState, useEffect, useMemo } from "react"
 import { PlusCircle, Pencil, Trash2, ChevronLeft, ChevronRight, Search, Check, Loader2 } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { Button } from "../../@/components/button"
+import { Input } from "../../@/components/input"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../@/components/table"
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogFooter,
-} from "@/components/ui/dialog"
-import { Label } from "@/components/ui/label"
+} from "../../@/components/dialog"
+import { Label } from "../../@/components/label"
 
 type Expediente = {
   id: number
