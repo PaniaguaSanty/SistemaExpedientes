@@ -1,9 +1,6 @@
 package com.sistemaExpedientes.sistExp.model;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,6 +10,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Entity
 @Table(name = "locations")
 public class Location {
     @Id
@@ -22,4 +20,8 @@ public class Location {
     private String origin;
     private String destiny;
     private String date;
+
+    @ManyToOne
+    @JoinColumn(name = "expedient_id")
+    private Expedient expedient;
 }

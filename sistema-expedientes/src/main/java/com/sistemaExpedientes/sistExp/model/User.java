@@ -1,14 +1,22 @@
 package com.sistemaExpedientes.sistExp.model;
 
 
-import jakarta.persistence.Entity;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
+import lombok.Data;
 
+import java.util.List;
+
+@Data
 @Entity
-@AllArgsConstructor
-@NoArgsConstructor
+@Table(name = "users")
 public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private String name;
     private String password;
+
+    @OneToMany(mappedBy = "user")
+    private List<Expedient> expedients;
 }

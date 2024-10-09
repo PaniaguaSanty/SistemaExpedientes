@@ -1,20 +1,17 @@
 package com.sistemaExpedientes.sistExp.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
+import java.time.LocalDate;
+import java.util.List;
+
+@Data
 @Entity
 @Table(name = "expedients")
 public class Expedient {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String issuer;
@@ -23,4 +20,16 @@ public class Expedient {
     private String solicitude;
     private String year;
     private String status;
+    private LocalDate date;
+
+    @OneToMany(mappedBy = "expedient")
+    private List<Resolution> resolutions;
+
+    @OneToMany(mappedBy = "expedient")
+    private List<Location> locations;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
 }
