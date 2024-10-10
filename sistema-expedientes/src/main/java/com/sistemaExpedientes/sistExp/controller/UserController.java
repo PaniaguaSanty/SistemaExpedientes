@@ -4,6 +4,7 @@ import com.sistemaExpedientes.sistExp.dto.request.UserRequestDTO;
 import com.sistemaExpedientes.sistExp.dto.response.UserResponseDTO;
 import com.sistemaExpedientes.sistExp.service.UserService;
 import com.sistemaExpedientes.sistExp.util.Controller;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +14,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/users")
 public class UserController implements Controller<UserResponseDTO, UserRequestDTO> {
+
+    @Autowired
     private UserService userService;
 
     @Override

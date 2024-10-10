@@ -4,6 +4,7 @@ import com.sistemaExpedientes.sistExp.dto.request.ExpedientRequestDTO;
 import com.sistemaExpedientes.sistExp.dto.response.ExpedientResponseDTO;
 import com.sistemaExpedientes.sistExp.service.ExpedientService;
 import com.sistemaExpedientes.sistExp.util.Controller;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +14,7 @@ import java.util.List;
 @RequestMapping("/api/expedients")
 @CrossOrigin(origins = "http://localhost:8080")
 public class ExpedientController implements Controller<ExpedientResponseDTO, ExpedientRequestDTO> {
+    @Autowired
     private ExpedientService expedientService;
 
     @Override
