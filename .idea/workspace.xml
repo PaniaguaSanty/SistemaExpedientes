@@ -5,7 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7f0c8d7e-87f1-4a4f-b3fb-27a6f3fcde9c" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/sistema-expedientes/src/main/java/com/sistemaExpedientes/sistExp/model/Expedient.java" beforeDir="false" afterPath="$PROJECT_DIR$/sistema-expedientes/src/main/java/com/sistemaExpedientes/sistExp/model/Expedient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sistema-expedientes/src/main/java/com/sistemaExpedientes/sistExp/controller/ExpedientController.java" beforeDir="false" afterPath="$PROJECT_DIR$/sistema-expedientes/src/main/java/com/sistemaExpedientes/sistExp/controller/ExpedientController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sistema-expedientes/src/main/java/com/sistemaExpedientes/sistExp/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/sistema-expedientes/src/main/java/com/sistemaExpedientes/sistExp/controller/UserController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sistema-expedientes/src/main/java/com/sistemaExpedientes/sistExp/service/ExpedientService.java" beforeDir="false" afterPath="$PROJECT_DIR$/sistema-expedientes/src/main/java/com/sistemaExpedientes/sistExp/service/ExpedientService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sistema-expedientes/src/main/java/com/sistemaExpedientes/sistExp/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/sistema-expedientes/src/main/java/com/sistemaExpedientes/sistExp/service/UserService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -20,10 +24,10 @@
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "customColor": "",
-  "associatedIndex": 4
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 4
+}</component>
   <component name="ProjectId" id="2n70CwOGGSfGaLZcLw1FOz3YAQ4" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -32,8 +36,9 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "Application.SistExpApplication.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "git-widget-placeholder": "develop-front",
     "kotlin-language-version-configured": "true"
   }
 }]]></component>
