@@ -8,6 +8,7 @@ import com.sistemaExpedientes.sistExp.model.User;
 import com.sistemaExpedientes.sistExp.repository.UserRepository;
 import com.sistemaExpedientes.sistExp.util.CRUD;
 import lombok.Data;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,7 +17,9 @@ import java.util.stream.Collectors;
 @Data
 @Service
 public class UserService implements CRUD<UserResponseDTO, UserRequestDTO> {
+    @Autowired
     private UserRepository userRepository;
+    @Autowired
     private UserMapper userMapper;
     @Override
     public UserResponseDTO create(UserRequestDTO userRequestDTO) {

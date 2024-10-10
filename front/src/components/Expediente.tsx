@@ -13,16 +13,28 @@ import {
   DialogFooter,
 } from "../../@/components/dialog"
 import { Label } from "../../@/components/label"
-
-type Expediente = {
-  id: number
-  issuer: string
-  organizationCode: string
-  correlativeNumber: string
-  solicitude: string
-  year: number
-  locations: Location[]
+type Resolution = {
+  id: number;
+  resolutionNumber: string;
+  expedientId: number; // Asumiendo que esto es el ID del expediente al que pertenece la resolución
+  status: string;
+};
+type Location={
+  id: number;
+  origin: string;
+  destiny: string;
+  date: Date; 
 }
+type Expediente = {
+  id: number;
+  issuer: string;
+  organizationCode: string;
+  correlativeNumber: string;
+  solicitude: string;
+  year: number;
+  resolutions: Resolution[];
+  location: Location[];
+};
 
 export default function ExpedientesCRUD() {
   const [expedientes, setExpedientes] = useState<Expediente[]>([])
@@ -39,7 +51,7 @@ export default function ExpedientesCRUD() {
     const fetchExpedientes = async () => {
       setIsLoading(true)
       try {
-        const response = await fetch('/api/expedientes') // Reemplaza con tu endpoint
+        const response = await fetch('http://localhost:8080/api/expedients') // Reemplaza con tu endpoint
         const data = await response.json()
         setExpedientes(data)
       } catch (error) {
@@ -94,44 +106,45 @@ export default function ExpedientesCRUD() {
     setExpedientes(expedientes.filter(exp => exp.id !== id))
   }
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    setIsLoading(true)
-    const formData = new FormData(e.currentTarget)
-    const nuevoExpediente: Expediente = {
-      id: expedienteActual ? expedienteActual.id : Date.now(),
-      issuer: formData.get('issuer') as string,
-      organizationCode: formData.get('organizationCode') as string,
-      correlativeNumber: formData.get('correlativeNumber') as string,
-      solicitude: formData.get('solicitude') as string,
-      year: parseInt(formData.get('year') as string),
-      locations: []
-    }
+  // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  //   e.preventDefault()
+  //   setIsLoading(true)
+  //   const formData = new FormData(e.currentTarget)
+  //   const nuevoExpediente: Expediente = {
+  //     id: expedienteActual ? expedienteActual.id : Date.now(),
+  //     issuer: formData.get('issuer') as string,
+  //     organizationCode: formData.get('organizationCode') as string,
+  //     correlativeNumber: formData.get('correlativeNumber') as string,
+  //     solicitude: formData.get('solicitude') as string,
+  //     year: parseInt(formData.get('year') as string),
 
-    const method = expedienteActual ? 'PUT' : 'POST'
-    const endpoint = expedienteActual ? `/api/expedientes/${expedienteActual.id}` : '/api/expedientes'
+  //     location: []
+  //   }
 
-    await fetch(endpoint, {
-      method,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(nuevoExpediente),
-    })
+  //   const method = expedienteActual ? 'PUT' : 'POST'
+  //   const endpoint = expedienteActual ? `/api/expedientes/${expedienteActual.id}` : '/api/expedientes'
 
-    setExpedientes((prev) => {
-      if (expedienteActual) {
-        return prev.map(exp => exp.id === expedienteActual.id ? nuevoExpediente : exp)
-      } else {
-        return [...prev, nuevoExpediente]
-      }
-    })
+  //   await fetch(endpoint, {
+  //     method,
+  //     headers: { 'Content-Type': 'application/json' },
+  //     body: JSON.stringify(nuevoExpediente),
+  //   })
 
-    setIsLoading(false)
-    setIsConfirmed(true)
-    setTimeout(() => {
-      setIsConfirmed(false)
-      setIsDialogOpen(false)
-    }, 1500)
-  }
+  //   setExpedientes((prev) => {
+  //     if (expedienteActual) {
+  //       return prev.map(exp => exp.id === expedienteActual.id ? nuevoExpediente : exp)
+  //     } else {
+  //       return [...prev, nuevoExpediente]
+  //     }
+  //   })
+
+  //   setIsLoading(false)
+  //   setIsConfirmed(true)
+  //   setTimeout(() => {
+  //     setIsConfirmed(false)
+  //     setIsDialogOpen(false)
+  //   }, 1500)
+  // }
 
   return (
     <div className="container mx-auto p-4 bg-white font-sans">
@@ -152,7 +165,7 @@ export default function ExpedientesCRUD() {
         </div>
       </div>
       <div className="overflow-x-auto bg-[#E0F0FF] rounded-lg shadow-lg">
-        <Table>
+      <Table>
           <TableHeader>
             <TableRow className="bg-[#1A2E4A] text-white">
               <TableHead className="py-3">Código</TableHead>
@@ -174,8 +187,16 @@ export default function ExpedientesCRUD() {
                 <TableCell className="py-3">{expediente.issuer}</TableCell>
                 <TableCell className="py-3">{expediente.year}</TableCell>
                 <TableCell className="py-3">{expediente.solicitude}</TableCell>
-                {/* <TableCell className="py-3">{expediente.resolucion}</TableCell>
-                <TableCell className="py-3">{expediente.ubicacion}</TableCell> */}
+                <TableCell className="py-3">
+                  {expediente.resolutions.map((resolution, resIndex) => (
+                    <div key={resIndex}>{resolution.resolutionNumber}</div>
+                  ))}
+                </TableCell>
+                <TableCell className="py-3">
+                  {expediente.location.map((location, locIndex) => (
+                    <div key={locIndex}>{location.id}</div>
+                  ))}
+                </TableCell>
                 <TableCell className="py-3">
                   <Button variant="ghost" size="sm" onClick={() => handleEdit(expediente)} className="text-[#255EA9] hover:text-[#1A2E4A]">
                     <Pencil className="h-5 w-5" />
@@ -215,7 +236,7 @@ export default function ExpedientesCRUD() {
           <DialogHeader>
             <DialogTitle className="text-2xl font-bold">{expedienteActual ? 'Editar Expediente' : 'Añadir Expediente'}</DialogTitle>
           </DialogHeader>
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form  className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
                 <Label htmlFor="codigo" className="text-sm font-medium">

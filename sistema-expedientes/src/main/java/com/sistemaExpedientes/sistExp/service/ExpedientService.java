@@ -8,6 +8,7 @@ import com.sistemaExpedientes.sistExp.model.Expedient;
 import com.sistemaExpedientes.sistExp.repository.ExpedientRepository;
 import com.sistemaExpedientes.sistExp.util.CRUD;
 import lombok.Data;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,7 +17,9 @@ import java.util.stream.Collectors;
 @Service
 public class ExpedientService implements CRUD<ExpedientResponseDTO, ExpedientRequestDTO> {
 
+    @Autowired
     private final ExpedientRepository expedientRepository;
+    @Autowired
     private final ExpedientMapper expedientMapper;
 
 
