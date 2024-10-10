@@ -16,55 +16,16 @@ import { Label } from "../../@/components/label"
 
 type Expediente = {
   id: number
-  codigo: string
-  numeroOrden: string
-  numeroExpediente: string
-  emisor: string
-  ano: number
-  resolucion: string
-  pedido: string
-  ubicacion: string
+  issuer: string
+  organizationCode: string
+  correlativeNumber: string
+  solicitude: string
+  year: number
+  locations: Location[]
 }
 
-const expedientesIniciales: Expediente[] = [
-  {
-    id: 1,
-    codigo: "EXP001",
-    numeroOrden: "5700",
-    numeroExpediente: "NE001",
-    emisor: "Departamento de Educación",
-    ano: 2023,
-    resolucion: "Aprobado",
-    pedido: "Insumos para librerías",
-    ubicacion: "Estante A, Fila 1"
-  },
-  {
-    id: 2,
-    codigo: "EXP002",
-    numeroOrden: "5701",
-    numeroExpediente: "NE002",
-    emisor: "Departamento de Salud",
-    ano: 2023,
-    resolucion: "En revisión",
-    pedido: "Equipos médicos",
-    ubicacion: "Estante B, Fila 3"
-  },
-  // Añadir 18 expedientes más aquí...
-  {
-    id: 20,
-    codigo: "EXP020",
-    numeroOrden: "5719",
-    numeroExpediente: "NE020",
-    emisor: "Departamento de Obras Públicas",
-    ano: 2023,
-    resolucion: "Pendiente",
-    pedido: "Materiales de construcción",
-    ubicacion: "Estante E, Fila 2"
-  }
-]
-
 export default function ExpedientesCRUD() {
-  const [expedientes, setExpedientes] = useState<Expediente[]>(expedientesIniciales)
+  const [expedientes, setExpedientes] = useState<Expediente[]>([])
   const [expedienteActual, setExpedienteActual] = useState<Expediente | null>(null)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [currentPage, setCurrentPage] = useState(1)
@@ -72,6 +33,24 @@ export default function ExpedientesCRUD() {
   const [isLoading, setIsLoading] = useState(false)
   const [isConfirmed, setIsConfirmed] = useState(false)
   const itemsPerPage = 20
+
+  // Fetch expedientes from API
+  useEffect(() => {
+    const fetchExpedientes = async () => {
+      setIsLoading(true)
+      try {
+        const response = await fetch('/api/expedientes') // Reemplaza con tu endpoint
+        const data = await response.json()
+        setExpedientes(data)
+      } catch (error) {
+        console.error("Error fetching expedientes:", error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchExpedientes()
+  }, [])
 
   const filteredExpedientes = useMemo(() => {
     return expedientes.filter((expediente) =>
@@ -107,7 +86,11 @@ export default function ExpedientesCRUD() {
     setIsDialogOpen(true)
   }
 
-  const handleDelete = (id: number) => {
+  const handleDelete = async (id: number) => {
+    // Suponiendo que tienes un endpoint para eliminar expedientes
+    await fetch(`/api/expedientes/${id}`, {
+      method: 'DELETE',
+    })
     setExpedientes(expedientes.filter(exp => exp.id !== id))
   }
 
@@ -117,24 +100,30 @@ export default function ExpedientesCRUD() {
     const formData = new FormData(e.currentTarget)
     const nuevoExpediente: Expediente = {
       id: expedienteActual ? expedienteActual.id : Date.now(),
-      codigo: formData.get('codigo') as string,
-      numeroOrden: formData.get('numeroOrden') as string,
-      numeroExpediente: formData.get('numeroExpediente') as string,
-      emisor: formData.get('emisor') as string,
-      ano: parseInt(formData.get('ano') as string),
-      resolucion: formData.get('resolucion') as string,
-      pedido: formData.get('pedido') as string,
-      ubicacion: formData.get('ubicacion') as string,
+      issuer: formData.get('issuer') as string,
+      organizationCode: formData.get('organizationCode') as string,
+      correlativeNumber: formData.get('correlativeNumber') as string,
+      solicitude: formData.get('solicitude') as string,
+      year: parseInt(formData.get('year') as string),
+      locations: []
     }
 
-    // Simular una operación asíncrona
-    await new Promise(resolve => setTimeout(resolve, 1500))
+    const method = expedienteActual ? 'PUT' : 'POST'
+    const endpoint = expedienteActual ? `/api/expedientes/${expedienteActual.id}` : '/api/expedientes'
 
-    if (expedienteActual) {
-      setExpedientes(expedientes.map(exp => exp.id === expedienteActual.id ? nuevoExpediente : exp))
-    } else {
-      setExpedientes([...expedientes, nuevoExpediente])
-    }
+    await fetch(endpoint, {
+      method,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(nuevoExpediente),
+    })
+
+    setExpedientes((prev) => {
+      if (expedienteActual) {
+        return prev.map(exp => exp.id === expedienteActual.id ? nuevoExpediente : exp)
+      } else {
+        return [...prev, nuevoExpediente]
+      }
+    })
 
     setIsLoading(false)
     setIsConfirmed(true)
@@ -180,14 +169,13 @@ export default function ExpedientesCRUD() {
           <TableBody>
             {currentItems.map((expediente, index) => (
               <TableRow key={expediente.id} className={index % 2 === 0 ? 'bg-white' : 'bg-[#E0F0FF]'}>
-                <TableCell className="py-3">{expediente.codigo}</TableCell>
-                <TableCell className="py-3">{expediente.numeroOrden}</TableCell>
-                <TableCell className="py-3">{expediente.numeroExpediente}</TableCell>
-                <TableCell className="py-3">{expediente.emisor}</TableCell>
-                <TableCell className="py-3">{expediente.ano}</TableCell>
-                <TableCell className="py-3">{expediente.resolucion}</TableCell>
-                <TableCell className="py-3">{expediente.pedido}</TableCell>
-                <TableCell className="py-3">{expediente.ubicacion}</TableCell>
+                <TableCell className="py-3">{expediente.organizationCode}</TableCell>
+                <TableCell className="py-3">{expediente.correlativeNumber}</TableCell>
+                <TableCell className="py-3">{expediente.issuer}</TableCell>
+                <TableCell className="py-3">{expediente.year}</TableCell>
+                <TableCell className="py-3">{expediente.solicitude}</TableCell>
+                {/* <TableCell className="py-3">{expediente.resolucion}</TableCell>
+                <TableCell className="py-3">{expediente.ubicacion}</TableCell> */}
                 <TableCell className="py-3">
                   <Button variant="ghost" size="sm" onClick={() => handleEdit(expediente)} className="text-[#255EA9] hover:text-[#1A2E4A]">
                     <Pencil className="h-5 w-5" />
@@ -199,6 +187,7 @@ export default function ExpedientesCRUD() {
               </TableRow>
             ))}
           </TableBody>
+
         </Table>
       </div>
       <div className="mt-6 flex justify-between items-center">
@@ -235,7 +224,7 @@ export default function ExpedientesCRUD() {
                 <Input
                   id="codigo"
                   name="codigo"
-                  defaultValue={expedienteActual?.codigo}
+                  defaultValue={expedienteActual?.organizationCode}
                   className="w-full bg-white text-black"
                 />
               </div>
@@ -246,11 +235,11 @@ export default function ExpedientesCRUD() {
                 <Input
                   id="numeroOrden"
                   name="numeroOrden"
-                  defaultValue={expedienteActual?.numeroOrden}
+                  defaultValue={expedienteActual?.correlativeNumber}
                   className="w-full bg-white text-black"
                 />
               </div>
-              <div className="space-y-2">
+              {/* <div className="space-y-2">
                 <Label htmlFor="numeroExpediente" className="text-sm font-medium">
                   Número de Expediente
                 </Label>
@@ -260,7 +249,7 @@ export default function ExpedientesCRUD() {
                   defaultValue={expedienteActual?.numeroExpediente}
                   className="w-full bg-white text-black"
                 />
-              </div>
+              </div> */}
               <div className="space-y-2">
                 <Label htmlFor="emisor" className="text-sm font-medium">
                   Emisor
@@ -268,7 +257,7 @@ export default function ExpedientesCRUD() {
                 <Input
                   id="emisor"
                   name="emisor"
-                  defaultValue={expedienteActual?.emisor}
+                  defaultValue={expedienteActual?.issuer}
                   className="w-full bg-white text-black"
                 />
               </div>
@@ -280,11 +269,11 @@ export default function ExpedientesCRUD() {
                   id="ano"
                   name="ano"
                   type="number"
-                  defaultValue={expedienteActual?.ano}
+                  defaultValue={expedienteActual?.year}
                   className="w-full bg-white text-black"
                 />
               </div>
-              <div className="space-y-2">
+              {/* <div className="space-y-2">
                 <Label htmlFor="resolucion" className="text-sm font-medium">
                   Resolución
                 </Label>
@@ -294,7 +283,7 @@ export default function ExpedientesCRUD() {
                   defaultValue={expedienteActual?.resolucion}
                   className="w-full bg-white text-black"
                 />
-              </div>
+              </div> */}
               <div className="space-y-2">
                 <Label htmlFor="pedido" className="text-sm font-medium">
                   Pedido
@@ -302,11 +291,11 @@ export default function ExpedientesCRUD() {
                 <Input
                   id="pedido"
                   name="pedido"
-                  defaultValue={expedienteActual?.pedido}
+                  defaultValue={expedienteActual?.solicitude}
                   className="w-full bg-white text-black"
                 />
               </div>
-              <div className="space-y-2">
+              {/* <div className="space-y-2">
                 <Label htmlFor="ubicacion" className="text-sm font-medium">
                   Ubicación
                 </Label>
@@ -316,7 +305,7 @@ export default function ExpedientesCRUD() {
                   defaultValue={expedienteActual?.ubicacion}
                   className="w-full bg-white text-black"
                 />
-              </div>
+              </div>  */}
             </div>
             <DialogFooter>
               <Button 
