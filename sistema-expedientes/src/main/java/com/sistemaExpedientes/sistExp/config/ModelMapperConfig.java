@@ -1,4 +1,4 @@
-package com.sistemaExpedientes.sistExp.util;
+package com.sistemaExpedientes.sistExp.config;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;

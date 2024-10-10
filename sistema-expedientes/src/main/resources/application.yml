@@ -17,3 +17,14 @@ spring:
         log:
           color:
             enabled: true
+
+exp:
+  openapi:
+    url: "http://localhost:8080"
+    description: "API for managing gym operations, clients, routines, and nutrition plans."
+    contact:
+      name: "Santiago Agustín Paniagua"
+      email: "paniaguasanty10@gmail.com"
+      url: "https://github.com/PaniaguaSanty"
+    title: "Gym Management API"
+    version: "1.0"
