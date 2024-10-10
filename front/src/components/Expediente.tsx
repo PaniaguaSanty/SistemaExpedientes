@@ -1,5 +1,5 @@
 "use client"
-
+// npm install react@latest @types/react@latest comando para actualizar
 import { useState, useEffect, useMemo } from "react"
 import { PlusCircle, Pencil, Trash2, ChevronLeft, ChevronRight, Search, Check, Loader2 } from "lucide-react"
 import { Button } from "../../@/components/button"
@@ -182,21 +182,31 @@ export default function ExpedientesCRUD() {
           <TableBody>
             {currentItems.map((expediente, index) => (
               <TableRow key={expediente.id} className={index % 2 === 0 ? 'bg-white' : 'bg-[#E0F0FF]'}>
-                <TableCell className="py-3">{expediente.organizationCode}</TableCell>
-                <TableCell className="py-3">{expediente.correlativeNumber}</TableCell>
-                <TableCell className="py-3">{expediente.issuer}</TableCell>
-                <TableCell className="py-3">{expediente.year}</TableCell>
-                <TableCell className="py-3">{expediente.solicitude}</TableCell>
+                <TableCell className="py-3">{expediente?.id}</TableCell>
+                <TableCell className="py-3">{expediente?.organizationCode}</TableCell>
+                <TableCell className="py-3">{expediente?.correlativeNumber}</TableCell>
+                <TableCell className="py-3">{expediente?.issuer}</TableCell>
+                <TableCell className="py-3">{expediente?.year}</TableCell>
+                <TableCell className="py-3">{expediente?.solicitude}</TableCell>
                 <TableCell className="py-3">
-                  {expediente.resolutions.map((resolution, resIndex) => (
-                    <div key={resIndex}>{resolution.resolutionNumber}</div>
-                  ))}
-                </TableCell>
-                <TableCell className="py-3">
-                  {expediente.location.map((location, locIndex) => (
-                    <div key={locIndex}>{location.id}</div>
-                  ))}
-                </TableCell>
+  {expediente.resolutions?.length > 0 ? (
+    expediente.resolutions.map((resolution, resIndex) => (
+      <div key={resIndex}>{resolution.resolutionNumber}</div>
+    ))
+  ) : (
+    <div>Sin resoluciones</div>
+  )}
+</TableCell>
+<TableCell className="py-3">
+  {expediente.location?.length > 0 ? (
+    expediente.location.map((location, locIndex) => (
+      <div key={locIndex}>{location.id}</div>
+    ))
+  ) : (
+    <div>Sin ubicaciones</div>
+  )}
+</TableCell>
+
                 <TableCell className="py-3">
                   <Button variant="ghost" size="sm" onClick={() => handleEdit(expediente)} className="text-[#255EA9] hover:text-[#1A2E4A]">
                     <Pencil className="h-5 w-5" />
