@@ -1,7 +1,9 @@
     "use client"
 
     import { useState, useEffect, useMemo, SetStateAction } from "react"
-    import { PlusCircle, Pencil, Trash2, ChevronLeft, ChevronRight, Search, Check, Loader2 } from "lucide-react"
+    import { PlusCircle, Pencil, Trash2, ChevronLeft, ChevronRight, Search, Check, Loader2 } from "lucide-react" //instalarlo
+    //tambien esto npm install tailwindcss postcss autoprefixer
+
     import { Button } from "../../@/components/button"
     import { Input } from "../../@/components/input"
     import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../@/components/table"

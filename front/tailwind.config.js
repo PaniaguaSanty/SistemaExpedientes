@@ -5,7 +5,7 @@ module.exports = {
   darkMode: ["class"],
    content: [
     './src/**/*.{js,ts,jsx,tsx}',
-	"./node_modules/@shadcn/ui/**/*.{js,ts,jsx,tsx}",
+	"./node_modules/@shadcn/ui/**/*.{js,ts,jsx,tsx}", //AGREGAR ESTO
   ],
   theme: {
   	container: {
