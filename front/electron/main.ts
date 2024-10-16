@@ -32,7 +32,11 @@ function createWindow() {
     webPreferences: {
       preload: path.join(__dirname, 'preload.mjs'),
     },
+    frame: true, // Mantener el marco de la ventana con los botones
   })
+
+  win.maximize(); // Maximizar la ventana en lugar de pantalla completa
+  win.setMenuBarVisibility(false); // Opcional: Oculta la barra de menú
 
   // Test active push message to Renderer-process.
   win.webContents.on('did-finish-load', () => {
@@ -42,20 +46,10 @@ function createWindow() {
   if (VITE_DEV_SERVER_URL) {
     win.loadURL(VITE_DEV_SERVER_URL)
   } else {
-    // win.loadFile('dist/index.html')
     win.loadFile(path.join(RENDERER_DIST, 'index.html'))
   }
 }
 
-// Quit when all windows are closed, except on macOS. There, it's common
-// for applications and their menu bar to stay active until the user quits
-// explicitly with Cmd + Q.
-app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
-    app.quit()
-    win = null
-  }
-})
 
 app.on('activate', () => {
   // On OS X it's common to re-create a window in the app when the
