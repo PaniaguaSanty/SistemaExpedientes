@@ -21,6 +21,7 @@ public class UserService implements CRUD<UserResponseDTO, UserRequestDTO> {
     private UserRepository userRepository;
     @Autowired
     private UserMapper userMapper;
+
     @Override
     public UserResponseDTO create(UserRequestDTO userRequestDTO) {
         if (userRepository.findById(userRequestDTO.getId()).isPresent()) {
@@ -50,9 +51,10 @@ public class UserService implements CRUD<UserResponseDTO, UserRequestDTO> {
         userRepository.delete(existingUser);
     }
 
-    public User verifyUser(Long id){
-       return userRepository.findById(id).orElseThrow(()-> new NotFoundException("No existe un usuario con el ID " + id));
+    public User verifyUser(Long id) {
+        return userRepository.findById(id).orElseThrow(() -> new NotFoundException("No existe un usuario con el ID " + id));
     }
+
     @Override
     public UserResponseDTO findOne(String id) {
         User user = verifyUser(Long.parseLong(id));
