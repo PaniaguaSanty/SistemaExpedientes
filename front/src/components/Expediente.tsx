@@ -1,7 +1,8 @@
 "use client"
-// npm install react@latest @types/react@latest comando para actualizar
+
 import { useState, useEffect, useMemo } from "react"
-import { PlusCircle, Pencil, Trash2, ChevronLeft, ChevronRight, Search, Check, Loader2 } from "lucide-react"
+import { PlusCircle, Check, Loader2, Search, ChevronRight, ChevronLeft, Pencil, Trash2 } from "lucide-react"
+
 import { Button } from "../../@/components/button"
 import { Input } from "../../@/components/input"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../@/components/table"
@@ -11,8 +12,10 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
+  DialogTrigger,
 } from "../../@/components/dialog"
 import { Label } from "../../@/components/label"
+
 type Resolution = {
   id: number;
   resolutionNumber: string;

@@ -1,4 +1,5 @@
 import ReactDOM from 'react-dom/client'
+import './output.css'
 import './index.css'
 import ExpedientesCRUD from '../src/components/Expediente.tsx'
 
