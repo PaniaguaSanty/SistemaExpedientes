@@ -1,7 +1,6 @@
 package com.sistemaExpedientes.sistExp.model;
 
 import jakarta.persistence.*;
-import java.time.LocalDate;
 import java.util.List;
 import lombok.*;
 
@@ -19,16 +18,10 @@ public class Expedient {
     private String solicitude;
     private String year;
     private String status;
-    private LocalDate date;
 
     @OneToMany(mappedBy = "expedient")
     private List<Resolution> resolutions;
 
     @OneToMany(mappedBy = "expedient")
     private List<Location> locations;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
-
 }

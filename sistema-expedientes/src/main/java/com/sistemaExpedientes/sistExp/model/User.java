@@ -15,6 +15,4 @@ public class User {
     private String name;
     private String password;
 
-    @OneToMany(mappedBy = "user")
-    private List<Expedient> expedients;
 }

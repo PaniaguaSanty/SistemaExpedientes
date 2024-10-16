@@ -8,20 +8,22 @@ import com.sistemaExpedientes.sistExp.model.Expedient;
 import com.sistemaExpedientes.sistExp.repository.ExpedientRepository;
 import com.sistemaExpedientes.sistExp.util.CRUD;
 import lombok.Data;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
 @Data
 @Service
 public class ExpedientService implements CRUD<ExpedientResponseDTO, ExpedientRequestDTO> {
 
-    @Autowired
     private final ExpedientRepository expedientRepository;
-    @Autowired
     private final ExpedientMapper expedientMapper;
 
+    public ExpedientService(ExpedientRepository expedientRepository, ExpedientMapper expedientMapper) {
+        this.expedientRepository = expedientRepository;
+        this.expedientMapper = expedientMapper;
+    }
 
     public ExpedientResponseDTO create(ExpedientRequestDTO expedientRequestDto) {
         try {
@@ -66,14 +68,14 @@ public class ExpedientService implements CRUD<ExpedientResponseDTO, ExpedientReq
 
     //buscar por codigo de org.
     public List<ExpedientResponseDTO> findByOrganizationCode(String orgCode) {
-       List<Expedient> expedients = expedientRepository.findByOrganizationCode(orgCode);
-       return expedients.stream()
-               .map(expedientMapper::convertToDto)
-               .collect(Collectors.toList());
+        List<Expedient> expedients = expedientRepository.findByOrganizationCode(orgCode);
+        return expedients.stream()
+                .map(expedientMapper::convertToDto)
+                .collect(Collectors.toList());
     }
 
     //buscar por año
-    public List<ExpedientResponseDTO>findByYear(String year){
+    public List<ExpedientResponseDTO> findByYear(String year) {
         List<Expedient> expedients = expedientRepository.findByYear(year);
         return expedients.stream()
                 .map(expedientMapper::convertToDto)
@@ -81,20 +83,21 @@ public class ExpedientService implements CRUD<ExpedientResponseDTO, ExpedientReq
     }
 
     //buscar por n° correlativo
-    public ExpedientResponseDTO findByCorrelativeNumber(String number){
+    public ExpedientResponseDTO findByCorrelativeNumber(String number) {
         Expedient expedient = expedientRepository.findByCorrelativeNumber(number);
         return expedientMapper.convertToDto(expedient);
     }
 
     //buscar por emisor
-    public List<ExpedientResponseDTO> findByIssuer(String issuer){
+    public List<ExpedientResponseDTO> findByIssuer(String issuer) {
         List<Expedient> expedients = expedientRepository.findByIssuer(issuer);
         return expedients.stream()
                 .map(expedientMapper::convertToDto)
                 .collect(Collectors.toList());
     }
+
     //buscar por tipo de solicitud
-    public List<ExpedientResponseDTO> findBySolicitude(String solicitude){
+    public List<ExpedientResponseDTO> findBySolicitude(String solicitude) {
         List<Expedient> expedients = expedientRepository.findBySolicitude(solicitude);
         return expedients.stream()
                 .map(expedientMapper::convertToDto)
@@ -102,7 +105,7 @@ public class ExpedientService implements CRUD<ExpedientResponseDTO, ExpedientReq
     }
 
     //buscar por estado
-    public List<ExpedientResponseDTO> findByStatus(String status){
+    public List<ExpedientResponseDTO> findByStatus(String status) {
         List<Expedient> expedients = expedientRepository.findByStatus(status);
         return expedients.stream()
                 .map(expedientMapper::convertToDto)
@@ -117,8 +120,8 @@ public class ExpedientService implements CRUD<ExpedientResponseDTO, ExpedientReq
                 .collect(Collectors.toList());
     }
 
-    private Expedient verifyExpedient(Long id){
-        return expedientRepository.findById(id).orElseThrow(()-> new NotFoundException("No existe un expediente con el ID " + id));
+    private Expedient verifyExpedient(Long id) {
+        return expedientRepository.findById(id).orElseThrow(() -> new NotFoundException("No existe un expediente con el ID " + id));
     }
 
 
