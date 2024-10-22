@@ -1,20 +1,12 @@
-"use client"
+'use client'
 
-import { useState, useEffect, useMemo } from "react"
-import { PlusCircle, Check, Loader2, Search, ChevronRight, ChevronLeft, Pencil, Trash2 } from "lucide-react"
+import { useState, useMemo, useRef } from "react"
+import { FileText, Search, Plus, Edit, Eye, ChevronDown, ChevronUp, Calendar, PlusCircle } from "lucide-react"
 
-import { Button } from "../../@/components/button"
-import { Input } from "../../@/components/input"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../@/components/table"
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-  DialogTrigger,
-} from "../../@/components/dialog"
-import { Label } from "../../@/components/label"
+type Ubicacion = {
+  fecha: string;
+  lugar: string;
+}
 
 type Expediente = {
   id: number
@@ -25,307 +17,533 @@ type Expediente = {
   ano: number
   resolucion: string
   pedido: string
-  ubicacion: string
+  ubicaciones: Ubicacion[]
+  pdfPath?: string
 }
 
-const expedientesIniciales: Expediente[] = [
-  {
-    id: 1,
-    codigo: "EXP001",
-    numeroOrden: "5700",
-    numeroExpediente: "NE001",
-    emisor: "Departamento de Educación",
-    ano: 2023,
-    resolucion: "Aprobado",
-    pedido: "Insumos para librerías",
-    ubicacion: "Estante A, Fila 1"
-  },
-  {
-    id: 2,
-    codigo: "EXP002",
-    numeroOrden: "5701",
-    numeroExpediente: "NE002",
-    emisor: "Departamento de Salud",
-    ano: 2023,
-    resolucion: "En revisión",
-    pedido: "Equipos médicos",
-    ubicacion: "Estante B, Fila 3"
-  },
-  {
-    id: 20,
-    codigo: "EXP020",
-    numeroOrden: "5719",
-    numeroExpediente: "NE020",
-    emisor: "Departamento de Obras Públicas",
-    ano: 2023,
-    resolucion: "Pendiente",
-    pedido: "Materiales de construcción",
-    ubicacion: "Estante E, Fila 2"
-  }
-]
-
-export default function ExpedientesCRUD() {
-  const [expedientes, setExpedientes] = useState<Expediente[]>(expedientesIniciales)
-  const [expedienteActual, setExpedienteActual] = useState<Expediente | null>(null)
-  const [isDialogOpen, setIsDialogOpen] = useState(false)
-  const [currentPage, setCurrentPage] = useState(1)
+export default function Dashboard() {
+  const [expedientes, setExpedientes] = useState<Expediente[]>([])
   const [searchTerm, setSearchTerm] = useState("")
-  const [isLoading, setIsLoading] = useState(false)
-  const [isConfirmed, setIsConfirmed] = useState(false)
-  const itemsPerPage = 20
+  const [selectedYear, setSelectedYear] = useState<number | null>(null)
+  const [newYear, setNewYear] = useState<string>("")
+  const [newExpediente, setNewExpediente] = useState<Partial<Expediente>>({
+    ano: selectedYear || undefined,
+    ubicaciones: [],
+  })
+  const [editingExpediente, setEditingExpediente] = useState<Expediente | null>(null)
+  const [newUbicacion, setNewUbicacion] = useState<string>("")
+  const [expandedUbicaciones, setExpandedUbicaciones] = useState<number[]>([])
+  const fileInputRef = useRef<HTMLInputElement>(null)
+
+  const years = useMemo(() => {
+    const uniqueYears = Array.from(new Set(expedientes.map(exp => exp.ano)))
+    return uniqueYears.sort((a, b) => b - a)
+  }, [expedientes])
 
   const filteredExpedientes = useMemo(() => {
-    return expedientes.filter((expediente) =>
-      Object.values(expediente).some((value) =>
-        value.toString().toLowerCase().includes(searchTerm.toLowerCase())
-      )
-    )
-  }, [expedientes, searchTerm])
+    return expedientes.filter((expediente) => {
+      const matchesSearch = Object.entries(expediente).some(([key, value]) => {
+        if (value === undefined || value === null) return false
+        if (Array.isArray(value)) {
+          return value.some(item => 
+            Object.values(item).some(v => 
+              v.toString().toLowerCase().includes(searchTerm.toLowerCase())
+            )
+          )
+        }
+        return value.toString().toLowerCase().includes(searchTerm.toLowerCase())
+      })
+      const matchesYear = selectedYear ? expediente.ano === selectedYear : true
+      return matchesSearch && matchesYear
+    })
+  }, [expedientes, searchTerm, selectedYear])
 
-  const totalPages = Math.ceil(filteredExpedientes.length / itemsPerPage)
-
-  const currentItems = useMemo(() => {
-    const indexOfLastItem = currentPage * itemsPerPage
-    const indexOfFirstItem = indexOfLastItem - itemsPerPage
-    return filteredExpedientes.slice(indexOfFirstItem, indexOfLastItem)
-  }, [filteredExpedientes, currentPage])
-
-  useEffect(() => {
-    setCurrentPage(1)
-  }, [searchTerm])
-
-  const handlePageChange = (pageNumber: number) => {
-    setCurrentPage(pageNumber)
-  }
-
-  const handleAdd = () => {
-    setExpedienteActual(null)
-    setIsDialogOpen(true)
-  }
-
-  const handleEdit = (expediente: Expediente) => {
-    setExpedienteActual(expediente)
-    setIsDialogOpen(true)
-  }
-
-  const handleDelete = (id: number) => {
-    setExpedientes(expedientes.filter(exp => exp.id !== id))
-  }
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    setIsLoading(true)
-    const formData = new FormData(e.currentTarget)
-    const nuevoExpediente: Expediente = {
-      id: expedienteActual ? expedienteActual.id : Date.now(),
-      codigo: formData.get('codigo') as string,
-      numeroOrden: formData.get('numeroOrden') as string,
-      numeroExpediente: formData.get('numeroExpediente') as string,
-      emisor: formData.get('emisor') as string,
-      ano: parseInt(formData.get('ano') as string),
-      resolucion: formData.get('resolucion') as string,
-      pedido: formData.get('pedido') as string,
-      ubicacion: formData.get('ubicacion') as string,
+  const handleAddYear = () => {
+    const yearToAdd = parseInt(newYear)
+    if (yearToAdd && !years.includes(yearToAdd)) {
+      setSelectedYear(yearToAdd)
+      setNewYear("")
     }
+  }
 
-    // Simular una operación asíncrona
-    await new Promise(resolve => setTimeout(resolve, 1500))
+  const handleAddUbicacion = (isEditing: boolean = false) => {
+    if (newUbicacion) {
+      const nuevaUbicacion: Ubicacion = {
+        fecha: new Date().toISOString(),
+        lugar: newUbicacion
+      }
+      if (isEditing && editingExpediente) {
+        setEditingExpediente({
+          ...editingExpediente,
+          ubicaciones: [nuevaUbicacion, ...editingExpediente.ubicaciones]
+        })
+      } else {
+        setNewExpediente({
+          ...newExpediente,
+          ubicaciones: [nuevaUbicacion, ...(newExpediente.ubicaciones || [])]
+        })
+      }
+      setNewUbicacion("")
+    }
+  }
 
-    if (expedienteActual) {
-      setExpedientes(expedientes.map(exp => exp.id === expedienteActual.id ? nuevoExpediente : exp))
+  const handleAddExpediente = () => {
+    if (selectedYear) {
+      const id = Date.now()
+      const newExp: Expediente = {
+        id: id,
+        codigo: `EXP${id}`,
+        numeroOrden: newExpediente.numeroOrden || "",
+        numeroExpediente: newExpediente.numeroExpediente || "",
+        emisor: newExpediente.emisor || "",
+        ano: selectedYear,
+        resolucion: newExpediente.resolucion || "",
+        pedido: newExpediente.pedido || "",
+        ubicaciones: newExpediente.ubicaciones || [],
+        pdfPath: newExpediente.pdfPath
+      }
+      setExpedientes([...expedientes, newExp])
+      setNewExpediente({ ano: selectedYear, ubicaciones: [] })
+    }
+  }
+
+  const handleEditExpediente = (expediente: Expediente) => {
+    setEditingExpediente(expediente)
+  }
+
+  const handleSaveEdit = () => {
+    if (editingExpediente) {
+      setExpedientes(expedientes.map(exp => 
+        exp.id === editingExpediente.id ? editingExpediente : exp
+      ))
+      setEditingExpediente(null)
+    }
+  }
+
+  const handleCancelEdit = () => {
+    setEditingExpediente(null)
+  }
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (file) {
+      const fileURL = URL.createObjectURL(file)
+      if (editingExpediente) {
+        setEditingExpediente({...editingExpediente, pdfPath: fileURL})
+      } else {
+        setNewExpediente({...newExpediente, pdfPath: fileURL})
+      }
+    }
+  }
+
+  const handleOpenPDF = (pdfPath: string) => {
+    if (pdfPath.startsWith('blob:') || pdfPath.startsWith('file:')) {
+      window.open(pdfPath, '_blank')
     } else {
-      setExpedientes([...expedientes, nuevoExpediente])
+      const fileURL = `file://${pdfPath}`
+      window.open(fileURL, '_blank')
     }
+  }
 
-    setIsLoading(false)
-    setIsConfirmed(true)
-    setTimeout(() => {
-      setIsConfirmed(false)
-      setIsDialogOpen(false)
-    }, 1500)
+  const toggleUbicaciones = (id: number) => {
+    setExpandedUbicaciones(prev => 
+      prev.includes(id) ? prev.filter(expId => expId !== id) : [...prev, id]
+    )
   }
 
   return (
-    <div className="container mx-auto p-4 bg-white font-sans">
-      <h1 className="text-3xl font-bold mb-6 text-[#1A2E4A]">Gestión de Expedientes</h1>
-      <div className="mb-6 flex justify-between items-center">
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogTrigger asChild>
-            <Button onClick={handleAdd} className="bg-[#1A2E4A] hover:bg-[#255EA9] text-white">
-              <PlusCircle className="mr-2 h-5 w-5" /> Añadir Expediente
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="bg-[#1A2E4A] text-white max-w-3xl">
-            <DialogHeader>
-              <DialogTitle className="text-2xl font-bold">{expedienteActual ? 'Editar Expediente' : 'Añadir Expediente'}</DialogTitle>
-            </DialogHeader>
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <Label htmlFor="codigo" className="text-sm font-medium">
-                    Código
-                  </Label>
-                  <Input
-                    id="codigo"
-                    name="codigo"
-                    defaultValue={expedienteActual?.codigo}
-                    className="w-full bg-white text-black"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="numeroOrden" className="text-sm font-medium">
-                    Número de Orden
-                  </Label>
-                  <Input
-                    id="numeroOrden"
-                    name="numeroOrden"
-                    defaultValue={expedienteActual?.numeroOrden}
-                    className="w-full bg-white text-black"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="numeroExpediente" className="text-sm font-medium">
-                    Número de Expediente
-                  </Label>
-                  <Input
-                    id="numeroExpediente"
-                    name="numeroExpediente"
-                    defaultValue={expedienteActual?.numeroExpediente}
-                    className="w-full bg-white text-black"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="emisor" className="text-sm font-medium">
-                    Emisor
-                  </Label>
-                  <Input
-                    id="emisor"
-                    name="emisor"
-                    defaultValue={expedienteActual?.emisor}
-                    className="w-full bg-white text-black"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="ano" className="text-sm font-medium">
-                    Año
-                  </Label>
-                  <Input
-                    id="ano"
-                    name="ano"
-                    type="number"
-                    defaultValue={expedienteActual?.ano}
-                    className="w-full bg-white text-black"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="resolucion" className="text-sm font-medium">
-                    Resolución
-                  </Label>
-                  <Input
-                    id="resolucion"
-                    name="resolucion"
-                    defaultValue={expedienteActual?.resolucion}
-                    className="w-full bg-white text-black"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="pedido" className="text-sm font-medium">
-                    Pedido
-                  </Label>
-                  <Input
-                    id="pedido"
-                    name="pedido"
-                    defaultValue={expedienteActual?.pedido}
-                    className="w-full bg-white text-black"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="ubicacion" className="text-sm font-medium">
-                    Ubicación
-                  </Label>
-                  <Input
-                    id="ubicacion"
-                    name="ubicacion"
-                    defaultValue={expedienteActual?.ubicacion}
-                    className="w-full bg-white text-black"
-                  />
-                </div>
-              </div>
-              <DialogFooter>
-                <Button type="submit" className="bg-[#1A2E4A] hover:bg-[#255EA9] text-white">
-                  {isLoading ? <Loader2 className="animate-spin h-5 w-5" /> : 'Guardar'}
-                </Button>
-              </DialogFooter>
-            </form>
-            {isConfirmed && <div className="mt-4 text-green-500">Expediente guardado con éxito.</div>}
-          </DialogContent>
-        </Dialog>
-
-        <div className="flex items-center">
-          <Input
-            placeholder="Buscar..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-1/3 mr-4"
-          />
-          <Button className="bg-[#1A2E4A] hover:bg-[#255EA9] text-white">
-            <Search className="h-5 w-5" />
-          </Button>
+    <div className="container mx-auto px-4 py-8 bg-gray-100">
+      <h1 className="text-3xl font-bold mb-8 text-center text-[#1A2E4A]">Gestión de Expedientes</h1>
+      
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+        <div className="bg-white rounded-lg shadow p-4">
+          <div className="flex flex-row items-center justify-between pb-2">
+            <h3 className="text-sm font-medium">Total Expedientes</h3>
+            <FileText className="h-4 w-4 text-gray-400" />
+          </div>
+          <div className="text-2xl font-bold">{filteredExpedientes.length}</div>
+        </div>
+        <div className="bg-white rounded-lg shadow p-4">
+          <div className="flex flex-row items-center justify-between pb-2">
+            <h3 className="text-sm font-medium">Año Seleccionado</h3>
+            <Calendar className="h-4 w-4 text-gray-400" />
+          </div>
+          <div className="text-2xl font-bold">{selectedYear || "Ninguno"}</div>
+        </div>
+        <div className="bg-white rounded-lg shadow p-4">
+          <div className="flex flex-row items-center justify-between pb-2">
+            <h3 className="text-sm font-medium">Años Disponibles</h3>
+            <Calendar className="h-4 w-4 text-gray-400" />
+          </div>
+          <div className="text-sm font-medium">{years.join(", ")}</div>
         </div>
       </div>
 
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Código</TableHead>
-            <TableHead>Número de Orden</TableHead>
-            <TableHead>Número de Expediente</TableHead>
-            <TableHead>Emisor</TableHead>
-            <TableHead>Año</TableHead>
-            <TableHead>Resolución</TableHead>
-            <TableHead>Pedido</TableHead>
-            <TableHead>Ubicación</TableHead>
-            <TableHead>Acciones</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {currentItems.map((expediente) => (
-            <TableRow key={expediente.id}>
-              <TableCell>{expediente.codigo}</TableCell>
-              <TableCell>{expediente.numeroOrden}</TableCell>
-              <TableCell>{expediente.numeroExpediente}</TableCell>
-              <TableCell>{expediente.emisor}</TableCell>
-              <TableCell>{expediente.ano}</TableCell>
-              <TableCell>{expediente.resolucion}</TableCell>
-              <TableCell>{expediente.pedido}</TableCell>
-              <TableCell>{expediente.ubicacion}</TableCell>
-              <TableCell>
-                <Button onClick={() => handleEdit(expediente)} className="mr-2">
-                  <Pencil className="h-5 w-5" />
-                </Button>
-                <Button onClick={() => handleDelete(expediente.id)} className="text-red-600">
-                  <Trash2 className="h-5 w-5" />
-                </Button>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+      <div className="flex flex-col md:flex-row justify-between items-center mb-8 space-y-4 md:space-y-0">
+        <div className="flex items-center space-x-2">
+          <select
+            value={selectedYear || ""}
+            onChange={(e) => setSelectedYear(e.target.value ? Number(e.target.value) : null)}
+            className="border border-gray-300 rounded-md p-2"
+          >
+            <option value="">Seleccionar año</option>
+            {years.map((year) => (
+              <option key={year} value={year}>{year}</option>
+            ))}
+          </select>
+          <input
+            type="number"
+            placeholder="Nuevo año"
+            value={newYear}
+            onChange={(e) => setNewYear(e.target.value)}
+            className="border border-gray-300 rounded-md p-2 w-32"
+          />
+          <button 
+            onClick={handleAddYear} 
+            disabled={!newYear}
+            className="bg-blue-500 text-white px-4 py-2 rounded-md disabled:opacity-50"
+          >
+            <Plus className="h-4 w-4 inline-block mr-2" />
+            Añadir Año
+          </button>
+        </div>
+        <div className="flex items-center space-x-2">
+          <input
+            type="text"
+            placeholder="Buscar expedientes..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="border border-gray-300 rounded-md p-2 w-64"
+          />
+          <button className="border border-gray-300 rounded-md p-2">
+            <Search className="h-4 w-4" />
+          </button>
+        </div>
+      </div>
 
-      <div className="flex justify-between mt-6">
-        <Button
-          onClick={() => handlePageChange(currentPage - 1)}
-          disabled={currentPage === 1}
-        >
-          <ChevronLeft className="h-5 w-5" />
-        </Button>
-        <span>Página {currentPage} de {totalPages}</span>
-        <Button
-          onClick={() => handlePageChange(currentPage + 1)}
-          disabled={currentPage === totalPages}
-        >
-          <ChevronRight className="h-5 w-5" />
-        </Button>
+      {selectedYear && !editingExpediente && (
+        <div className="bg-white rounded-lg shadow p-4 mb-8">
+          <h2 className="text-xl font-bold mb-4">Añadir Nuevo Expediente para {selectedYear}</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <input
+              placeholder="Número de Orden"
+              value={newExpediente.numeroOrden || ""}
+              onChange={(e) => setNewExpediente({...newExpediente, numeroOrden: e.target.value})}
+              className="border border-gray-300 rounded-md p-2"
+            />
+            <input
+              placeholder="Número de Expediente"
+              value={newExpediente.numeroExpediente || ""}
+              onChange={(e) => setNewExpediente({...newExpediente, numeroExpediente: e.target.value})}
+              className="border border-gray-300 rounded-md p-2"
+            />
+            <input
+              placeholder="Emisor"
+              value={newExpediente.emisor || ""}
+              onChange={(e) => setNewExpediente({...newExpediente, emisor: e.target.value})}
+              className="border border-gray-300 rounded-md p-2"
+            />
+            <input
+              placeholder="Resolución"
+              value={newExpediente.resolucion || ""}
+              onChange={(e) => setNewExpediente({...newExpediente, resolucion: e.target.value})}
+              className="border border-gray-300 rounded-md p-2"
+            />
+            <input
+              placeholder="Pedido"
+              value={newExpediente.pedido || ""}
+              onChange={(e) => setNewExpediente({...newExpediente, pedido: e.target.value})}
+              className="border border-gray-300 rounded-md p-2"
+            />
+            <div className="col-span-2 flex items-center space-x-2">
+              <input
+                placeholder="Nueva Ubicación"
+                value={newUbicacion}
+                onChange={(e) => setNewUbicacion(e.target.value)}
+                className="border border-gray-300 rounded-md p-2 flex-grow"
+              />
+              <button 
+                onClick={() => handleAddUbicacion()} 
+                disabled={!newUbicacion}
+                className="bg-blue-500 text-white px-4 py-2 rounded-md disabled:opacity-50 flex-shrink-0"
+              >
+                <PlusCircle className="h-4 w-4 inline-block mr-2" />
+                Añadir
+              </button>
+            </div>
+            <div className="col-span-2">
+              <h3 className="font-bold mb-2">Ubicación actual:</h3>
+              {newExpediente.ubicaciones && newExpediente.ubicaciones.length > 0 ? (
+                <p>{newExpediente.ubicaciones[0].lugar}</p>
+              ) : (
+                <p>Sin ubicación</p>
+              )}
+              {newExpediente.ubicaciones && newExpediente.ubicaciones.length > 1 && (
+                <div className="mt-2">
+                  <button
+                    className="border border-gray-300 rounded-md px-2 py-1 text-sm"
+                    onClick={() => toggleUbicaciones(-1)}
+                  >
+                    {expandedUbicaciones.includes(-1) ? (
+                      <>
+                        <ChevronUp className="h-4 w-4 inline-block mr-2" />
+                        Ocultar ubicaciones anteriores
+                      </>
+                    ) : (
+                      <>
+                        <ChevronDown className="h-4 w-4 inline-block mr-2" />
+                        Ver ubicaciones anteriores
+                      </>
+                    )}
+                  </button>
+                  {expandedUbicaciones.includes(-1) && (
+                    <ul className="list-disc pl-5 mt-2">
+                      {newExpediente.ubicaciones.slice(1).map((ubicacion, index) => (
+                        <li key={index}>{new Date(ubicacion.fecha).toLocaleDateString()}: {ubicacion.lugar}</li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              )}
+            </div>
+            <div className="flex items-center space-x-2">
+              <input
+                type="file"
+                accept=".pdf"
+                ref={fileInputRef}
+                onChange={handleFileChange}
+                className="hidden"
+              />
+              <button 
+                onClick={() => fileInputRef.current?.click()}
+                className="bg-gray-200 text-gray-700 px-4 py-2 rounded-md"
+              >
+                <FileText className="h-4 w-4 inline-block mr-2" />
+                Adjuntar PDF
+              </button>
+              <span className="text-sm text-gray-500">
+                {newExpediente.pdfPath ? (new URL(newExpediente.pdfPath)).pathname.split('/').pop() : 'Ningún PDF adjuntado'}
+              </span>
+            </div>
+            <button 
+              onClick={handleAddExpediente} 
+              className="col-span-full bg-green-500 text-white px-4 py-2 rounded-md"
+            >
+              <Plus className="h-4 w-4 inline-block mr-2" />
+              Guardar Expediente
+            </button>
+          </div>
+        </div>
+      )}
+
+      {editingExpediente && (
+        <div className="bg-white rounded-lg shadow p-4 mb-8">
+          <h2 className="text-xl font-bold mb-4">Editar Expediente: {editingExpediente.codigo}</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4  gap-4">
+            <input
+              placeholder="Número de Orden"
+              value={editingExpediente.numeroOrden}
+              onChange={(e) => setEditingExpediente({...editingExpediente, numeroOrden: e.target.value})}
+              className="border border-gray-300 rounded-md p-2"
+            />
+            <input
+              placeholder="Número de Expediente"
+              value={editingExpediente.numeroExpediente}
+              onChange={(e) => setEditingExpediente({...editingExpediente, numeroExpediente: e.target.value})}
+              className="border border-gray-300 rounded-md p-2"
+            />
+            <input
+              placeholder="Emisor"
+              value={editingExpediente.emisor}
+              onChange={(e) => setEditingExpediente({...editingExpediente, emisor: e.target.value})}
+              className="border border-gray-300 rounded-md p-2"
+            />
+            <input
+              placeholder="Resolución"
+              value={editingExpediente.resolucion}
+              onChange={(e) => setEditingExpediente({...editingExpediente, resolucion: e.target.value})}
+              className="border border-gray-300 rounded-md p-2"
+            />
+            <input
+              placeholder="Pedido"
+              value={editingExpediente.pedido}
+              onChange={(e) => setEditingExpediente({...editingExpediente, pedido: e.target.value})}
+              className="border border-gray-300 rounded-md p-2"
+            />
+            <div className="col-span-2 flex items-center space-x-2">
+              <input
+                placeholder="Nueva Ubicación"
+                value={newUbicacion}
+                onChange={(e) => setNewUbicacion(e.target.value)}
+                className="border border-gray-300 rounded-md p-2 flex-grow"
+              />
+              <button 
+                onClick={() => handleAddUbicacion(true)} 
+                disabled={!newUbicacion}
+                className="bg-blue-500 text-white px-4 py-2 rounded-md disabled:opacity-50 flex-shrink-0"
+              >
+                <PlusCircle className="h-4 w-4 inline-block mr-2" />
+                Añadir
+              </button>
+            </div>
+            <div className="col-span-2">
+              <h3 className="font-bold mb-2">Ubicación actual:</h3>
+              {editingExpediente.ubicaciones.length > 0 ? (
+                <p>{editingExpediente.ubicaciones[0].lugar}</p>
+              ) : (
+                <p>Sin ubicación</p>
+              )}
+              {editingExpediente.ubicaciones.length > 1 && (
+                <div className="mt-2">
+                  <button
+                    className="border border-gray-300 rounded-md px-2 py-1 text-sm"
+                    onClick={() => toggleUbicaciones(editingExpediente.id)}
+                  >
+                    {expandedUbicaciones.includes(editingExpediente.id) ? (
+                      <>
+                        <ChevronUp className="h-4 w-4 inline-block mr-2" />
+                        Ocultar ubicaciones anteriores
+                      </>
+                    ) : (
+                      <>
+                        <ChevronDown className="h-4 w-4 inline-block mr-2" />
+                        Ver ubicaciones anteriores
+                      </>
+                    )}
+                  </button>
+                  {expandedUbicaciones.includes(editingExpediente.id) && (
+                    <ul className="list-disc pl-5 mt-2">
+                      {editingExpediente.ubicaciones.slice(1).map((ubicacion, index) => (
+                        <li key={index}>{new Date(ubicacion.fecha).toLocaleDateString()}: {ubicacion.lugar}</li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              )}
+            </div>
+            <div className="flex items-center space-x-2">
+              <input
+                type="file"
+                accept=".pdf"
+                ref={fileInputRef}
+                onChange={handleFileChange}
+                className="hidden"
+              />
+              <button 
+                onClick={() => fileInputRef.current?.click()}
+                className="bg-gray-200 text-gray-700 px-4 py-2 rounded-md"
+              >
+                <FileText className="h-4 w-4 inline-block mr-2" />
+                Adjuntar PDF
+              </button>
+              <span className="text-sm text-gray-500">
+                {editingExpediente.pdfPath ? (new URL(editingExpediente.pdfPath)).pathname.split('/').pop() : 'Ningún PDF adjuntado'}
+              </span>
+            </div>
+            <div className="col-span-full flex justify-end space-x-2">
+              <button 
+                onClick={handleCancelEdit}
+                className="border border-gray-300 text-gray-700 px-4 py-2 rounded-md"
+              >
+                Cancelar
+              </button>
+              <button 
+                onClick={handleSaveEdit}
+                className="bg-green-500 text-white px-4 py-2 rounded-md"
+              >
+                Guardar Cambios
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div className="bg-white rounded-lg shadow overflow-x-auto">
+        <table className="min-w-full">
+          <thead className="bg-[#1A2E4A] text-white">
+            <tr>
+              <th className="px-4 py-2 text-left">Código</th>
+              <th className="px-4 py-2 text-left">Número de Orden</th>
+              <th className="px-4 py-2 text-left">Número de Expediente</th>
+              <th className="px-4 py-2 text-left">Emisor</th>
+              <th className="px-4 py-2 text-left">Año</th>
+              <th className="px-4 py-2 text-left">Resolución</th>
+              <th className="px-4 py-2 text-left">Pedido</th>
+              <th className="px-4 py-2 text-left">Ubicaciones</th>
+              <th className="px-4 py-2 text-left">PDF</th>
+              <th className="px-4 py-2 text-left">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredExpedientes.map((expediente) => (
+              <tr key={expediente.id} className="border-b hover:bg-gray-50">
+                <td className="px-4 py-2">{expediente.codigo}</td>
+                <td className="px-4 py-2">{expediente.numeroOrden}</td>
+                <td className="px-4 py-2">{expediente.numeroExpediente}</td>
+                <td className="px-4 py-2">{expediente.emisor}</td>
+                <td className="px-4 py-2">{expediente.ano}</td>
+                <td className="px-4 py-2 bg-blue-100 font-medium">{expediente.resolucion}</td>
+                <td className="px-4 py-2">{expediente.pedido}</td>
+                <td className="px-4 py-2">
+                  {expediente.ubicaciones.length > 0 && (
+                    <div>
+                      <p>Actual: {expediente.ubicaciones[0].lugar}</p>
+                      {expediente.ubicaciones.length > 1 && (
+                        <div>
+                          <button
+                            className="border border-gray-300 rounded-md px-2 py-1 text-sm"
+                            onClick={() => toggleUbicaciones(expediente.id)}
+                          >
+                            {expandedUbicaciones.includes(expediente.id) ? (
+                              <>
+                                <ChevronUp className="h-4 w-4 inline-block mr-2" />
+                                Ocultar anteriores
+                              </>
+                            ) : (
+                              <>
+                                <ChevronDown className="h-4 w-4 inline-block mr-2" />
+                                Ver anteriores
+                              </>
+                            )}
+                          </button>
+                          {expandedUbicaciones.includes(expediente.id) && (
+                            <ul className="list-disc pl-5 mt-2">
+                              {expediente.ubicaciones.slice(1).map((ubicacion, index) => (
+                                <li key={index}>{new Date(ubicacion.fecha).toLocaleDateString()}: {ubicacion.lugar}</li>
+                              ))}
+                            </ul>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </td>
+                <td className="px-4 py-2">
+                  {expediente.pdfPath ? (
+                    <button 
+                      className="border border-gray-300 text-gray-700 px-2 py-1 rounded-md text-sm"
+                      onClick={() => handleOpenPDF(expediente.pdfPath!)}
+                    >
+                      <Eye className="h-4 w-4 inline-block mr-2" />
+                      Ver PDF
+                    </button>
+                  ) : (
+                    "No hay PDF"
+                  )}
+                </td>
+                <td className="px-4 py-2">
+                  <button 
+                    className="border border-gray-300 text-gray-700 px-2 py-1 rounded-md text-sm"
+                    onClick={() => handleEditExpediente(expediente)}
+                  >
+                    <Edit className="h-4 w-4 inline-block mr-2" />
+                    Editar
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   )
