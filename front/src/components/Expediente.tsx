@@ -539,7 +539,7 @@ export default function Dashboard() {
                     <Edit className="h-4 w-4 inline-block mr-2" />
                     Editar
                   </button>
-                </td>
+                </td> 
               </tr>
             ))}
           </tbody>
