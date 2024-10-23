@@ -11,10 +11,8 @@ public class Location {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private String origin;
-    private String destiny;
     private String date;
-
+    private String place;
     @ManyToOne
     @JoinColumn(name = "expedient_id")
     private Expedient expedient;

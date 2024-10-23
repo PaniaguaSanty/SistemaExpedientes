@@ -1,8 +1,10 @@
 package com.sistemaExpedientes.sistExp.model;
 
 import jakarta.persistence.*;
+
 import java.time.LocalDate;
 import java.util.List;
+
 import lombok.*;
 
 @Data
@@ -20,9 +22,9 @@ public class Expedient {
     private String year;
     private String status;
     private LocalDate date;
-
+    private String pdfPath;
     @OneToMany(mappedBy = "expedient")
-    private List<Resolution> resolutions;
+    private List<Regulation> regulations;
 
     @OneToMany(mappedBy = "expedient")
     private List<Location> locations;

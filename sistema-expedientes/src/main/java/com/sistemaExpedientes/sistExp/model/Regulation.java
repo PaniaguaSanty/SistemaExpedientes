@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 @Table(name = "resolutions")
-public class Resolution {
+public class Regulation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
