@@ -12,6 +12,8 @@ public class Location {
     private Long id;
 
     private String date;
+    private String origin;
+    private String destiny;
     private String place;
     @ManyToOne
     @JoinColumn(name = "expedient_id")

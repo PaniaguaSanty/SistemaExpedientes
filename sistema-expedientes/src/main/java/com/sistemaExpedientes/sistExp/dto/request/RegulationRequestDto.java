@@ -1,4 +1,4 @@
-package com.sistemaExpedientes.sistExp.dto.response;
+package com.sistemaExpedientes.sistExp.dto.request;
 
 import com.sistemaExpedientes.sistExp.util.Status;
 import lombok.AllArgsConstructor;
@@ -10,8 +10,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ResolutionResponseDto {
-    private Long id;
+public class RegulationRequestDto {
     private String resolutionNumber;
     private String description;
     private Status status;

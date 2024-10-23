@@ -4,18 +4,16 @@ import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
 import com.sistemaExpedientes.sistExp.model.Expedient;
 import com.sistemaExpedientes.sistExp.model.Location;
-import com.sistemaExpedientes.sistExp.model.Resolution;
+import com.sistemaExpedientes.sistExp.model.Regulation;
 import com.sistemaExpedientes.sistExp.repository.ExpedientRepository;
 import com.sistemaExpedientes.sistExp.repository.LocationRepository;
-import com.sistemaExpedientes.sistExp.repository.ResolutionRepository;
-import com.sistemaExpedientes.sistExp.util.Status;
+import com.sistemaExpedientes.sistExp.repository.RegulationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +27,7 @@ public class CSVService {
     private LocationRepository locationRepository;
 
     @Autowired
-    private ResolutionRepository resolutionRepository;
+    private RegulationRepository regulationRepository;
 
     public void saveCSVData(MultipartFile file) throws IOException, CsvException {
         List<Expedient> expedientList = new ArrayList<>();
@@ -60,11 +58,11 @@ public class CSVService {
                 locationRepository.save(location); // Guardar la ubicación
 
                 // Crear y guardar la resolución asociada al expediente
-                Resolution resolution = new Resolution();
-                resolution.setResolutionNumber(row[2]);
-                //resolution.setStatus(Status.valueOf(row[11]));
-                resolution.setExpedient(savedExpedient); // Asociar la resolución al expediente
-                resolutionRepository.save(resolution); // Guardar la resolución
+                Regulation regulation = new Regulation();
+                regulation.setResolutionNumber(row[2]);
+                //regulation.setStatus(Status.valueOf(row[11]));
+                regulation.setExpedient(savedExpedient); // Asociar la resolución al expediente
+                regulationRepository.save(regulation); // Guardar la resolución
             }
         }
     }
