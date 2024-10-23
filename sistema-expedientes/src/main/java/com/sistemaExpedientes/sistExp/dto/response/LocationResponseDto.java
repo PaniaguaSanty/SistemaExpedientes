@@ -13,8 +13,7 @@ import lombok.Setter;
 public class LocationResponseDto {
 
     private Long id;
-    private String origin;
-    private String destiny;
+    private String place;
     private String date;
     private Expedient expedient;
 }

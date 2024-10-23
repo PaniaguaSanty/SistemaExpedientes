@@ -12,8 +12,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class LocationRequestDto {
 
-    private String origin;
-    private String destiny;
+    private String place;
     private String date;
-    private Long expedientId;
+    private Expedient expedient;
 }

@@ -7,69 +7,57 @@ import com.sistemaExpedientes.sistExp.exception.NotFoundException;
 import com.sistemaExpedientes.sistExp.mapper.LocationMapper;
 import com.sistemaExpedientes.sistExp.model.Location;
 import com.sistemaExpedientes.sistExp.repository.LocationRepository;
-import com.sistemaExpedientes.sistExp.util.CRUD;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 @Service
-@RequiredArgsConstructor
-public class LocationService implements CRUD<LocationResponseDto, LocationRequestDto> {
+public class LocationService {
 
     private final LocationMapper locationMapper;
     private final LocationRepository locationRepository;
 
+    public LocationService(LocationMapper locationMapper, LocationRepository locationRepository) {
+        this.locationMapper = locationMapper;
+        this.locationRepository = locationRepository;
+    }
 
-    @Override
     public LocationResponseDto create(LocationRequestDto locationRequestDto) {
         try {
-            Location location = locationMapper.convertToEntity(locationRequestDto);
-            Location locationSaved = locationRepository.save(location);
-            return locationMapper.convertToDto(locationSaved);
-        } catch (Exception e) {
-            throw new NotFoundException("Error while creating the location");
-        }
-    }
-
-    @Override
-    public LocationResponseDto update(LocationRequestDto locationRequestDto) {
-        try {
-            Location existingLocation = verifyLocation(locationRequestDto.getExpedientId());
-
-            existingLocation.setOrigin(locationRequestDto.getOrigin());
-            existingLocation.setDestiny(locationRequestDto.getDestiny());
-            Location updatedLocation = locationRepository.save(existingLocation);
-            return locationMapper.convertToDto(updatedLocation);
+            Location expedient = locationMapper.convertToEntity(locationRequestDto);
+            Location expedientSaved = locationRepository.save(expedient);
+            return locationMapper.convertToDto(expedientSaved);
         } catch (NotFoundException e) {
-            throw new NotFoundException("Error while updating the resolution");
+            throw new NotFoundException("Error while creating the expedient");
         }
     }
 
-    @Override
+    public LocationResponseDto update(Long id, LocationRequestDto locationRequestDto) {
+        try {
+            Location existingLocation = locationRepository.findById(id)
+                    .orElseThrow(() -> new NotFoundException("Location not found with current id...."));
+
+            existingLocation.setDate(locationRequestDto.getDate());
+            existingLocation.setExpedient(locationRequestDto.getExpedient());
+
+            Location updatedLocation = locationRepository.save(existingLocation);
+            return locationMapper.convertToDto(existingLocation);
+        } catch (NotFoundException e) {
+            throw new NotFoundException("Error while updting the expedient");
+        }
+    }
+
     public void delete(String id) {
         Location location = verifyLocation(Long.parseLong(id));
         locationRepository.delete(location);
     }
 
-    @Override
+
+    //buscar por id
     public LocationResponseDto findOne(String id) {
         Location location = verifyLocation(Long.parseLong(id));
         return locationMapper.convertToDto(location);
     }
 
-    @Override
-    public List<LocationResponseDto> findAll() {
-        List<Location> locations = locationRepository.findAll();
-        return locations.stream()
-                .map(locationMapper::convertToDto)
-                .collect(Collectors.toList());
-    }
-
     private Location verifyLocation(Long id) {
-        return locationRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("No existe una ubicacicón con el ID " + id));
+        return locationRepository.findById(id).orElseThrow(() -> new NotFoundException("No existe un expediente con el ID " + id));
     }
 }
-
