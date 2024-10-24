@@ -9,22 +9,24 @@ spring:
       ddl-auto: update
     show-sql: true
     properties:
-      hibernate.format_sql: true
-      spring:
-      logging:
-        level:
-          root: INFO
-        log:
-          color:
-            enabled: true
+      hibernate:
+        format_sql: true
+  output:
+    ansi:
+      enabled: always # permite ver el log como colores
+server:
+  port: 8080
+logging:
+  level:
+    root: info # permite ver los logs de consola
 
 exp:
   openapi:
     url: "http://localhost:8080"
-    description: "API for managing gym operations, clients, routines, and nutrition plans."
+    description: "API for managing Expedient operations for the Ministerio de Educacion of Posadas Misiones, Argentina."
     contact:
-      name: "Santiago Agustín Paniagua"
+      name: "Santiago Agustín Paniagua & Facundo Emanuel Pedrozo"
       email: "paniaguasanty10@gmail.com"
       url: "https://github.com/PaniaguaSanty"
-    title: "Gym Management API"
+    title: "Expedients Management API"
     version: "1.0"
