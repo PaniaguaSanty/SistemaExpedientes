@@ -1,7 +1,10 @@
 package com.sistemaExpedientes.sistExp.controller;
 
 import com.sistemaExpedientes.sistExp.dto.request.ExpedientRequestDTO;
+import com.sistemaExpedientes.sistExp.dto.request.LocationRequestDto;
 import com.sistemaExpedientes.sistExp.dto.response.ExpedientResponseDTO;
+import com.sistemaExpedientes.sistExp.dto.response.LocationResponseDto;
+import com.sistemaExpedientes.sistExp.exception.NotFoundException;
 import com.sistemaExpedientes.sistExp.service.ExpedientService;
 import com.sistemaExpedientes.sistExp.util.Controller;
 import org.slf4j.Logger;
@@ -49,6 +52,36 @@ public class ExpedientController implements Controller<ExpedientResponseDTO, Exp
         expedientService.delete(id);
         logger.info("Exiting delete CONTROLLER method...");
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    // Método para agregar una ubicación a un expediente
+    @PostMapping("/addLocation/{correlativeNumber}")
+    public ResponseEntity<LocationResponseDto> addLocation(@PathVariable String
+                                                                   correlativeNumber, @RequestBody LocationRequestDto locationDto) {
+        logger.info("Entering addLocation CONTROLLER method...");
+        try {
+            LocationResponseDto location = expedientService.addLocation(correlativeNumber, locationDto);
+            logger.info("Exiting addLocation CONTROLLER method successfully...");
+            return new ResponseEntity<>(location, HttpStatus.CREATED);
+        } catch (NotFoundException e) {
+            logger.error("Expedient with correlative number {} not found", correlativeNumber);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+
+    // Método para editar una ubicación existente
+    @PutMapping("/editLocation/{locationId}")
+    public ResponseEntity<LocationResponseDto> editLocation(@PathVariable Long locationId, @RequestBody LocationResponseDto locationDetails) {
+        logger.info("Entering editLocation CONTROLLER method...");
+        try {
+            LocationResponseDto updatedLocation = expedientService.editLocation(locationId, locationDetails);
+            logger.info("Exiting editLocation CONTROLLER method successfully...");
+            return new ResponseEntity<>(updatedLocation, HttpStatus.OK);
+        } catch (NotFoundException e) {
+            logger.error("Error in editLocation CONTROLLER method: {}", e.getMessage());
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @Override
