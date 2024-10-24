@@ -14,7 +14,7 @@ type Expediente = {
   numeroExpediente: string
   emisor: string
   ano: number
-  resolucion: string
+  reglamentacion: string
   pedido: string
   ubicaciones: Ubicacion[]
   pdfPath?: string
@@ -96,7 +96,7 @@ export default function Dashboard() {
         numeroExpediente: newExpediente.numeroExpediente || "",
         emisor: newExpediente.emisor || "",
         ano: selectedYear,
-        resolucion: newExpediente.resolucion || "",
+        reglamentacion: newExpediente.reglamentacion || "",
         pedido: newExpediente.pedido || "",
         ubicaciones: newExpediente.ubicaciones || [],
         pdfPath: newExpediente.pdfPath
@@ -268,9 +268,9 @@ export default function Dashboard() {
               className="border border-gray-300 rounded-md p-2"
             />
             <input
-              placeholder="Resolución"
-              value={newExpediente.resolucion || ""}
-              onChange={(e) => setNewExpediente({...newExpediente, resolucion: e.target.value})}
+              placeholder="Reglamentación"
+              value={newExpediente.reglamentacion || ""}
+              onChange={(e) => setNewExpediente({...newExpediente, reglamentacion: e.target.value})}
               className="border border-gray-300 rounded-md p-2"
             />
             <input
@@ -395,9 +395,9 @@ export default function Dashboard() {
               className="border border-gray-300 rounded-md p-2"
             />
             <input
-              placeholder="Resolución"
-              value={editingExpediente.resolucion}
-              onChange={(e) => setEditingExpediente({...editingExpediente, resolucion: e.target.value})}
+              placeholder="Reglamentación"
+              value={editingExpediente.reglamentacion}
+              onChange={(e) => setEditingExpediente({...editingExpediente, reglamentacion: e.target.value})}
               className="border border-gray-300 rounded-md p-2"
             />
             <input
@@ -544,7 +544,7 @@ export default function Dashboard() {
               <th className="px-4 py-2 text-left">Número de Expediente</th>
               <th className="px-4 py-2 text-left">Emisor</th>
               <th className="px-4 py-2 text-left">Año</th>
-              <th className="px-4 py-2 text-left">Resolución</th>
+              <th className="px-4 py-2 text-left">Reglamentación</th>
               <th className="px-4 py-2 text-left">Pedido</th>
               <th className="px-4 py-2 text-left">Ubicaciones</th>
               <th className="px-4 py-2 text-left">PDF</th>
@@ -559,7 +559,7 @@ export default function Dashboard() {
                 <td className="px-4 py-2">{expediente.numeroExpediente}</td>
                 <td className="px-4 py-2">{expediente.emisor}</td>
                 <td className="px-4 py-2">{expediente.ano}</td>
-                <td className="px-4 py-2 bg-blue-100 font-medium">{expediente.resolucion}</td>
+                <td className="px-4 py-2 bg-blue-100 font-medium">{expediente.reglamentacion}</td>
                 <td className="px-4 py-2">{expediente.pedido}</td>
                 <td className="px-4 py-2">
                   {expediente.ubicaciones.length > 0 && (
