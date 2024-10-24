@@ -1,6 +1,7 @@
 package com.sistemaExpedientes.sistExp.service;
 
 import com.sistemaExpedientes.sistExp.dto.request.ExpedientRequestDTO;
+import com.sistemaExpedientes.sistExp.dto.request.LocationRequestDto;
 import com.sistemaExpedientes.sistExp.dto.response.ExpedientResponseDTO;
 import com.sistemaExpedientes.sistExp.dto.response.LocationResponseDto;
 import com.sistemaExpedientes.sistExp.exception.NotFoundException;
@@ -83,14 +84,16 @@ public class ExpedientService implements CRUD<ExpedientResponseDTO, ExpedientReq
         expedientRepository.delete(expedient);
     }
 
-    public Location addLocation(String correlativeNumber, Location location) {
+    public LocationResponseDto addLocation(String correlativeNumber, LocationRequestDto location) {
         logger.info("Entering in AddLocation SERVICE method...");
         Expedient expedient = expedientRepository.findByCorrelativeNumber(correlativeNumber);
+        Location locationToAdd = locationMapper.convertToEntity(location);
         if (expedient != null) {
             location.setExpedient(expedient);
             location.setDate(String.valueOf(LocalDateTime.now()));
             logger.info("Exiting addLocation SERVICE method succesfully!");
-            return locationRepository.save(location);
+            locationRepository.save(locationToAdd);
+            return locationMapper.convertToDto(locationToAdd);
         }
         return null;
     }
