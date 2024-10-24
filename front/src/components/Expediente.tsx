@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useMemo, useRef } from "react"
+import { motion, AnimatePresence } from "framer-motion"
 
 type Ubicacion = {
   fecha: string;
@@ -359,15 +360,17 @@ export default function Dashboard() {
                 {newExpediente.pdfPath ? (new URL(newExpediente.pdfPath)).pathname.split('/').pop() : 'Ningún PDF adjuntado'}
               </span>
             </div>
-            <button 
-              onClick={handleAddExpediente} 
-              className="col-span-full bg-green-500 text-white px-4 py-2 rounded-md"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 inline-block mr-2" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-              </svg>
-              Guardar Expediente
-            </button>
+            <motion.button
+  onClick={handleAddExpediente}
+  className="col-span-full bg-green-500 text-white px-4 py-2 rounded-md"
+  whileHover={{ scale: 1.1 }}
+  whileTap={{ scale: 0.9 }}
+>
+  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 inline-block mr-2" viewBox="0 0 20 20" fill="currentColor">
+    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+  </svg>
+  Guardar Expediente
+</motion.button>
           </div>
         </div>
       )}
@@ -632,16 +635,18 @@ export default function Dashboard() {
                 </td>
                 <td className="px-4 py-2">
                   {expediente.pdfPath ? (
-                    <button 
-                      className="border border-gray-300 text-gray-700 px-2 py-1 rounded-md text-sm"
-                      onClick={() => handleOpenPDF(expediente.pdfPath!)}
-                    >
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 inline-block mr-2" viewBox="0 0 20 20" fill="currentColor">
-                        <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
-                        <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
-                      </svg>
-                      Ver PDF
-                    </button>
+                    <motion.button
+                    className="border border-gray-300 text-gray-700 px-2 py-1 rounded-md text-sm"
+                    onClick={() => handleOpenPDF(expediente.pdfPath!)}
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 inline-block mr-2" viewBox="0 0 20 20" fill="currentColor">
+                      <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                      <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
+                    </svg>
+                    Ver PDF
+                  </motion.button>
                   ) : (
                     "No hay PDF"
                   )}
