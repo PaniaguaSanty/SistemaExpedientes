@@ -180,6 +180,7 @@ export default function Dashboard() {
           </div>
           <div className="text-2xl font-bold">{filteredExpedientes.length}</div>
         </div>
+        
         <div className="bg-white rounded-lg shadow p-4">
           <div className="flex flex-row items-center justify-between pb-2">
             <h3 className="text-sm font-medium">Año Seleccionado</h3>
