@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useMemo, useRef } from "react"
-import { FileText, Search, Plus, Edit, Eye, ChevronDown, ChevronUp, Calendar, PlusCircle } from "lucide-react"
 
 type Ubicacion = {
   fecha: string;
@@ -151,6 +150,21 @@ export default function Dashboard() {
     )
   }
 
+  const handleEditUbicacion = (expedienteId: number, ubicacionIndex: number, newLugar: string, newFecha: string) => {
+    setExpedientes(expedientes.map(exp => {
+      if (exp.id === expedienteId) {
+        const updatedUbicaciones = [...exp.ubicaciones];
+        updatedUbicaciones[ubicacionIndex] = {
+          ...updatedUbicaciones[ubicacionIndex],
+          lugar: newLugar,
+          fecha: newFecha
+        };
+        return { ...exp, ubicaciones: updatedUbicaciones };
+      }
+      return exp;
+    }));
+  }
+
   return (
     <div className="container mx-auto px-4 py-8 bg-gray-100">
       <h1 className="text-3xl font-bold mb-8 text-center text-[#1A2E4A]">Gestión de Expedientes</h1>
@@ -159,21 +173,27 @@ export default function Dashboard() {
         <div className="bg-white rounded-lg shadow p-4">
           <div className="flex flex-row items-center justify-between pb-2">
             <h3 className="text-sm font-medium">Total Expedientes</h3>
-            <FileText className="h-4 w-4 text-gray-400" />
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 0v12h8V4H6z" clipRule="evenodd" />
+            </svg>
           </div>
           <div className="text-2xl font-bold">{filteredExpedientes.length}</div>
         </div>
         <div className="bg-white rounded-lg shadow p-4">
           <div className="flex flex-row items-center justify-between pb-2">
             <h3 className="text-sm font-medium">Año Seleccionado</h3>
-            <Calendar className="h-4 w-4 text-gray-400" />
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" />
+            </svg>
           </div>
           <div className="text-2xl font-bold">{selectedYear || "Ninguno"}</div>
         </div>
         <div className="bg-white rounded-lg shadow p-4">
           <div className="flex flex-row items-center justify-between pb-2">
             <h3 className="text-sm font-medium">Años Disponibles</h3>
-            <Calendar className="h-4 w-4 text-gray-400" />
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" />
+            </svg>
           </div>
           <div className="text-sm font-medium">{years.join(", ")}</div>
         </div>
@@ -203,7 +223,9 @@ export default function Dashboard() {
             disabled={!newYear}
             className="bg-blue-500 text-white px-4 py-2 rounded-md disabled:opacity-50"
           >
-            <Plus className="h-4 w-4 inline-block mr-2" />
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 inline-block mr-2" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clipRule="evenodd" />
+            </svg>
             Añadir Año
           </button>
         </div>
@@ -216,7 +238,9 @@ export default function Dashboard() {
             className="border border-gray-300 rounded-md p-2 w-64"
           />
           <button className="border border-gray-300 rounded-md p-2">
-            <Search className="h-4 w-4" />
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd" />
+            </svg>
           </button>
         </div>
       </div>
@@ -261,13 +285,17 @@ export default function Dashboard() {
                 value={newUbicacion}
                 onChange={(e) => setNewUbicacion(e.target.value)}
                 className="border border-gray-300 rounded-md p-2 flex-grow"
+              
               />
               <button 
                 onClick={() => handleAddUbicacion()} 
                 disabled={!newUbicacion}
                 className="bg-blue-500 text-white px-4 py-2 rounded-md disabled:opacity-50 flex-shrink-0"
               >
-                <PlusCircle className="h-4 w-4 inline-block mr-2" />
+                
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 inline-block mr-2" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M10 5a1 1 0 011  1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clipRule="evenodd" />
+                </svg>
                 Añadir
               </button>
             </div>
@@ -286,12 +314,16 @@ export default function Dashboard() {
                   >
                     {expandedUbicaciones.includes(-1) ? (
                       <>
-                        <ChevronUp className="h-4 w-4 inline-block mr-2" />
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 inline-block mr-2" viewBox="0 0 20 20" fill="currentColor">
+                          <path fillRule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clipRule="evenodd" />
+                        </svg>
                         Ocultar ubicaciones anteriores
                       </>
                     ) : (
                       <>
-                        <ChevronDown className="h-4 w-4 inline-block mr-2" />
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 inline-block mr-2" viewBox="0 0 20 20" fill="currentColor">
+                          <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                        </svg>
                         Ver ubicaciones anteriores
                       </>
                     )}
@@ -318,7 +350,9 @@ export default function Dashboard() {
                 onClick={() => fileInputRef.current?.click()}
                 className="bg-gray-200 text-gray-700 px-4 py-2 rounded-md"
               >
-                <FileText className="h-4 w-4 inline-block mr-2" />
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 inline-block mr-2" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M8 4a3 3 0 00-3 3v4a5 5 0 0010 0V7a1 1 0 112 0v4a7 7 0 11-14 0V7a5 5 0 0110 0v4a3 3 0 11-6 0V7a1 1 0 012 0v4a1 1 0 102 0V7a3 3 0 00-3-3z" clipRule="evenodd" />
+                </svg>
                 Adjuntar PDF
               </button>
               <span className="text-sm text-gray-500">
@@ -329,7 +363,9 @@ export default function Dashboard() {
               onClick={handleAddExpediente} 
               className="col-span-full bg-green-500 text-white px-4 py-2 rounded-md"
             >
-              <Plus className="h-4 w-4 inline-block mr-2" />
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 inline-block mr-2" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+              </svg>
               Guardar Expediente
             </button>
           </div>
@@ -339,7 +375,7 @@ export default function Dashboard() {
       {editingExpediente && (
         <div className="bg-white rounded-lg shadow p-4 mb-8">
           <h2 className="text-xl font-bold mb-4">Editar Expediente: {editingExpediente.codigo}</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4  gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <input
               placeholder="Número de Orden"
               value={editingExpediente.numeroOrden}
@@ -382,7 +418,9 @@ export default function Dashboard() {
                 disabled={!newUbicacion}
                 className="bg-blue-500 text-white px-4 py-2 rounded-md disabled:opacity-50 flex-shrink-0"
               >
-                <PlusCircle className="h-4 w-4 inline-block mr-2" />
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 inline-block mr-2" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clipRule="evenodd" />
+                </svg>
                 Añadir
               </button>
             </div>
@@ -401,20 +439,51 @@ export default function Dashboard() {
                   >
                     {expandedUbicaciones.includes(editingExpediente.id) ? (
                       <>
-                        <ChevronUp className="h-4 w-4 inline-block mr-2" />
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 inline-block mr-2" viewBox="0 0 20 20" fill="currentColor">
+                          <path fillRule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clipRule="evenodd" />
+                        </svg>
                         Ocultar ubicaciones anteriores
                       </>
                     ) : (
                       <>
-                        <ChevronDown className="h-4 w-4 inline-block mr-2" />
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 inline-block mr-2" viewBox="0 0 20 20" fill="currentColor">
+                          <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                        </svg>
                         Ver ubicaciones anteriores
                       </>
                     )}
                   </button>
                   {expandedUbicaciones.includes(editingExpediente.id) && (
                     <ul className="list-disc pl-5 mt-2">
-                      {editingExpediente.ubicaciones.slice(1).map((ubicacion, index) => (
-                        <li key={index}>{new Date(ubicacion.fecha).toLocaleDateString()}: {ubicacion.lugar}</li>
+                      {editingExpediente.ubicaciones.map((ubicacion, index) => (
+                        <li key={index} className="flex items-center space-x-2 mb-2">
+                          <input
+                            type="text"
+                            value={ubicacion.lugar}
+                            onChange={(e) => {
+                              const newUbicaciones = [...editingExpediente.ubicaciones];
+                              newUbicaciones[index] = { ...newUbicaciones[index], lugar: e.target.value };
+                              setEditingExpediente(prev => prev ? {...prev, ubicaciones: newUbicaciones} : prev);
+                            }}
+                            className="border border-gray-300 rounded-md px-2 py-1 text-sm mr-2"
+                          />
+                          <input
+                            type="date"
+                            value={new Date(ubicacion.fecha).toISOString().split('T')[0]}
+                            onChange={(e) => {
+                              const newUbicaciones = [...editingExpediente.ubicaciones];
+                              newUbicaciones[index] = { ...newUbicaciones[index], fecha: new Date(e.target.value).toISOString() };
+                              setEditingExpediente(prev => prev ? {...prev, ubicaciones: newUbicaciones} : prev);
+                            }}
+                            className="border border-gray-300 rounded-md px-2 py-1 text-sm"
+                          />
+                          <button
+                            onClick={() => handleEditUbicacion(editingExpediente.id, index, ubicacion.lugar, ubicacion.fecha)}
+                            className="bg-green-500 text-white px-2 py-1 rounded-md text-sm"
+                          >
+                            Guardar
+                          </button>
+                        </li>
                       ))}
                     </ul>
                   )}
@@ -433,7 +502,9 @@ export default function Dashboard() {
                 onClick={() => fileInputRef.current?.click()}
                 className="bg-gray-200 text-gray-700 px-4 py-2 rounded-md"
               >
-                <FileText className="h-4 w-4 inline-block mr-2" />
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 inline-block mr-2" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M8 4a3 3 0 00-3 3v4a5 5 0 0010 0V7a1 1 0 112 0v4a7 7 0 11-14 0V7a5 5 0 0110 0v4a3 3 0 11-6 0V7a1 1 0 012 0v4a1 1 0 102 0V7a3 3 0 00-3-3z" clipRule="evenodd" />
+                </svg>
                 Adjuntar PDF
               </button>
               <span className="text-sm text-gray-500">
@@ -445,12 +516,18 @@ export default function Dashboard() {
                 onClick={handleCancelEdit}
                 className="border border-gray-300 text-gray-700 px-4 py-2 rounded-md"
               >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 inline-block mr-2" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                </svg>
                 Cancelar
               </button>
               <button 
                 onClick={handleSaveEdit}
                 className="bg-green-500 text-white px-4 py-2 rounded-md"
               >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 inline-block mr-2" viewBox="0 0 20 20"  fill="currentColor">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
                 Guardar Cambios
               </button>
             </div>
@@ -496,20 +573,55 @@ export default function Dashboard() {
                           >
                             {expandedUbicaciones.includes(expediente.id) ? (
                               <>
-                                <ChevronUp className="h-4 w-4 inline-block mr-2" />
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 inline-block mr-2" viewBox="0 0 20 20" fill="currentColor">
+                                  <path fillRule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clipRule="evenodd" />
+                                </svg>
                                 Ocultar anteriores
                               </>
                             ) : (
                               <>
-                                <ChevronDown className="h-4 w-4 inline-block mr-2" />
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 inline-block mr-2" viewBox="0 0 20 20" fill="currentColor">
+                                  <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                                </svg>
                                 Ver anteriores
                               </>
                             )}
                           </button>
                           {expandedUbicaciones.includes(expediente.id) && (
                             <ul className="list-disc pl-5 mt-2">
-                              {expediente.ubicaciones.slice(1).map((ubicacion, index) => (
-                                <li key={index}>{new Date(ubicacion.fecha).toLocaleDateString()}: {ubicacion.lugar}</li>
+                              {expediente.ubicaciones.map((ubicacion, index) => (
+                                <li key={index} className="flex items-center space-x-2 mb-2">
+                                  <input
+                                    type="text"
+                                    value={ubicacion.lugar}
+                                    onChange={(e) => {
+                                      const newUbicaciones = [...expediente.ubicaciones];
+                                      newUbicaciones[index] = { ...newUbicaciones[index], lugar: e.target.value };
+                                      setExpedientes(expedientes.map(exp => 
+                                        exp.id === expediente.id ? { ...exp, ubicaciones: newUbicaciones } : exp
+                                      ));
+                                    }}
+                                    className="border border-gray-300 rounded-md px-2 py-1 text-sm mr-2"
+                                  />
+                                  <input
+                                    type="date"
+                                    value={new Date(ubicacion.fecha).toISOString().split('T')[0]}
+                                    onChange={(e) => {
+                                      const newUbicaciones = [...expediente.ubicaciones];
+                                      newUbicaciones[index] = { ...newUbicaciones[index], fecha: new Date(e.target.value).toISOString() };
+                                      setExpedientes(expedientes.map(exp => 
+                                        exp.id === expediente.id ? { ...exp, ubicaciones: newUbicaciones } : exp
+                                      ));
+                                    }}
+                                    className="border border-gray-300 rounded-md px-2 py-1 text-sm"
+                                  />
+                                  <button
+                                    onClick={() => handleEditUbicacion(expediente.id, index, ubicacion.lugar, ubicacion.fecha)}
+                                    className="bg-green-500 text-white px-2 py-1 rounded-md text-sm"
+                                  >
+                                    Guardar
+                                  </button>
+                                </li>
                               ))}
                             </ul>
                           )}
@@ -524,7 +636,10 @@ export default function Dashboard() {
                       className="border border-gray-300 text-gray-700 px-2 py-1 rounded-md text-sm"
                       onClick={() => handleOpenPDF(expediente.pdfPath!)}
                     >
-                      <Eye className="h-4 w-4 inline-block mr-2" />
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 inline-block mr-2" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                        <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
+                      </svg>
                       Ver PDF
                     </button>
                   ) : (
@@ -536,10 +651,12 @@ export default function Dashboard() {
                     className="border border-gray-300 text-gray-700 px-2 py-1 rounded-md text-sm"
                     onClick={() => handleEditExpediente(expediente)}
                   >
-                    <Edit className="h-4 w-4 inline-block mr-2" />
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 inline-block mr-2" viewBox="0 0 20 20" fill="currentColor">
+                      <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                    </svg>
                     Editar
                   </button>
-                </td> 
+                </td>
               </tr>
             ))}
           </tbody>
