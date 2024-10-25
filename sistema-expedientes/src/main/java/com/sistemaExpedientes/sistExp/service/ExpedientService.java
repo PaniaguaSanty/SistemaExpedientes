@@ -64,7 +64,7 @@ public class ExpedientService implements CRUD<ExpedientResponseDTO, ExpedientReq
             existingExpedient.setCorrelativeNumber(expedientRequestDTO.getCorrelativeNumber());
             existingExpedient.setSolicitude(expedientRequestDTO.getSolicitude());
             existingExpedient.setYear(expedientRequestDTO.getYear());
-            existingExpedient.setRegulations(expedientRequestDTO.getRegulations());
+            existingExpedient.setRegulations(String.valueOf(expedientRequestDTO.getRegulations()));
             existingExpedient.setPdfPath(expedientRequestDTO.getPdfPath());
 
             Expedient updatedExpedient = expedientRepository.save(existingExpedient);

@@ -16,8 +16,7 @@ public class Regulation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String resolutionNumber;
-    private String description; //describe que pueda ser dictamen, circular, resolución,etc..
+    private String description; //describe que pueda ser dictamen, circular, resolución y su nùmero,etc..
 
     //@Enumerated(EnumType.STRING)
    // private Status status;

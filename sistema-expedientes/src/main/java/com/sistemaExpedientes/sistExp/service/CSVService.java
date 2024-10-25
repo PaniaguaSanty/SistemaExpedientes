@@ -19,6 +19,7 @@ import java.util.List;
 
 @Service
 public class CSVService {
+    // si se implementa correctamente el pasaje de xslx a csv, borrar esta clase...
 
     @Autowired
     private ExpedientRepository expedientRepository;
@@ -52,14 +53,14 @@ public class CSVService {
 
                 // Crear y guardar la ubicación asociada al expediente
                 Location location = new Location();
-                location.setOrigin(row[3]);
-                location.setDestiny(row[2]);
+               // location.setOrigin(row[3]);
+                // location.setDestiny(row[2]);
                 location.setExpedient(savedExpedient); // Asociar la ubicación al expediente
                 locationRepository.save(location); // Guardar la ubicación
 
                 // Crear y guardar la resolución asociada al expediente
                 Regulation regulation = new Regulation();
-                regulation.setResolutionNumber(row[2]);
+                regulation.setDescription(row[2]);
                 //regulation.setStatus(Status.valueOf(row[11]));
                 regulation.setExpedient(savedExpedient); // Asociar la resolución al expediente
                 regulationRepository.save(regulation); // Guardar la resolución

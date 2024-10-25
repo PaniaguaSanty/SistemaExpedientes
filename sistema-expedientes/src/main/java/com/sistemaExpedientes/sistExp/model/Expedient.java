@@ -16,7 +16,7 @@ public class Expedient {
     private Long id;
 
     private String issuer;
-    private String organizationCode;
+    private String organizationCode; //seria nªexpediente
     private String correlativeNumber;
     private String solicitude;
     private String year;
@@ -33,4 +33,6 @@ public class Expedient {
     @JoinColumn(name = "user_id")
     private User user;
 
+    public void setRegulations(String value) {
+    }
 }

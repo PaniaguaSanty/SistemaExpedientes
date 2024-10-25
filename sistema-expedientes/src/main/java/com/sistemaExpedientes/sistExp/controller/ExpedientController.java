@@ -5,6 +5,8 @@ import com.sistemaExpedientes.sistExp.dto.request.LocationRequestDto;
 import com.sistemaExpedientes.sistExp.dto.response.ExpedientResponseDTO;
 import com.sistemaExpedientes.sistExp.dto.response.LocationResponseDto;
 import com.sistemaExpedientes.sistExp.exception.NotFoundException;
+import com.sistemaExpedientes.sistExp.model.Expedient;
+import com.sistemaExpedientes.sistExp.service.ExcelService;
 import com.sistemaExpedientes.sistExp.service.ExpedientService;
 import com.sistemaExpedientes.sistExp.util.Controller;
 import org.slf4j.Logger;
@@ -12,7 +14,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -22,9 +27,11 @@ public class ExpedientController implements Controller<ExpedientResponseDTO, Exp
 
     private static final Logger logger = LoggerFactory.getLogger(ExpedientController.class);
     private final ExpedientService expedientService;
+    private final ExcelService excelService;
 
-    public ExpedientController(ExpedientService expedientService) {
+    public ExpedientController(ExpedientService expedientService, ExcelService excelService) {
         this.expedientService = expedientService;
+        this.excelService = excelService;
     }
 
     @Override
@@ -68,7 +75,6 @@ public class ExpedientController implements Controller<ExpedientResponseDTO, Exp
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-
 
     // Método para editar una ubicación existente
     @PutMapping("/editLocation/{locationId}")
@@ -154,5 +160,26 @@ public class ExpedientController implements Controller<ExpedientResponseDTO, Exp
         List<ExpedientResponseDTO> expedients = expedientService.findByStatus(status);
         logger.info("Exiting findByStatus CONTROLLER method...");
         return ResponseEntity.ok(expedients);
+    }
+
+    // Endpoint para subir el archivo Excel y realizar la conversión a CSV e inserción a la base de datos
+    @PostMapping("/upload")
+    public ResponseEntity<String> uploadExcelFile(@RequestParam("file") MultipartFile file) {
+        try {
+            // Convertir Excel a CSV
+            File csvFile = excelService.convertExcelToCsv(file);
+            // Insertar el CSV en la base de datos
+            excelService.insertCsvToDatabase(csvFile);
+            return ResponseEntity.status(HttpStatus.OK).body("Archivo subido y datos guardados correctamente!");
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al procesar el archivo: " + e.getMessage());
+
+        }
+    }
+
+    // Endpoint para obtener todos los expedientes desde la base de datos
+    @GetMapping("/getAll")
+    public List<Expedient> getAllExpedientes() {
+        return excelService.getAllExpedientes();
     }
 }
