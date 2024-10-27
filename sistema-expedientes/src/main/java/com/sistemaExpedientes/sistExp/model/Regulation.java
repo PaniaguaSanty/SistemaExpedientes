@@ -1,6 +1,7 @@
+// Regulation.java
 package com.sistemaExpedientes.sistExp.model;
 
-import com.sistemaExpedientes.sistExp.util.Status;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,12 +17,13 @@ public class Regulation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String description; //describe que pueda ser dictamen, circular, resolución y su nùmero,etc..
+    private String description;
 
-    //@Enumerated(EnumType.STRING)
-   // private Status status;
     @ManyToOne
     @JoinColumn(name = "expedient_id")
+    @JsonBackReference // Rompe el ciclo de serialización aquí
     private Expedient expedient;
-
 }
+
+//@Enumerated(EnumType.STRING)
+// private Status status;
