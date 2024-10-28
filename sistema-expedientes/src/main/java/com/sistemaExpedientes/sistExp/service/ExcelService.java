@@ -12,7 +12,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -23,10 +22,10 @@ public class ExcelService {
     private final LocationRepository locationRepository;
     private final RegulationRepository regulationRepository;
 
-    public ExcelService(ExpedientRepository expedientRepository, LocationRepository locationRepository, RegulationRepository resolutionRepository) {
+    public ExcelService(ExpedientRepository expedientRepository, LocationRepository locationRepository, RegulationRepository regulationRepository) {
         this.expedientRepository = expedientRepository;
         this.locationRepository = locationRepository;
-        this.regulationRepository = resolutionRepository;
+        this.regulationRepository = regulationRepository;
     }
 
     // Método para convertir Excel a CSV
@@ -37,29 +36,34 @@ public class ExcelService {
             Sheet sheet = workbook.getSheetAt(0);
             Iterator<Row> rowIterator = sheet.iterator();
 
-            // Archivo CSV temporal donde escribiremos los datos
             File csvFile = File.createTempFile("expedientes_", ".csv");
             try (PrintWriter writer = new PrintWriter(new FileWriter(csvFile))) {
-
                 while (rowIterator.hasNext()) {
                     Row row = rowIterator.next();
-                    Iterator<Cell> cellIterator = row.cellIterator();
                     StringBuilder csvRow = new StringBuilder();
 
-                    while (cellIterator.hasNext()) {
-                        Cell cell = cellIterator.next();
-                        switch (cell.getCellType()) {
-                            case STRING:
-                                csvRow.append(cell.getStringCellValue());
-                                break;
-                            case NUMERIC:
-                                csvRow.append((int) cell.getNumericCellValue());
-                                break;
-                            default:
-                                csvRow.append("");
-                                break;
+                    // Asegurarse de procesar todas las columnas, incluso si están vacías
+                    for (int i = 0; i < 15; i++) {  // 15 columnas fijas
+                        Cell cell = row.getCell(i, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
+                        if (cell != null) {
+                            switch (cell.getCellType()) {
+                                case STRING:
+                                    csvRow.append(cell.getStringCellValue().trim());
+                                    break;
+                                case NUMERIC:
+                                    csvRow.append((int) cell.getNumericCellValue());
+                                    break;
+                                case BLANK:
+                                    csvRow.append("");
+                                    break;
+                                default:
+                                    csvRow.append("");
+                                    break;
+                            }
+                        } else {
+                            csvRow.append("");
                         }
-                        if (cellIterator.hasNext()) {
+                        if (i < 14) {  // No agregar coma después de la última columna
                             csvRow.append(",");
                         }
                     }
@@ -72,72 +76,93 @@ public class ExcelService {
 
     public void insertCsvToDatabase(File csvFile) throws IOException {
         List<Expedient> expedients = new ArrayList<>();
-        List<String[]> csvData = new ArrayList<>(); // Para almacenar todas las líneas leídas del CSV
-        int processedRows = 0; // Contador de filas procesadas
+        List<String[]> csvData = new ArrayList<>();
+        int processedRows = 0;
 
-        // Leer el archivo CSV
         try (BufferedReader reader = new BufferedReader(new FileReader(csvFile))) {
             String line;
-            // Saltar la primera línea (encabezado)
-            reader.readLine();
+            reader.readLine(); // Saltar encabezado
 
             while ((line = reader.readLine()) != null) {
-                line = line.trim(); // Limpiar espacios al inicio y al final
+                String[] values = line.split(",", -1); // -1 para mantener campos vacíos
+                csvData.add(values);
 
-                // Se procesa cada línea, incluso si está vacía
-                String[] values = line.split(","); // Separar por comas
-                csvData.add(values); // Guardar las filas leídas en una lista
+                // Crear expediente solo si hay datos válidos
+                if (values.length >= 15) {  // Asegurarse de que hay suficientes columnas
+                    Expedient expedient = new Expedient();
 
-                // Crear y configurar el objeto Expedient
-                Expedient expedient = new Expedient();
-                expedient.setCorrelativeNumber(values.length > 3 ? values[3] : ""); // n correlativo
-                expedient.setIssuer(values.length > 1 ? values[1] : ""); // iniciante
-                expedient.setSolicitude(values.length > 6 ? values[6] : ""); // solicitud
-                expedient.setYear(values.length > 4 ? values[4] : ""); // año
+                    // Asignar valores según el orden correcto del Excel
+                    // Solo asignar si el valor no está vacío
+                    String codigo = values[0].trim();
+                    String iniciante = values[1].trim();
+                    String nroExpediente = values[2].trim();
+                    String nroCorrelativo = values[3].trim();
+                    String anio = values[4].trim();
+                    String solicitud = values[6].trim();
 
-                // Agregar el Expedient a la lista
-                expedients.add(expedient);
-                processedRows++; // Incrementar el contador de filas procesadas
-            }
-        }
+                    expedient.setId(isValidLong(codigo) ? Long.valueOf(codigo) : null);    // Codigo
+                    expedient.setIssuer(iniciante.isEmpty() ? null : iniciante);           // Iniciante
+                    expedient.setOrganizationCode(nroExpediente.isEmpty() ? null : nroExpediente);   // N°Expediente
+                    expedient.setCorrelativeNumber(nroCorrelativo.isEmpty() ? null : nroCorrelativo);  // N° Correlativo
+                    expedient.setYear(anio.isEmpty() ? null : anio);                       // Año
+                    expedient.setSolicitude(solicitud.isEmpty() ? null : solicitud);       // Solicitud
 
-        System.out.println("Total de filas procesadas: " + processedRows); // Imprimir el total de filas procesadas
-
-        // Guardar todos los expedientes
-        if (!expedients.isEmpty()) {
-            List<Expedient> savedExpedients = expedientRepository.saveAll(expedients);
-            System.out.println("Total de expedientes guardados: " + savedExpedients.size());
-        } else {
-            System.out.println("No se encontraron expedientes para guardar.");
-        }
-
-        // Asociar regulaciones y ubicaciones
-        for (int i = 0; i < expedients.size(); i++) {
-            Expedient savedExpedient = expedients.get(i);
-            String[] values = csvData.get(i); // Obtener los valores correspondientes a este expediente
-
-            // Crear y guardar la regulación asociada al expediente
-            Regulation regulation = new Regulation();
-            regulation.setDescription("Descripción de la regulación para el expediente " + savedExpedient.getCorrelativeNumber());
-            regulation.setExpedient(savedExpedient);
-            regulationRepository.save(regulation);
-
-            // Crear y guardar las ubicaciones asociadas al expediente
-            for (int j = 7; j <= 14; j++) {
-                if (j < values.length) { // Comprobar que el índice existe
-                    Location location = new Location();
-                    location.setPlace(values[j] != null ? values[j] : ""); // Ubicación o vacío
-                    location.setExpedient(savedExpedient); // Asociar la ubicación al expediente
-                    locationRepository.save(location); // Guardar la ubicación
+                    // Solo agregar si hay al menos algunos datos válidos
+                    expedients.add(expedient);
+                    processedRows++;
                 }
             }
         }
+
+        System.out.println("Total de filas procesadas: " + processedRows);
+
+        // Guardar expedientes válidos
+        if (!expedients.isEmpty()) {
+            List<Expedient> savedExpedients = expedientRepository.saveAll(expedients);
+            System.out.println("Total de expedientes guardados: " + savedExpedients.size());
+
+            // Procesar regulaciones y ubicaciones
+            for (int i = 0; i < expedients.size(); i++) {
+                Expedient savedExpedient = expedients.get(i);
+                String[] values = csvData.get(i);
+
+                // Guardar regulación si existe
+                if (values.length > 5 && !values[5].trim().isEmpty()) {
+                    Regulation regulation = new Regulation();
+                    regulation.setDescription(values[5].trim());  // Resolución
+                    regulation.setExpedient(savedExpedient);
+                    regulationRepository.save(regulation);
+                }
+
+                // Guardar ubicaciones si existen (columnas 7-14)
+                for (int j = 7; j <= 14 && j < values.length; j++) {
+                    String ubicacion = values[j].trim();
+                    if (!ubicacion.isEmpty()) {
+                        Location location = new Location();
+                        location.setPlace(ubicacion);
+                        location.setExpedient(savedExpedient);
+                        locationRepository.save(location);
+                    }
+                }
+            }
+        } else {
+            System.out.println("No se encontraron expedientes válidos para guardar.");
+        }
     }
 
+    private boolean isValidLong(String value) {
+        if (value == null || value.trim().isEmpty()) {
+            return false;
+        }
+        try {
+            Long.parseLong(value.trim());
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
 
-    // Método para obtener todos los expedientes
     public List<Expedient> getAllExpedientes() {
         return expedientRepository.findAll();
     }
-
 }

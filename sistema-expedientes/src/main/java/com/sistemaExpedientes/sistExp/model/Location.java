@@ -1,7 +1,9 @@
+// Location.java
 package com.sistemaExpedientes.sistExp.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Data;
 
 @Data
 @Entity
@@ -15,7 +17,9 @@ public class Location {
     private String origin;
     private String destiny;
     private String place;
+
     @ManyToOne
     @JoinColumn(name = "expedient_id")
+    @JsonBackReference // Rompe el ciclo de serialización aquí
     private Expedient expedient;
 }

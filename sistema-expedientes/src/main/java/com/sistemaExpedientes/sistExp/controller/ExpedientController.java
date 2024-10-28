@@ -12,6 +12,7 @@ import com.sistemaExpedientes.sistExp.util.Controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -35,7 +36,7 @@ public class ExpedientController implements Controller<ExpedientResponseDTO, Exp
     }
 
     @Override
-    @PostMapping("/create")
+    @PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ExpedientResponseDTO> create(@RequestBody ExpedientRequestDTO expedientRequestDto) {
         logger.info("Entering create CONTROLLER method with data: {}", expedientRequestDto);
         ExpedientResponseDTO createdExp = expedientService.create(expedientRequestDto);
