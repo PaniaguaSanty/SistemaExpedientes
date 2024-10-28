@@ -32,10 +32,6 @@ public class Expedient {
     @JsonManagedReference // Rompe el ciclo para locations
     private List<Location> locations;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
-
     public void setRegulations(String value) {
     }
 }
