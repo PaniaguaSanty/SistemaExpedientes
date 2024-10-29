@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Data
@@ -21,7 +20,6 @@ public class Expedient {
     private String solicitude;
     private String year;
     private String status;
-    private LocalDate date;
     private String pdfPath;
 
     @OneToMany(mappedBy = "expedient")

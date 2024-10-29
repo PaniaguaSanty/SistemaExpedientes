@@ -1,9 +1,9 @@
 package com.sistemaExpedientes.sistExp.service;
 
+import com.sistemaExpedientes.sistExp.dto.request.AddLocationRequestDto;
 import com.sistemaExpedientes.sistExp.dto.request.ExpedientRequestDTO;
-import com.sistemaExpedientes.sistExp.dto.request.LocationRequestDto;
+import com.sistemaExpedientes.sistExp.dto.response.AddLocationResponseDto;
 import com.sistemaExpedientes.sistExp.dto.response.ExpedientResponseDTO;
-import com.sistemaExpedientes.sistExp.dto.response.LocationResponseDto;
 import com.sistemaExpedientes.sistExp.exception.NotFoundException;
 import com.sistemaExpedientes.sistExp.mapper.ExpedientMapper;
 import com.sistemaExpedientes.sistExp.mapper.LocationMapper;
@@ -16,7 +16,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -84,33 +83,35 @@ public class ExpedientService implements CRUD<ExpedientResponseDTO, ExpedientReq
         expedientRepository.delete(expedient);
     }
 
-    public LocationResponseDto addLocation(String correlativeNumber, LocationRequestDto location) {
+    public AddLocationResponseDto addLocation(Long id, AddLocationRequestDto location) {
         logger.info("Entering in AddLocation SERVICE method...");
-        Expedient expedient = expedientRepository.findByCorrelativeNumber(correlativeNumber);
-        Location locationToAdd = locationMapper.convertToEntity(location);
+        Expedient expedient = expedientRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Expedient not found with id: " + id));
+        Location locationToAdd = locationMapper.convertAddedLocationToEntity(location);
         if (expedient != null) {
-            location.setExpedient(expedient);
-            location.setDate(String.valueOf(LocalDateTime.now()));
+            expedient.getLocations().add(locationToAdd);
+            locationToAdd.setExpedient(expedient);
             logger.info("Exiting addLocation SERVICE method succesfully!");
             locationRepository.save(locationToAdd);
-            return locationMapper.convertToDto(locationToAdd);
+            return locationMapper.convertAddedLocationToDto(locationToAdd);
         }
         return null;
     }
 
-    public LocationResponseDto editLocation(Long locationId, LocationResponseDto locationDetails) {
+    public AddLocationResponseDto editLocation(Long id, String existingPlace, AddLocationRequestDto locationDetails) {
         logger.info("Entering in EditLocation SERVICE method...");
-        Location existingLocation = locationRepository.findById(locationId)
-                .orElseThrow(() -> new RuntimeException("Location not found with ID " + locationId));
-        Expedient expedient = expedientRepository.findByCorrelativeNumber(locationDetails.getExpedient().getCorrelativeNumber());
+        Expedient expedient = expedientRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Expedient not found with ID " + id));
+        Location locationToUpdate = locationRepository.findByPlace(existingPlace);
         if (expedient != null) {
-            existingLocation.setExpedient(expedient);
+            locationToUpdate.setPlace(locationDetails.getPlace());
+            locationToUpdate.setExpedient(expedient);
+            Location updatedLocation = locationRepository.save(locationToUpdate);
+            return locationMapper.convertAddedLocationToDto(locationToUpdate);
         }
-        existingLocation.setPlace(locationDetails.getPlace());
-        existingLocation.setDate(String.valueOf(LocalDateTime.now())); // Updating the date to reflect the edit
+
         logger.info("Exiting in EditLocation SERVICE method succesfully!...");
-        Location updatedLocation = locationRepository.save(existingLocation);
-        return locationMapper.convertToDto(updatedLocation);
+        return null;
     }
 
     @Override
@@ -180,6 +181,9 @@ public class ExpedientService implements CRUD<ExpedientResponseDTO, ExpedientReq
                 .collect(Collectors.toList());
     }
 
+    //Buscar por regulación
+
+
     //buscar por estado
     public List<ExpedientResponseDTO> findByStatus(String status) {
         logger.info("Entering in findByStatus SERVICE method with status: {}", status);
@@ -200,7 +204,7 @@ public class ExpedientService implements CRUD<ExpedientResponseDTO, ExpedientReq
         List<Expedient> filteredExpedients = expedients.stream()
                 .filter(expedient -> expedient.getLocations() != null &&
                         expedient.getLocations().stream()
-                                .anyMatch(loc -> loc.getPlace().equals(location))) // Asegúrate de que 'getPlace()' sea el método correcto en Location
+                                .anyMatch(loc -> loc.getPlace().equals(location)))
                 .collect(Collectors.toList());
 
         logger.info("Exiting findByLocation SERVICE method...");

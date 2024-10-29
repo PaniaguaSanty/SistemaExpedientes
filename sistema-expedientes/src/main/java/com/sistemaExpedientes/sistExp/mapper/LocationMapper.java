@@ -1,6 +1,8 @@
 package com.sistemaExpedientes.sistExp.mapper;
 
+import com.sistemaExpedientes.sistExp.dto.request.AddLocationRequestDto;
 import com.sistemaExpedientes.sistExp.dto.request.LocationRequestDto;
+import com.sistemaExpedientes.sistExp.dto.response.AddLocationResponseDto;
 import com.sistemaExpedientes.sistExp.dto.response.LocationResponseDto;
 import com.sistemaExpedientes.sistExp.model.Location;
 import org.modelmapper.ModelMapper;
@@ -23,5 +25,14 @@ public class LocationMapper {
 
     public Location convertToEntity(LocationRequestDto locationRequestDto) {
         return modelMapper.map(locationRequestDto, Location.class);
+    }
+
+    //Usado en metodo "AddLocation" en ExpedientService...
+    public AddLocationResponseDto convertAddedLocationToDto(Location locationToAdd) {
+        return modelMapper.map(locationToAdd, AddLocationResponseDto.class);
+    }
+
+    public Location convertAddedLocationToEntity(AddLocationRequestDto location) {
+        return modelMapper.map(location, Location.class);
     }
 }

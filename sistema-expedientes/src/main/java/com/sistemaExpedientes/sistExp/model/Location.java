@@ -13,7 +13,6 @@ public class Location {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private String date;
     private String origin;
     private String destiny;
     private String place;

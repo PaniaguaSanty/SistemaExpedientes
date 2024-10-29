@@ -35,7 +35,6 @@ public class LocationService {
             Location existingLocation = locationRepository.findById(id)
                     .orElseThrow(() -> new NotFoundException("Location not found with current id...."));
 
-            existingLocation.setDate(locationRequestDto.getDate());
             existingLocation.setExpedient(locationRequestDto.getExpedient());
 
             Location updatedLocation = locationRepository.save(existingLocation);
