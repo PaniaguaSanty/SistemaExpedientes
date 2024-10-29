@@ -190,6 +190,27 @@ public class ExpedientService implements CRUD<ExpedientResponseDTO, ExpedientReq
                 .collect(Collectors.toList());
     }
 
+    public List<ExpedientResponseDTO> findByLocation(String location) {
+        logger.info("Entering findByLocation SERVICE method with location: {}", location);
+
+        // Obtener todos los expedientes
+        List<Expedient> expedients = expedientRepository.findAll();
+
+        // Filtrar los expedientes que tienen la ubicación especificada
+        List<Expedient> filteredExpedients = expedients.stream()
+                .filter(expedient -> expedient.getLocations() != null &&
+                        expedient.getLocations().stream()
+                                .anyMatch(loc -> loc.getPlace().equals(location))) // Asegúrate de que 'getPlace()' sea el método correcto en Location
+                .collect(Collectors.toList());
+
+        logger.info("Exiting findByLocation SERVICE method...");
+
+        // Convertir a DTOs y devolver
+        return filteredExpedients.stream()
+                .map(expedientMapper::convertToDto)
+                .collect(Collectors.toList());
+    }
+
 }
 
 

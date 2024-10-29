@@ -71,7 +71,7 @@ public class ExpedientController implements Controller<ExpedientResponseDTO, Exp
             LocationResponseDto location = expedientService.addLocation(correlativeNumber, locationDto);
             logger.info("Exiting addLocation CONTROLLER method successfully...");
             return new ResponseEntity<>(location, HttpStatus.CREATED);
-        } catch (NotFoundException e) {
+        } catch (NotFoundException   e) {
             logger.error("Expedient with correlative number {} not found", correlativeNumber);
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -145,6 +145,15 @@ public class ExpedientController implements Controller<ExpedientResponseDTO, Exp
         return ResponseEntity.ok(expedients);
     }
 
+    //Buscar por Location
+    @GetMapping("/location/{location}")
+    public ResponseEntity<List<ExpedientResponseDTO>> findByLocation(@PathVariable String location) {
+        logger.info("Entering in findByLocation CONTROLLER method with location {}", location);
+        List<ExpedientResponseDTO> expedients = expedientService.findByLocation(location);
+        logger.info("Exiting findByLocation CONTROLLER method...");
+        return ResponseEntity.ok(expedients);
+    }
+
     // Buscar por tipo de solicitud
     @GetMapping("/solicitude/{solicitude}")
     public ResponseEntity<List<ExpedientResponseDTO>> findBySolicitude(@PathVariable String solicitude) {
@@ -163,7 +172,7 @@ public class ExpedientController implements Controller<ExpedientResponseDTO, Exp
         return ResponseEntity.ok(expedients);
     }
 
-    // Endpoint para subir el archivo Excel y realizar la conversión a CSV e inserción a la base de datos
+    // Endpoint para subir el archivo Excel, convertir a CSV e insertar en la base de datos
     @PostMapping("/upload")
     public ResponseEntity<String> uploadExcelFile(@RequestParam("file") MultipartFile file) {
         try {
@@ -174,7 +183,18 @@ public class ExpedientController implements Controller<ExpedientResponseDTO, Exp
             return ResponseEntity.status(HttpStatus.OK).body("Archivo subido y datos guardados correctamente!");
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al procesar el archivo: " + e.getMessage());
+        }
+    }
 
+    // Endpoint para subir el archivo Excel de cursos e insertar en la base de datos
+    @PostMapping("/upload-courses")
+    public ResponseEntity<String> uploadCoursesExcel(@RequestParam("file") MultipartFile file) {
+        try {
+            excelService.insertCourseExcelToDatabase(file);
+            return ResponseEntity.status(HttpStatus.OK).body("Archivo de cursos subido y datos guardados correctamente!");
+        } catch (IOException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al procesar el archivo de cursos: " + e.getMessage());
         }
     }
 

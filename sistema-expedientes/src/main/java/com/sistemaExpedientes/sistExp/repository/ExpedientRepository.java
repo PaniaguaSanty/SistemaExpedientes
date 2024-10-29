@@ -11,12 +11,16 @@ import java.util.List;
 public interface ExpedientRepository extends JpaRepository<Expedient, Long> {
 
     List<Expedient> findByOrganizationCode(String organizationCode);
-    List<Expedient> findByYear(String year);
-    Expedient findByCorrelativeNumber(String number);
-    List<Expedient> findByIssuer(String issuer);
-    List<Expedient> findBySolicitude(String solicitude);
-    List<Expedient> findByStatus(String status);
 
+    List<Expedient> findByYear(String year);
+
+    Expedient findByCorrelativeNumber(String number);
+
+    List<Expedient> findByIssuer(String issuer);
+
+    List<Expedient> findBySolicitude(String solicitude);
+
+    List<Expedient> findByStatus(String status);
 
 }
 

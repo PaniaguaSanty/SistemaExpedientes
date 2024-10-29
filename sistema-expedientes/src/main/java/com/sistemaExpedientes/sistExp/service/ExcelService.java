@@ -1,12 +1,16 @@
 package com.sistemaExpedientes.sistExp.service;
 
+import com.sistemaExpedientes.sistExp.model.Course;
 import com.sistemaExpedientes.sistExp.model.Expedient;
 import com.sistemaExpedientes.sistExp.model.Location;
 import com.sistemaExpedientes.sistExp.model.Regulation;
+import com.sistemaExpedientes.sistExp.repository.CourseRepository;
 import com.sistemaExpedientes.sistExp.repository.ExpedientRepository;
 import com.sistemaExpedientes.sistExp.repository.LocationRepository;
 import com.sistemaExpedientes.sistExp.repository.RegulationRepository;
 import org.apache.poi.ss.usermodel.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,14 +22,17 @@ import java.util.List;
 @Service
 public class ExcelService {
 
+    private static final Logger logger = LoggerFactory.getLogger(ExcelService.class);
     private final ExpedientRepository expedientRepository;
     private final LocationRepository locationRepository;
     private final RegulationRepository regulationRepository;
+    private final CourseRepository courseRepository;
 
-    public ExcelService(ExpedientRepository expedientRepository, LocationRepository locationRepository, RegulationRepository regulationRepository) {
+    public ExcelService(ExpedientRepository expedientRepository, LocationRepository locationRepository, RegulationRepository regulationRepository, CourseRepository courseRepository) {
         this.expedientRepository = expedientRepository;
         this.locationRepository = locationRepository;
         this.regulationRepository = regulationRepository;
+        this.courseRepository = courseRepository;
     }
 
     // Método para convertir Excel a CSV
@@ -114,12 +121,12 @@ public class ExcelService {
             }
         }
 
-        System.out.println("Total de filas procesadas: " + processedRows);
+        logger.info("Total rows proccesed: {}", processedRows);
 
         // Guardar expedientes válidos
         if (!expedients.isEmpty()) {
             List<Expedient> savedExpedients = expedientRepository.saveAll(expedients);
-            System.out.println("Total de expedientes guardados: " + savedExpedients.size());
+            logger.info("Total de expedientes guardados: " + savedExpedients.size());
 
             // Procesar regulaciones y ubicaciones
             for (int i = 0; i < expedients.size(); i++) {
@@ -146,9 +153,64 @@ public class ExcelService {
                 }
             }
         } else {
-            System.out.println("No se encontraron expedientes válidos para guardar.");
+            logger.info("No se encontraron expedientes válidos para guardar.");
         }
     }
+
+    // Método para convertir un archivo de cursos de Excel a la base de datos
+    public void insertCourseExcelToDatabase(MultipartFile excelFile) throws IOException {
+        List<Course> courses = new ArrayList<>();
+
+        try (InputStream inputStream = excelFile.getInputStream();
+             Workbook workbook = WorkbookFactory.create(inputStream)) {
+
+            // Iterar sobre todas las hojas del archivo Excel
+            for (int i = 0; i < workbook.getNumberOfSheets(); i++) {
+                Sheet sheet = workbook.getSheetAt(i);
+                String year = sheet.getSheetName(); //ejemplo, "año 2021"
+                Iterator<Row> rowIterator = sheet.iterator();
+                rowIterator.next(); // Saltar la primera fila si es un encabezado
+
+                while (rowIterator.hasNext()) {
+                    Row row = rowIterator.next();
+                    Course course = new Course();
+
+                    // Columna 0 - Denominación
+                    Cell denominationCell = row.getCell(0);
+                    if (denominationCell != null && denominationCell.getCellType() == CellType.STRING) {
+                        course.setDenominations(denominationCell.getStringCellValue());
+                    } else {
+                        course.setDenominations(""); // Valor predeterminado si está vacío
+                    }
+
+                    // Columna 1 - Destinatarios
+                    Cell recipientsCell = row.getCell(1);
+                    if (recipientsCell != null && recipientsCell.getCellType() == CellType.STRING) {
+                        course.setRecipients(recipientsCell.getStringCellValue());
+                    } else {
+                        course.setRecipients(""); // Valor predeterminado si está vacío
+                    }
+
+                    // Columna 2 - Instituciones
+                    Cell institutionsCell = row.getCell(2);
+                    if (institutionsCell != null && institutionsCell.getCellType() == CellType.STRING) {
+                        course.setResponsibleInstitutions(institutionsCell.getStringCellValue());
+                    } else {
+                        course.setResponsibleInstitutions(""); // Valor predeterminado si está vacío
+                    }
+
+                    course.setYear(year); //esta linea establece el año antes de guardarla
+                    courses.add(course);
+                }
+            }
+        }
+
+        // Guardar todos los cursos
+        if (!courses.isEmpty()) {
+            courseRepository.saveAll(courses);
+        }
+    }
+
 
     private boolean isValidLong(String value) {
         if (value == null || value.trim().isEmpty()) {
