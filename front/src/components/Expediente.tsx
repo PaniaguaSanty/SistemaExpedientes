@@ -1,351 +1,910 @@
-"use client"
+import { useState, useMemo, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
-import { useState, useEffect, useMemo } from "react"
-import { PlusCircle, Pencil, Trash2, ChevronLeft, ChevronRight, Search, Check, Loader2 } from "lucide-react"
-import { Button } from "../../@/components/button"
-import { Input } from "../../@/components/input"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../@/components/table"
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from "../../@/components/dialog"
-import { Label } from "../../@/components/label"
-type Resolution = {
-  id: number;
-  resolutionNumber: string;
-  expedientId: number; // Asumiendo que esto es el ID del expediente al que pertenece la resolución
-  status: string;
+type Ubicacion = {
+  fecha: string;
+  lugar: string;
 };
-type Location={
-  id: number;
-  origin: string;
-  destiny: string;
-  date: Date; 
-}
+
 type Expediente = {
   id: number;
-  issuer: string;
-  organizationCode: string;
-  correlativeNumber: string;
-  solicitude: string;
-  year: number;
-  resolutions: Resolution[];
-  location: Location[];
+  codigo: string;
+  numeroOrden: string;
+  numeroExpediente: string;
+  emisor: string;
+  ano: number;
+  reglamentacion: string;
+  pedido: string;
+  ubicaciones: Ubicacion[];
+  pdfPath?: string;
 };
 
-export default function ExpedientesCRUD() {
-  const [expedientes, setExpedientes] = useState<Expediente[]>([])
-  const [expedienteActual, setExpedienteActual] = useState<Expediente | null>(null)
-  const [isDialogOpen, setIsDialogOpen] = useState(false)
-  const [currentPage, setCurrentPage] = useState(1)
-  const [searchTerm, setSearchTerm] = useState("")
-  const [isLoading, setIsLoading] = useState(false)
-  const [isConfirmed, setIsConfirmed] = useState(false)
-  const itemsPerPage = 20
+export default function Dashboard() {
+  const [expedientes, setExpedientes] = useState<Expediente[]>([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedYear, setSelectedYear] = useState<number | null>(null);
+  const [newYear, setNewYear] = useState<string>("");
+  const [newExpediente, setNewExpediente] = useState<Partial<Expediente>>({
+    ano: selectedYear || undefined,
+    ubicaciones: [], // Inicializamos como un array vacío
+  });
+  const [editingExpediente, setEditingExpediente] = useState<Expediente | null>(null);
+  const [newUbicacion, setNewUbicacion] = useState<string>("");
+  const [expandedUbicaciones, setExpandedUbicaciones] = useState<number[]>([]);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Fetch expedientes from API
-  useEffect(() => {
-    const fetchExpedientes = async () => {
-      setIsLoading(true)
-      try {
-        const response = await fetch('http://localhost:8080/api/expedients') // Reemplaza con tu endpoint
-        const data = await response.json()
-        setExpedientes(data)
-      } catch (error) {
-        console.error("Error fetching expedientes:", error)
-      } finally {
-        setIsLoading(false)
-      }
-    }
-
-    fetchExpedientes()
-  }, [])
+  const years = useMemo(() => {
+    const uniqueYears = Array.from(new Set(expedientes.map(exp => exp.ano)))
+    return uniqueYears.sort((a, b) => b - a)
+  }, [expedientes])
 
   const filteredExpedientes = useMemo(() => {
-    return expedientes.filter((expediente) =>
-      Object.values(expediente).some((value) =>
-        value.toString().toLowerCase().includes(searchTerm.toLowerCase())
-      )
-    )
-  }, [expedientes, searchTerm])
-
-  const totalPages = Math.ceil(filteredExpedientes.length / itemsPerPage)
-
-  const currentItems = useMemo(() => {
-    const indexOfLastItem = currentPage * itemsPerPage
-    const indexOfFirstItem = indexOfLastItem - itemsPerPage
-    return filteredExpedientes.slice(indexOfFirstItem, indexOfLastItem)
-  }, [filteredExpedientes, currentPage])
-
-  useEffect(() => {
-    setCurrentPage(1)
-  }, [searchTerm])
-
-  const handlePageChange = (pageNumber: number) => {
-    setCurrentPage(pageNumber)
-  }
-
-  const handleAdd = () => {
-    setExpedienteActual(null)
-    setIsDialogOpen(true)
-  }
-
-  const handleEdit = (expediente: Expediente) => {
-    setExpedienteActual(expediente)
-    setIsDialogOpen(true)
-  }
-
-  const handleDelete = async (id: number) => {
-    // Suponiendo que tienes un endpoint para eliminar expedientes
-    await fetch(`/api/expedientes/${id}`, {
-      method: 'DELETE',
+    return expedientes.filter((expediente) => {
+      const matchesSearch = Object.entries(expediente).some(([key, value]) => {
+        if (value === undefined || value === null) return false
+        if (Array.isArray(value)) {
+          return value.some(item =>
+            Object.values(item).some(v =>
+              v.toString().toLowerCase().includes(searchTerm.toLowerCase())
+            )
+          )
+        }
+        return value.toString().toLowerCase().includes(searchTerm.toLowerCase())
+      })
+      const matchesYear = selectedYear ? expediente.ano === selectedYear : true
+      return matchesSearch && matchesYear
     })
-    setExpedientes(expedientes.filter(exp => exp.id !== id))
+  }, [expedientes, searchTerm, selectedYear])
+
+  const handleAddYear = () => {
+    const yearToAdd = parseInt(newYear)
+    if (yearToAdd && !years.includes(yearToAdd)) {
+      setSelectedYear(yearToAdd)
+      setNewYear("")
+    }
   }
 
-  // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-  //   e.preventDefault()
-  //   setIsLoading(true)
-  //   const formData = new FormData(e.currentTarget)
-  //   const nuevoExpediente: Expediente = {
-  //     id: expedienteActual ? expedienteActual.id : Date.now(),
-  //     issuer: formData.get('issuer') as string,
-  //     organizationCode: formData.get('organizationCode') as string,
-  //     correlativeNumber: formData.get('correlativeNumber') as string,
-  //     solicitude: formData.get('solicitude') as string,
-  //     year: parseInt(formData.get('year') as string),
+  const handleAddUbicacion = (isEditing: boolean = false) => {
+    if (newUbicacion) {
+      const nuevaUbicacion: Ubicacion = {
+        fecha: new Date().toISOString(),
+        lugar: newUbicacion,
+      };
+      if (isEditing && editingExpediente) {
+        setEditingExpediente({
+          ...editingExpediente,
+          ubicaciones: [nuevaUbicacion, ...editingExpediente.ubicaciones],
+        });
+      } else {
+        setNewExpediente({
+          ...newExpediente,
+          ubicaciones: [nuevaUbicacion, ...(newExpediente.ubicaciones || [])],
+        });
+      }
+      setNewUbicacion("");
+    }
+  };
 
-  //     location: []
-  //   }
+  const handleAddExpediente = () => {
+    if (selectedYear) {
+      const id = Date.now()
+      const newExp: Expediente = {
+        id: id,
+        codigo: `EXP${id}`,
+        numeroOrden: newExpediente.numeroOrden || "",
+        numeroExpediente: newExpediente.numeroExpediente || "",
+        emisor: newExpediente.emisor || "",
+        ano: selectedYear,
+        reglamentacion: newExpediente.reglamentacion || "",
+        pedido: newExpediente.pedido || "",
+        ubicaciones: newExpediente.ubicaciones || [],
+        pdfPath: newExpediente.pdfPath
+      }
+      setExpedientes([...expedientes, newExp])
+      setNewExpediente({ ano: selectedYear, ubicaciones: [] })
+    }
+  }
 
-  //   const method = expedienteActual ? 'PUT' : 'POST'
-  //   const endpoint = expedienteActual ? `/api/expedientes/${expedienteActual.id}` : '/api/expedientes'
+  const handleEditExpediente = (expediente: Expediente) => {
+    setEditingExpediente(expediente)
+  }
 
-  //   await fetch(endpoint, {
-  //     method,
-  //     headers: { 'Content-Type': 'application/json' },
-  //     body: JSON.stringify(nuevoExpediente),
-  //   })
+  const handleSaveEdit = () => {
+    if (editingExpediente) {
+      setExpedientes(expedientes.map(exp =>
+        exp.id === editingExpediente.id ? editingExpediente : exp
+      ))
+      setEditingExpediente(null)
+    }
+  }
 
-  //   setExpedientes((prev) => {
-  //     if (expedienteActual) {
-  //       return prev.map(exp => exp.id === expedienteActual.id ? nuevoExpediente : exp)
-  //     } else {
-  //       return [...prev, nuevoExpediente]
-  //     }
-  //   })
+  const handleCancelEdit = () => {
+    setEditingExpediente(null)
+  }
 
-  //   setIsLoading(false)
-  //   setIsConfirmed(true)
-  //   setTimeout(() => {
-  //     setIsConfirmed(false)
-  //     setIsDialogOpen(false)
-  //   }, 1500)
-  // }
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (file) {
+      const fileURL = URL.createObjectURL(file)
+      if (editingExpediente) {
+        setEditingExpediente({...editingExpediente, pdfPath: fileURL})
+      } else {
+        setNewExpediente({...newExpediente, pdfPath: fileURL})
+      }
+    }
+  }
+
+  const handleDeletePDF = (isEditing: boolean = false) => {
+    if (isEditing && editingExpediente) {
+      setEditingExpediente({...editingExpediente, pdfPath: undefined})
+    } else {
+      setNewExpediente({...newExpediente, pdfPath: undefined})
+    }
+  }
+
+  const handleOpenPDF = (pdfPath: string) => {
+    if (pdfPath.startsWith('blob:') || pdfPath.startsWith('file:')) {
+      window.open(pdfPath, '_blank')
+    } else {
+      const fileURL = `file://${pdfPath}`
+      window.open(fileURL, '_blank')
+    }
+  }
+
+  const toggleUbicaciones = (id: number) => {
+    setExpandedUbicaciones(prev =>
+      prev.includes(id) ? prev.filter(expId => expId !== id) : [...prev, id]
+    )
+  }
+
+  const handleEditUbicacion = (expedienteId: number, ubicacionIndex: number, newLugar: string, newFecha: string) => {
+    setExpedientes(expedientes.map(exp => {
+      if (exp.id === expedienteId) {
+        const updatedUbicaciones = [...exp.ubicaciones];
+        updatedUbicaciones[ubicacionIndex] = {
+          ...updatedUbicaciones[ubicacionIndex],
+          lugar: newLugar,
+          fecha: newFecha
+        };
+        return { ...exp, ubicaciones: updatedUbicaciones };
+      }
+      return exp;
+    }));
+
+    // Add this line to trigger the animation
+    document.getElementById(`save-button-${expedienteId}-${ubicacionIndex}`)?.classList.add('animate-pulse');
+    setTimeout(() => {
+      document.getElementById(`save-button-${expedienteId}-${ubicacionIndex}`)?.classList.remove('animate-pulse');
+    }, 1000);
+  };
+
+  const buttonVariants = {
+    hover: { scale: 1.05, transition: { duration: 0.2 } },
+    tap: { scale: 0.95, transition: { duration: 0.2 } },
+  }
+
+  const fadeInVariants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1, transition: { duration: 0.5 } },
+  }
+
+  const listItemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0 },
+  }
+
+  const statBoxVariants = {
+    hidden: { opacity: 0, y: -20, scale: 0.8 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: {
+        type: "spring",
+        stiffness: 300,
+        damping: 20,
+        duration: 0.5
+      }
+    },
+    hover: {
+      scale: 1.05,
+      boxShadow: "0px 5px 10px rgba(0,0,0,0.1)",
+      transition: { duration: 0.3 }
+    }
+  };
 
   return (
-    <div className="container mx-auto p-4 bg-white font-sans">
-      <h1 className="text-3xl font-bold mb-6 text-[#1A2E4A]">Gestión de Expedientes</h1>
-      <div className="mb-6 flex justify-between items-center">
-        <Button onClick={handleAdd} className="bg-[#1A2E4A] hover:bg-[#255EA9] text-white">
-          <PlusCircle className="mr-2 h-5 w-5" /> Añadir Expediente
-        </Button>
-        <div className="relative w-1/3">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-          <Input
+    <motion.div
+      className="container mx-auto px-4 py-8 bg-gray-100"
+      initial="hidden"
+      animate="visible"
+      variants={fadeInVariants}
+    >
+      <motion.h1
+        className="text-3xl font-bold mb-8 text-center text-[#1A2E4A]"
+        initial={{ y: -20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.5 }}
+      >
+        Gestión de Expedientes
+      </motion.h1>
+
+      <motion.div
+        className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8"
+        variants={fadeInVariants}
+      >
+        <motion.div
+          className="bg-white rounded-lg shadow p-4 cursor-pointer"
+          variants={statBoxVariants}
+          whileHover="hover"
+        >
+          <div className="flex flex-row items-center justify-between pb-2">
+            <h3 className="text-sm font-medium">Total Expedientes</h3>
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 0v12h8V4H6z" clipRule="evenodd" />
+            </svg>
+          </div>
+          <motion.div
+            className="text-2xl font-bold"
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{
+              type: "spring",
+              stiffness: 500,
+              damping: 20,
+              delay: 0.2
+            }}
+          >
+            {filteredExpedientes.length}
+          </motion.div>
+        </motion.div>
+
+        <motion.div
+          className="bg-white rounded-lg shadow p-4 cursor-pointer"
+          variants={statBoxVariants}
+          whileHover="hover"
+        >
+          <div className="flex flex-row items-center justify-between pb-2">
+            <h3 className="text-sm font-medium">Año Seleccionado</h3>
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" />
+            </svg>
+          </div>
+          <motion.div
+            className="text-2xl font-bold"
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{
+              type: "spring",
+              stiffness: 500,
+              damping: 20,
+              delay: 0.2
+            }}
+          >
+            {selectedYear || "N/A"}
+          </motion.div>
+        </motion.div>
+
+        <motion.div
+          className="bg-white rounded-lg shadow p-4 cursor-pointer"
+          variants={statBoxVariants}
+          whileHover="hover"
+        >
+          <div className="flex flex-row items-center justify-between pb-2">
+            <h3 className="text-sm font-medium">Años Disponibles</h3>
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+              <path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z" />
+            </svg>
+          </div>
+          <motion.div
+            className="text-2xl font-bold"
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{
+              type: "spring",
+              stiffness: 500,
+              damping: 20,
+              delay: 0.2
+            }}
+          >
+            {years.length}
+          </motion.div>
+        </motion.div>
+      </motion.div>
+
+      <motion.div
+        className="flex flex-col md:flex-row justify-between items-center mb-8 space-y-4 md:space-y-0"
+        variants={fadeInVariants}
+      >
+        <div className="flex items-center space-x-2">
+          <select
+            value={selectedYear || ""}
+            onChange={(e) => setSelectedYear(e.target.value ? Number(e.target.value) : null)}
+            className="border border-gray-300 rounded-md p-2"
+          >
+            <option value="">Seleccionar año</option>
+            {years.map((year) => (
+              <option key={year} value={year}>{year}</option>
+            ))}
+          </select>
+          <input
+            type="number"
+            placeholder="Nuevo año"
+            value={newYear}
+            onChange={(e) => setNewYear(e.target.value)}
+            className="border border-gray-300 rounded-md p-2 w-32"
+          />
+          <motion.button
+            onClick={handleAddYear}
+            disabled={!newYear}
+            className="bg-blue-500 text-white px-4 py-2 rounded-md disabled:opacity-50"
+            variants={buttonVariants}
+            whileHover="hover"
+            whileTap="tap"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 inline-block mr-2" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clipRule="evenodd" />
+            </svg>
+            Añadir Año
+          </motion.button>
+        </div>
+        <div className="flex items-center space-x-2">
+          <input
             type="text"
             placeholder="Buscar expedientes..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-10 pr-4 py-2 w-full border rounded-md focus:outline-none focus:ring-2 focus:ring-[#255EA9]"
+            className="border border-gray-300 rounded-md p-2 w-64"
           />
+          <motion.button
+            className="border border-gray-300 rounded-md p-2"
+            variants={buttonVariants}
+            whileHover="hover"
+            whileTap="tap"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd" />
+            </svg>
+          </motion.button>
         </div>
-      </div>
-      <div className="overflow-x-auto bg-[#E0F0FF] rounded-lg shadow-lg">
-      <Table>
-          <TableHeader>
-            <TableRow className="bg-[#1A2E4A] text-white">
-              <TableHead className="py-3">Código</TableHead>
-              <TableHead className="py-3">Número de Orden</TableHead>
-              <TableHead className="py-3">Número de Expediente</TableHead>
-              <TableHead className="py-3">Emisor</TableHead>
-              <TableHead className="py-3">Año</TableHead>
-              <TableHead className="py-3">Resolución</TableHead>
-              <TableHead className="py-3">Pedido</TableHead>
-              <TableHead className="py-3">Ubicación</TableHead>
-              <TableHead className="py-3">Acciones</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {currentItems.map((expediente, index) => (
-              <TableRow key={expediente.id} className={index % 2 === 0 ? 'bg-white' : 'bg-[#E0F0FF]'}>
-                <TableCell className="py-3">{expediente.organizationCode}</TableCell>
-                <TableCell className="py-3">{expediente.correlativeNumber}</TableCell>
-                <TableCell className="py-3">{expediente.issuer}</TableCell>
-                <TableCell className="py-3">{expediente.year}</TableCell>
-                <TableCell className="py-3">{expediente.solicitude}</TableCell>
-                <TableCell className="py-3">
-                  {expediente.resolutions.map((resolution, resIndex) => (
-                    <div key={resIndex}>{resolution.resolutionNumber}</div>
-                  ))}
-                </TableCell>
-                <TableCell className="py-3">
-                  {expediente.location.map((location, locIndex) => (
-                    <div key={locIndex}>{location.id}</div>
-                  ))}
-                </TableCell>
-                <TableCell className="py-3">
-                  <Button variant="ghost" size="sm" onClick={() => handleEdit(expediente)} className="text-[#255EA9] hover:text-[#1A2E4A]">
-                    <Pencil className="h-5 w-5" />
-                  </Button>
-                  <Button variant="ghost" size="sm" onClick={() => handleDelete(expediente.id)} className="text-red-500 hover:text-red-700">
-                    <Trash2 className="h-5 w-5" />
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
+      </motion.div>
 
-        </Table>
-      </div>
-      <div className="mt-6 flex justify-between items-center">
-        <Button
-          onClick={() => handlePageChange(currentPage - 1)}
-          disabled={currentPage === 1}
-          className="bg-[#255EA9] hover:bg-[#1A2E4A] text-white"
-        >
-          <ChevronLeft className="h-5 w-5 mr-2" /> Anterior
-        </Button>
-        <span className="text-[#1A2E4A] font-medium">
-          Página {currentPage} de {totalPages}
-        </span>
-        <Button
-          onClick={() => handlePageChange(currentPage + 1)}
-          disabled={currentPage === totalPages}
-          className="bg-[#255EA9] hover:bg-[#1A2E4A] text-white"
-        >
-          Siguiente <ChevronRight className="h-5 w-5 ml-2" />
-        </Button>
-      </div>
-
-      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="bg-[#1A2E4A] text-white max-w-3xl">
-          <DialogHeader>
-            <DialogTitle className="text-2xl font-bold">{expedienteActual ? 'Editar Expediente' : 'Añadir Expediente'}</DialogTitle>
-          </DialogHeader>
-          <form  className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-2">
-                <Label htmlFor="codigo" className="text-sm font-medium">
-                  Código
-                </Label>
-                <Input
-                  id="codigo"
-                  name="codigo"
-                  defaultValue={expedienteActual?.organizationCode}
-                  className="w-full bg-white text-black"
+      <AnimatePresence>
+        {selectedYear && !editingExpediente && (
+          <motion.div
+            className="bg-white rounded-lg shadow p-4 mb-8"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3 }}
+          >
+            <h2 className="text-xl font-bold mb-4">Añadir Nuevo Expediente para {selectedYear}</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <input
+                type="text"
+                placeholder="Número de Orden"
+                value={newExpediente.numeroOrden || ''}
+                onChange={(e) => setNewExpediente({...newExpediente, numeroOrden: e.target.value})}
+                className="border border-gray-300 rounded-md p-2"
+              />
+              <input
+                type="text"
+                placeholder="Número de Expediente"
+                value={newExpediente.numeroExpediente || ''}
+                onChange={(e) => setNewExpediente({...newExpediente, numeroExpediente: e.target.value})}
+                className="border border-gray-300 rounded-md p-2"
+              />
+              <input
+                type="text"
+                placeholder="Emisor"
+                value={newExpediente.emisor || ''}
+                onChange={(e) => setNewExpediente({...newExpediente, emisor: e.target.value})}
+                className="border border-gray-300 rounded-md p-2"
+              />
+              <input
+                type="text"
+                placeholder="Reglamentación"
+                value={newExpediente.reglamentacion || ''}
+                onChange={(e) => setNewExpediente({...newExpediente, reglamentacion: e.target.value})}
+                className="border border-gray-300 rounded-md p-2"
+              />
+              <input
+                type="text"
+                placeholder="Pedido"
+                value={newExpediente.pedido || ''}
+                onChange={(e) => setNewExpediente({...newExpediente, pedido: e.target.value})}
+                className="border border-gray-300 rounded-md p-2"
+              />
+              <div className="flex items-center space-x-2">
+                <input
+                  type="text"
+                  placeholder="Nueva ubicación"
+                  value={newUbicacion}
+                  onChange={(e) => setNewUbicacion(e.target.value)}
+                  className="border border-gray-300 rounded-md p-2 flex-grow"
                 />
+                <motion.button
+                  onClick={() => handleAddUbicacion()}
+                  className="bg-blue-500 text-white px-4 py-2 rounded-md"
+                  variants={buttonVariants}
+                  whileHover="hover"
+                  whileTap="tap"
+                >
+                  Añadir
+                </motion.button>
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="numeroOrden" className="text-sm font-medium">
-                  Número de Orden
-                </Label>
-                <Input
-                  id="numeroOrden"
-                  name="numeroOrden"
-                  defaultValue={expedienteActual?.correlativeNumber}
-                  className="w-full bg-white text-black"
-                />
-              </div>
-              {/* <div className="space-y-2">
-                <Label htmlFor="numeroExpediente" className="text-sm font-medium">
-                  Número de Expediente
-                </Label>
-                <Input
-                  id="numeroExpediente"
-                  name="numeroExpediente"
-                  defaultValue={expedienteActual?.numeroExpediente}
-                  className="w-full bg-white text-black"
-                />
-              </div> */}
-              <div className="space-y-2">
-                <Label htmlFor="emisor" className="text-sm font-medium">
-                  Emisor
-                </Label>
-                <Input
-                  id="emisor"
-                  name="emisor"
-                  defaultValue={expedienteActual?.issuer}
-                  className="w-full bg-white text-black"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="ano" className="text-sm font-medium">
-                  Año
-                </Label>
-                <Input
-                  id="ano"
-                  name="ano"
-                  type="number"
-                  defaultValue={expedienteActual?.year}
-                  className="w-full bg-white text-black"
-                />
-              </div>
-              {/* <div className="space-y-2">
-                <Label htmlFor="resolucion" className="text-sm font-medium">
-                  Resolución
-                </Label>
-                <Input
-                  id="resolucion"
-                  name="resolucion"
-                  defaultValue={expedienteActual?.resolucion}
-                  className="w-full bg-white text-black"
-                />
-              </div> */}
-              <div className="space-y-2">
-                <Label htmlFor="pedido" className="text-sm font-medium">
-                  Pedido
-                </Label>
-                <Input
-                  id="pedido"
-                  name="pedido"
-                  defaultValue={expedienteActual?.solicitude}
-                  className="w-full bg-white text-black"
-                />
-              </div>
-              {/* <div className="space-y-2">
-                <Label htmlFor="ubicacion" className="text-sm font-medium">
-                  Ubicación
-                </Label>
-                <Input
-                  id="ubicacion"
-                  name="ubicacion"
-                  defaultValue={expedienteActual?.ubicacion}
-                  className="w-full bg-white text-black"
-                />
-              </div>  */}
-            </div>
-            <DialogFooter>
-              <Button 
-                type="submit" 
-                className="bg-[#255EA9] hover:bg-[#1A2E4A] text-white w-full justify-center"
-                disabled={isLoading || isConfirmed}
-              >
-                {isLoading ? (
-                  <Loader2 className="h-5 w-5 animate-spin" />
-                ) : isConfirmed ? (
-                  <Check className="h-5 w-5 text-green-500" />
-                ) : (
-                  expedienteActual ? 'Actualizar' : 'Añadir'
-                )}
-              </Button>
-            </DialogFooter>
-          </form>
-        </DialogContent>
-      </Dialog>
+              {(newExpediente.ubicaciones || []).length > 0 && (
+  <div className="col-span-full mt-2">
+    <h4 className="font-medium mb-2">Ubicaciones añadidas:</h4>
+    <ul className="space-y-2">
+        {(newExpediente.ubicaciones || []).map((ubicacion, index) => (
+          <li key={index} className="flex items-center space-x-2">
+            <input
+              type="text"
+              value={ubicacion.lugar}
+              onChange={(e) => {
+                const newUbicaciones = [...(newExpediente.ubicaciones || [])];
+                newUbicaciones[index] = { ...newUbicaciones[index], lugar: e.target.value };
+                setNewExpediente({ ...newExpediente, ubicaciones: newUbicaciones });
+              }}
+              className="border border-gray-300 rounded-md px-2 py-1 text-sm"
+            />
+            <input
+              type="date"
+              value={ubicacion.fecha ? new Date(ubicacion.fecha).toISOString().split('T')[0] : ""}
+              onChange={(e) => {
+                const newUbicaciones = [...(newExpediente.ubicaciones || [])];
+                newUbicaciones[index] = { ...newUbicaciones[index], fecha: new Date(e.target.value).toISOString() };
+                setNewExpediente({ ...newExpediente, ubicaciones: newUbicaciones });
+              }}
+              className="border border-gray-300 rounded-md px-2 py-1 text-sm"
+            />
+            <motion.button
+              onClick={() => {
+                const newUbicaciones = (newExpediente.ubicaciones || []).filter((_, i) => i !== index);
+                setNewExpediente({ ...newExpediente, ubicaciones: newUbicaciones });
+              }}
+              className="text-red-500 hover:text-red-700"
+              variants={buttonVariants}
+              whileHover="hover"
+              whileTap="tap"
+            >
+              Eliminar
+            </motion.button>
+          </li>
+        ))}
+      </ul>
     </div>
+  )}
+              <div className="col-span-full flex items-center space-x-2 mt-4">
+                <input
+                  type="file"
+                  accept=".pdf"
+                  onChange={handleFileChange}
+                  ref={fileInputRef}
+                  className="hidden"
+                />
+                <motion.button
+                  onClick={() => fileInputRef.current?.click()}
+                  className="bg-gray-200 text-gray-700 px-4 py-2 rounded-md"
+                  variants={buttonVariants}
+                  whileHover="hover"
+                  whileTap="tap"
+                >
+                  {newExpediente.pdfPath ? 'Cambiar PDF' : 'Adjuntar PDF'}
+                </motion.button>
+                {newExpediente.pdfPath && (
+                  <motion.button
+                    onClick={() => handleDeletePDF()}
+                    className="bg-red-500 text-white px-4 py-2 rounded-md"
+                    variants={buttonVariants}
+                    whileHover="hover"
+                    whileTap="tap"
+                  >
+                    Eliminar PDF
+                  </motion.button>
+                )}
+                <span className="text-sm text-gray-500">
+                  {newExpediente.pdfPath ? (new URL(newExpediente.pdfPath)).pathname.split('/').pop() : 'Ningún PDF adjuntado'}
+                </span>
+              </div>
+              <motion.button
+                onClick={handleAddExpediente}
+                className="col-span-full bg-green-500 text-white px-4 py-2 rounded-md"
+                variants={buttonVariants}
+                whileHover="hover"
+                whileTap="tap"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 inline-block mr-2" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+                Guardar Expediente
+              </motion.button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {editingExpediente && (
+          <motion.div
+            className="bg-white rounded-lg shadow p-4 mb-8"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3 }}
+          >
+            <h2 className="text-xl font-bold mb-4">Editar Expediente: {editingExpediente.codigo}</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <input
+                type="text"
+                placeholder="Número de Orden"
+                value={editingExpediente.numeroOrden}
+                onChange={(e) => setEditingExpediente({...editingExpediente, numeroOrden: e.target.value})}
+                className="border border-gray-300 rounded-md p-2"
+              />
+              <input
+                type="text"
+                placeholder="Número de Expediente"
+                value={editingExpediente.numeroExpediente}
+                onChange={(e) => setEditingExpediente({...editingExpediente, numeroExpediente: e.target.value})}
+                className="border border-gray-300 rounded-md p-2"
+              />
+              <input
+                type="text"
+                placeholder="Emisor"
+                value={editingExpediente.emisor}
+                onChange={(e) => setEditingExpediente({...editingExpediente, emisor: e.target.value})}
+                className="border border-gray-300 rounded-md p-2"
+              />
+              <input
+                type="text"
+                placeholder="Reglamentación"
+                value={editingExpediente.reglamentacion}
+                onChange={(e) => setEditingExpediente({...editingExpediente, reglamentacion: e.target.value})}
+                className="border border-gray-300 rounded-md p-2"
+              />
+              <input
+                type="text"
+                placeholder="Pedido"
+                value={editingExpediente.pedido}
+                onChange={(e) => setEditingExpediente({...editingExpediente, pedido: e.target.value})}
+                className="border border-gray-300 rounded-md p-2"
+              />
+              <div className="col-span-full">
+                <h3 className="text-lg font-semibold mb-2">Ubicaciones</h3>
+                {editingExpediente.ubicaciones.map((ubicacion, index) => (
+                  <div key={index} className="flex items-center space-x-2 mb-2">
+                    <input
+                      type="text"
+                      value={ubicacion.lugar}
+                      onChange={(e) => {
+                        const newUbicaciones = [...editingExpediente.ubicaciones];
+                        newUbicaciones[index] = { ...newUbicaciones[index], lugar: e.target.value };
+                        setEditingExpediente({...editingExpediente, ubicaciones: newUbicaciones});
+                      }}
+                      className="border border-gray-300 rounded-md px-2 py-1 text-sm flex-grow"
+                    />
+                    <input
+                      type="date"
+                      value={new Date(ubicacion.fecha).toISOString().split('T')[0]}
+                      onChange={(e) => {
+                        const newUbicaciones = [...editingExpediente.ubicaciones];
+                        newUbicaciones[index] = { ...newUbicaciones[index], fecha: new Date(e.target.value).toISOString() };
+                        setEditingExpediente({...editingExpediente, ubicaciones: newUbicaciones});
+                      }}
+                      className="border border-gray-300 rounded-md px-2 py-1 text-sm"
+                    />
+                    <motion.button
+                      onClick={() => {
+                        const newUbicaciones = editingExpediente.ubicaciones.filter((_, i) => i !== index);
+                        setEditingExpediente({...editingExpediente, ubicaciones: newUbicaciones});
+                      }}
+                      className="bg-red-500 text-white px-2 py-1 rounded-md text-sm"
+                      variants={buttonVariants}
+                      whileHover="hover"
+                      whileTap="tap"
+                    >
+                      Eliminar
+                    </motion.button>
+                  </div>
+                ))}
+                <div className="flex items-center space-x-2 mt-2">
+                  <input
+                    type="text"
+                    placeholder="Nueva ubicación"
+                    value={newUbicacion}
+                    onChange={(e) => setNewUbicacion(e.target.value)}
+                    className="border border-gray-300 rounded-md p-2 flex-grow"
+                  />
+                  <motion.button
+                    onClick={() => {
+                      if (newUbicacion) {
+                        const nuevaUbicacion = {
+                          fecha: new Date().toISOString(),
+                          lugar: newUbicacion
+                        };
+                        setEditingExpediente({
+                          ...editingExpediente,
+                          ubicaciones: [nuevaUbicacion, ...editingExpediente.ubicaciones]
+                        });
+                        setNewUbicacion("");
+                      }
+                    }}
+                    className="bg-blue-500 text-white px-4 py-2 rounded-md"
+                    variants={buttonVariants}
+                    whileHover="hover"
+                    whileTap="tap"
+                  >
+                    Añadir
+                  </motion.button>
+                </div>
+              </div>
+              <div className="col-span-full flex items-center space-x-2 mt-4">
+                <input
+                  type="file"
+                  accept=".pdf"
+                  onChange={handleFileChange}
+                  ref={fileInputRef}
+                  className="hidden"
+                />
+                <motion.button
+                  onClick={() => fileInputRef.current?.click()}
+                  className="bg-gray-200 text-gray-700 px-4 py-2 rounded-md"
+                  variants={buttonVariants}
+                  whileHover="hover"
+                  whileTap="tap"
+                >
+                  {editingExpediente.pdfPath ? 'Cambiar PDF' : 'Adjuntar PDF'}
+                </motion.button>
+                {editingExpediente.pdfPath && (
+                  <motion.button
+                    onClick={() => handleDeletePDF(true)}
+                    className="bg-red-500 text-white px-4 py-2 rounded-md"
+                    variants={buttonVariants}
+                    whileHover="hover"
+                    whileTap="tap"
+                  >
+                    Eliminar PDF
+                  </motion.button>
+                )}
+                <span className="text-sm text-gray-500">
+                  {editingExpediente.pdfPath ? (new URL(editingExpediente.pdfPath)).pathname.split('/').pop() : 'Ningún PDF adjuntado'}
+                </span>
+              </div>
+              <div className="col-span-full flex justify-end space-x-2">
+                <motion.button
+                  onClick={handleCancelEdit}
+                  className="border border-gray-300 text-gray-700 px-4 py-2 rounded-md"
+                  variants={buttonVariants}
+                  whileHover="hover"
+                  whileTap="tap"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 inline-block mr-2" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                  </svg>
+                  Cancelar
+                </motion.button>
+                <motion.button
+                  onClick={handleSaveEdit}
+                  className="bg-green-500 text-white px-4 py-2 rounded-md"
+                  variants={buttonVariants}
+                  whileHover="hover"
+                  whileTap="tap"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 inline-block mr-2" viewBox="0 0 20 20"  fill="currentColor">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
+                  Guardar Cambios
+                </motion.button>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <motion.div
+        className="bg-white rounded-lg shadow overflow-x-auto"
+        variants={fadeInVariants}
+      >
+        <table className="min-w-full">
+          <thead className="bg-[#1A2E4A] text-white">
+            <tr>
+              <th className="px-4 py-2 text-left">Código</th>
+              <th className="px-4 py-2 text-left">Número de Orden</th>
+              <th className="px-4 py-2 text-left">Número de Expediente</th>
+              <th className="px-4 py-2 text-left">Emisor</th>
+              <th className="px-4 py-2 text-left">Año</th>
+              <th className="px-4 py-2 text-left">Reglamentación</th>
+              <th className="px-4 py-2 text-left">Pedido</th>
+              <th className="px-4 py-2 text-left">Ubicaciones</th>
+              <th className="px-4 py-2 text-left">PDF</th>
+              <th className="px-4 py-2 text-left">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <AnimatePresence>
+              {filteredExpedientes.map((expediente) => (
+                <motion.tr
+                  key={expediente.id}
+                  className="border-b hover:bg-gray-50"
+                  variants={listItemVariants}
+                  initial="hidden"
+                  animate="visible"
+                  exit="hidden"
+                  transition={{ duration: 0.3 }}
+                >
+                  <td className="px-4 py-2">{expediente.codigo}</td>
+                  <td className="px-4 py-2">{expediente.numeroOrden}</td>
+                  <td className="px-4 py-2">{expediente.numeroExpediente}</td>
+                  <td className="px-4 py-2">{expediente.emisor}</td>
+                  <td className="px-4 py-2">{expediente.ano}</td>
+                  <td className="px-4 py-2 bg-blue-100 font-medium">{expediente.reglamentacion}</td>
+                  <td className="px-4 py-2">{expediente.pedido}</td>
+                  <td className="px-4 py-2">
+                    {expediente.ubicaciones.length > 0 && (
+                      <div>
+                        <div className="flex items-center space-x-2 mb-2">
+                          <input
+                            type="text"
+                            value={expediente.ubicaciones[0].lugar}
+                            onChange={(e) => handleEditUbicacion(expediente.id, 0, e.target.value, expediente.ubicaciones[0].fecha)}
+                            className="border border-gray-300 rounded-md px-2 py-1 text-sm mr-2"
+                          />
+                          <motion.button
+                            id={`save-button-${expediente.id}-0`}
+                            onClick={() => handleEditUbicacion(expediente.id, 0, expediente.ubicaciones[0].lugar, expediente.ubicaciones[0].fecha)}
+                            className="bg-green-500 text-white px-2 py-1 rounded-md text-sm transition-all duration-300 ease-in-out"
+                            variants={buttonVariants}
+                            whileHover="hover"
+                            whileTap="tap"
+                          >
+                            Guardar
+                          </motion.button>
+                          <motion.button
+                            onClick={() => {
+                              const newUbicaciones = expediente.ubicaciones.filter((_, i) => i !== 0);
+                              setExpedientes(expedientes.map(exp =>
+                                exp.id === expediente.id ? { ...exp, ubicaciones: newUbicaciones } : exp
+                              ));
+                            }}
+                            className="bg-red-500 text-white px-2 py-1 rounded-md text-sm ml-2"
+                            variants={buttonVariants}
+                            whileHover="hover"
+                            whileTap="tap"
+                          >
+                            Eliminar
+                          </motion.button>
+                        </div>
+                        {expediente.ubicaciones.length > 1 && (
+                          <div>
+                            <motion.button
+                              className="border border-gray-300 rounded-md px-2 py-1 text-sm"
+                              onClick={() => toggleUbicaciones(expediente.id)}
+                              variants={buttonVariants}
+                              whileHover="hover"
+                              whileTap="tap"
+                            >
+                              {expandedUbicaciones.includes(expediente.id) ? (
+                                <>
+                                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 inline-block mr-2" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fillRule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clipRule="evenodd" />
+                                  </svg>
+                                  Ocultar anteriores
+                                </>
+                              ) : (
+                                <>
+                                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 inline-block mr-2" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                                  </svg>
+                                  Ver anteriores
+                                </>
+                              )}
+                            </motion.button>
+                            <AnimatePresence>
+                              {expandedUbicaciones.includes(expediente.id) && (
+                                <motion.ul
+                                  className="list-disc pl-5 mt-2"
+                                  initial={{ opacity: 0, height: 0 }}
+                                  animate={{ opacity: 1, height: 'auto' }}
+                                  exit={{ opacity: 0, height: 0 }}
+                                  transition={{ duration: 0.3 }}
+                                >
+                                  {expediente.ubicaciones.map((ubicacion, index) => (
+                                    <motion.li
+                                      key={index}
+                                      className="flex items-center space-x-2 mb-2"
+                                      variants={listItemVariants}
+                                      initial="hidden"
+                                      animate="visible"
+                                      exit="hidden"
+                                      transition={{ duration: 0.3, delay: index * 0.1 }}
+                                    >
+                                      <input
+                                        type="text"
+                                        value={ubicacion.lugar}
+                                        onChange={(e) => handleEditUbicacion(expediente.id, index, e.target.value, ubicacion.fecha)}
+                                        className="border border-gray-300 rounded-md px-2 py-1 text-sm mr-2"
+                                      />
+                                      <input
+                                        type="date"
+                                        value={new Date(ubicacion.fecha).toISOString().split('T')[0]}
+                                        onChange={(e) => handleEditUbicacion(expediente.id, index, ubicacion.lugar, new Date(e.target.value).toISOString())}
+                                        className="border border-gray-300 rounded-md px-2 py-1 text-sm"
+                                      />
+                                      <motion.button
+                                        id={`save-button-${expediente.id}-${index}`}
+                                        onClick={() => handleEditUbicacion(expediente.id, index, ubicacion.lugar, ubicacion.fecha)}
+                                        className="bg-green-500 text-white px-2 py-1 rounded-md text-sm transition-all duration-300 ease-in-out"
+                                        variants={buttonVariants}
+                                        whileHover="hover"
+                                        whileTap="tap"
+                                      >
+                                        Guardar
+                                      </motion.button>
+                                      <motion.button
+                                        onClick={() => {
+                                          const newUbicaciones = expediente.ubicaciones.filter((_, i) => i !== index);
+                                          setExpedientes(expedientes.map(exp =>
+                                            exp.id === expediente.id ? { ...exp, ubicaciones: newUbicaciones } : exp
+                                          ));
+                                        }}
+                                        className="bg-red-500 text-white px-2 py-1 rounded-md text-sm ml-2"
+                                        variants={buttonVariants}
+                                        whileHover="hover"
+                                        whileTap="tap"
+                                      >
+                                        Eliminar
+                                      </motion.button>
+                                    </motion.li>
+                                  ))}
+                                </motion.ul>
+                              )}
+                            </AnimatePresence>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </td>
+                  <td className="px-4 py-2">
+                    {expediente.pdfPath ? (
+                      <motion.button
+                        className="border border-gray-300 text-gray-700 px-2 py-1 rounded-md text-sm"
+                        onClick={() => handleOpenPDF(expediente.pdfPath!)}
+                        variants={buttonVariants}
+                        whileHover="hover"
+                        whileTap="tap"
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 inline-block mr-2" viewBox="0 0 20 20" fill="currentColor">
+                          <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                          <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
+                        </svg>
+                        Ver PDF
+                      </motion.button>
+                    ) : (
+                      "No hay PDF"
+                    )}
+                  </td>
+                  <td className="px-4 py-2">
+                    <motion.button
+                      className="border border-gray-300 text-gray-700 px-2 py-1 rounded-md text-sm"
+                      onClick={() => handleEditExpediente(expediente)}
+                      variants={buttonVariants}
+                      whileHover="hover"
+                      whileTap="tap"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 inline-block mr-2" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                      </svg>
+                      Editar
+                    </motion.button>
+                  </td>
+                </motion.tr>
+              ))}
+            </AnimatePresence>
+          </tbody>
+        </table>
+      </motion.div>
+    </motion.div>
   )
 }
