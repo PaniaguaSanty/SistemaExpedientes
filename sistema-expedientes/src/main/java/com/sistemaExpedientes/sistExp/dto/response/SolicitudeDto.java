@@ -1,6 +1,5 @@
 package com.sistemaExpedientes.sistExp.dto.response;
 
-import com.sistemaExpedientes.sistExp.model.Expedient;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,9 +9,8 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class LocationResponseDto {
-
-    private Long id;
-    private String place;
-    private Expedient expedient;
+public class SolicitudeDto {
+    private Long expedientId;
+    private String issuer;
+    private String solicitude;
 }

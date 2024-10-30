@@ -16,7 +16,6 @@ public class Regulation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String description;
 
     @ManyToOne
@@ -24,6 +23,3 @@ public class Regulation {
     @JsonBackReference // Rompe el ciclo de serialización aquí
     private Expedient expedient;
 }
-
-//@Enumerated(EnumType.STRING)
-// private Status status;
