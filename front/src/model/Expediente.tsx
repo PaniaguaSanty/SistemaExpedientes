@@ -1,29 +1,17 @@
+import { Ubicacion } from './Ubicacion';
+import { Regulation } from './Regulation';
 
 export type Expediente = {
   id: number;
-  issuer: string;
-  organizationCode: string;
-  correlativeNumber: string;
-  solicitude: string;
-  year: string;
-  status: string;
+  codigo: string;
+  numeroOrden: string;
+  numeroExpediente: string;
+  emisor: string;
+  ano: number;
+  reglamentacion: Regulation[];
+  pedido: string;
+  ubicaciones: Ubicacion[];
   pdfPath?: string;
-  regulations: Regulation[];
-  locations: Location[];
 }
-
-export type Location = {
-  id: number;
-  origin: string;
-  destiny: string;
-  place: string;
-  expedient: Expediente;
-}
-
-export type Regulation = {
-  id: number;
-  description: string;
-  expedient: Expediente;
-}
-
+export type { Ubicacion };
 
