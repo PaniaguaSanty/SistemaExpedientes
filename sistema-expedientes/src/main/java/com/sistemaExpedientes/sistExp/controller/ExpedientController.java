@@ -4,6 +4,8 @@ import com.sistemaExpedientes.sistExp.dto.request.AddLocationRequestDto;
 import com.sistemaExpedientes.sistExp.dto.request.ExpedientRequestDTO;
 import com.sistemaExpedientes.sistExp.dto.response.AddLocationResponseDto;
 import com.sistemaExpedientes.sistExp.dto.response.ExpedientResponseDTO;
+import com.sistemaExpedientes.sistExp.dto.response.RegulationResponseDto;
+import com.sistemaExpedientes.sistExp.dto.response.SolicitudeDto;
 import com.sistemaExpedientes.sistExp.exception.NotFoundException;
 import com.sistemaExpedientes.sistExp.model.Expedient;
 import com.sistemaExpedientes.sistExp.service.ExcelService;
@@ -156,6 +158,34 @@ public class ExpedientController implements Controller<ExpedientResponseDTO, Exp
     }
 
     // Buscar por tipo de solicitud
+    @GetMapping("regulations/{id}")
+    public ResponseEntity<List<RegulationResponseDto>> findRegulationsByExpedientId(@PathVariable("id") Long expedientId) {
+        logger.info("Entering getRegulationsByExpedientId CONTROLLER method with expedientId: {}", expedientId);
+
+        List<RegulationResponseDto> regulations = expedientService.findRegulationsByExpedientId(expedientId);
+
+        if (regulations.isEmpty()) {
+            logger.info("No regulations found for expedientId: {}", expedientId);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+
+        logger.info("Exiting getRegulationsByExpedientId CONTROLLER method successfully with {} results", regulations.size());
+        return new ResponseEntity<>(regulations, HttpStatus.OK);
+    }
+    @GetMapping("/solicitudes/{issuer}")
+    public ResponseEntity<List<SolicitudeDto>> findSolicitudeByIssuer(@PathVariable String issuer) {
+        logger.info("Entering findSolicitudeByIssuer CONTROLLER method with issuer: {}", issuer);
+        List<SolicitudeDto> solicitudeDTOs = expedientService.findSolicitudeByIssuer(issuer);
+
+        if (solicitudeDTOs.isEmpty()) {
+            logger.info("No solicitudes found for issuer: {}", issuer);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+
+        logger.info("Exiting findSolicitudeByIssuer CONTROLLER method successfully with {} results", solicitudeDTOs.size());
+        return new ResponseEntity<>(solicitudeDTOs, HttpStatus.OK);
+    }
+
     @GetMapping("/solicitude/{solicitude}")
     public ResponseEntity<List<ExpedientResponseDTO>> findBySolicitude(@PathVariable String solicitude) {
         logger.info("Entering findBySolicitude CONTROLLER method with solicitude: {}", solicitude);
@@ -163,8 +193,8 @@ public class ExpedientController implements Controller<ExpedientResponseDTO, Exp
         logger.info("Exiting findBySolicitude CONTROLLER method...");
         return ResponseEntity.ok(expedients);
     }
-
     // Buscar por estado
+
     @GetMapping("/status/{status}")
     public ResponseEntity<List<ExpedientResponseDTO>> findByStatus(@PathVariable String status) {
         logger.info("Entering findByStatus CONTROLLER method with status: {}", status);
@@ -172,8 +202,8 @@ public class ExpedientController implements Controller<ExpedientResponseDTO, Exp
         logger.info("Exiting findByStatus CONTROLLER method...");
         return ResponseEntity.ok(expedients);
     }
-
     // Endpoint para subir el archivo Excel, convertir a CSV e insertar en la base de datos
+
     @PostMapping("/upload")
     public ResponseEntity<String> uploadExcelFile(@RequestParam("file") MultipartFile file) {
         try {
@@ -186,8 +216,8 @@ public class ExpedientController implements Controller<ExpedientResponseDTO, Exp
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al procesar el archivo: " + e.getMessage());
         }
     }
-
     // Endpoint para subir el archivo Excel de cursos e insertar en la base de datos
+
     @PostMapping("/upload-courses")
     public ResponseEntity<String> uploadCoursesExcel(@RequestParam("file") MultipartFile file) {
         try {

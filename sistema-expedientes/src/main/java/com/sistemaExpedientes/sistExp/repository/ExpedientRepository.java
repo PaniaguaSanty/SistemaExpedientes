@@ -16,12 +16,12 @@ public interface ExpedientRepository extends JpaRepository<Expedient, Long> {
 
     Expedient findByCorrelativeNumber(String number);
 
-    List<Expedient> findByIssuer(String issuer);
+    List<Expedient> findByIssuerIgnoreCase(String issuer);
 
     List<Expedient> findBySolicitude(String solicitude);
 
     List<Expedient> findByStatus(String status);
 
-}
 
+}
 

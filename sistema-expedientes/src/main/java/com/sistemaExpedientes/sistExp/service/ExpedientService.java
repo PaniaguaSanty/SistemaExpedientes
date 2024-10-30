@@ -4,13 +4,18 @@ import com.sistemaExpedientes.sistExp.dto.request.AddLocationRequestDto;
 import com.sistemaExpedientes.sistExp.dto.request.ExpedientRequestDTO;
 import com.sistemaExpedientes.sistExp.dto.response.AddLocationResponseDto;
 import com.sistemaExpedientes.sistExp.dto.response.ExpedientResponseDTO;
+import com.sistemaExpedientes.sistExp.dto.response.RegulationResponseDto;
+import com.sistemaExpedientes.sistExp.dto.response.SolicitudeDto;
 import com.sistemaExpedientes.sistExp.exception.NotFoundException;
 import com.sistemaExpedientes.sistExp.mapper.ExpedientMapper;
 import com.sistemaExpedientes.sistExp.mapper.LocationMapper;
+import com.sistemaExpedientes.sistExp.mapper.RegulationMapper;
 import com.sistemaExpedientes.sistExp.model.Expedient;
 import com.sistemaExpedientes.sistExp.model.Location;
+import com.sistemaExpedientes.sistExp.model.Regulation;
 import com.sistemaExpedientes.sistExp.repository.ExpedientRepository;
 import com.sistemaExpedientes.sistExp.repository.LocationRepository;
+import com.sistemaExpedientes.sistExp.repository.RegulationRepository;
 import com.sistemaExpedientes.sistExp.util.CRUD;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,15 +33,21 @@ public class ExpedientService implements CRUD<ExpedientResponseDTO, ExpedientReq
     private final LocationRepository locationRepository;
     private final ExpedientMapper expedientMapper;
     private final LocationMapper locationMapper;
+    private final RegulationRepository regulationRepository;
+    private final RegulationMapper regulationMapper;
 
     public ExpedientService(ExpedientRepository expedientRepository,
                             LocationRepository locationRepository,
                             ExpedientMapper expedientMapper,
-                            LocationMapper locationMapper) {
+                            LocationMapper locationMapper,
+                            RegulationRepository regulationRepository,
+                            RegulationMapper regulationMapper) {
         this.expedientRepository = expedientRepository;
         this.locationRepository = locationRepository;
         this.expedientMapper = expedientMapper;
         this.locationMapper = locationMapper;
+        this.regulationRepository = regulationRepository;
+        this.regulationMapper = regulationMapper;
     }
 
     @Override
@@ -164,7 +175,7 @@ public class ExpedientService implements CRUD<ExpedientResponseDTO, ExpedientReq
     //buscar por emisor
     public List<ExpedientResponseDTO> findByIssuer(String issuer) {
         logger.info("Entering in findByIssuer SERVICE method with issuer: {}", issuer);
-        List<Expedient> expedients = expedientRepository.findByIssuer(issuer);
+        List<Expedient> expedients = expedientRepository.findByIssuerIgnoreCase(issuer);
         logger.info("Exiting findByIssuer SERVICE method...");
         return expedients.stream()
                 .map(expedientMapper::convertToDto)
@@ -180,9 +191,6 @@ public class ExpedientService implements CRUD<ExpedientResponseDTO, ExpedientReq
                 .map(expedientMapper::convertToDto)
                 .collect(Collectors.toList());
     }
-
-    //Buscar por regulación
-
 
     //buscar por estado
     public List<ExpedientResponseDTO> findByStatus(String status) {
@@ -215,6 +223,47 @@ public class ExpedientService implements CRUD<ExpedientResponseDTO, ExpedientReq
                 .collect(Collectors.toList());
     }
 
+    // metodo para encontrar solicitudes por emisor
+    public List<SolicitudeDto> findSolicitudeByIssuer(String issuer) {
+        logger.info("Entering findSolicitudeByIssuer SERVICE method with issuer: {}", issuer);
+
+        // Obtener la lista de expedientes según el emisor
+        List<Expedient> expedients = expedientRepository.findByIssuerIgnoreCase(issuer);
+
+        // Mapear los expedientes a SolicitudeDTO
+        List<SolicitudeDto> solicitudeDTOs = expedients.stream()
+                .map(expedient -> new SolicitudeDto(
+                        expedient.getId(),       // expedientId
+                        expedient.getIssuer(),   // issuer
+                        expedient.getSolicitude() // solicitude
+                ))
+                .collect(Collectors.toList());
+
+        logger.info("Exiting findSolicitudeByIssuer SERVICE method successfully with {} results", solicitudeDTOs.size());
+        return solicitudeDTOs;
+    }
+
+    //Buscar todas las regulaciones correspondientes a un solicitante
+
+    //Buscar por regulación:
+
+    public List<RegulationResponseDto> findRegulationsByExpedientId(Long expedientId) {
+        logger.info("Entering findRegulationsByExpedientId SERVICE method with expedientId: {}", expedientId);
+
+        // Obtiene todas las regulaciones que pertenecen al expediente con el ID dado
+        List<Regulation> regulations = regulationRepository.findByExpedientId(expedientId);
+
+        // Mapea las regulaciones a DTOs
+        List<RegulationResponseDto> regulationDTOs = regulations.stream()
+                .map(regulationMapper::convertToDto)
+                .collect(Collectors.toList());
+
+        logger.info("Exiting findRegulationsByExpedientId SERVICE method successfully with {} results", regulationDTOs.size());
+        return regulationDTOs;
+    }
+
+
 }
+
 
 
