@@ -9,16 +9,19 @@ const VITE_DEV_SERVER_URL = process.env["VITE_DEV_SERVER_URL"];
 const MAIN_DIST = path.join(process.env.APP_ROOT, "dist-electron");
 const RENDERER_DIST = path.join(process.env.APP_ROOT, "dist");
 process.env.VITE_PUBLIC = VITE_DEV_SERVER_URL ? path.join(process.env.APP_ROOT, "public") : RENDERER_DIST;
-let win;
+let win = null;
 function createWindow() {
   win = new BrowserWindow({
-    fullscreen: true,
-    // Esto hace que la ventana se abra en pantalla completa
+    fullscreenable: true,
+    // Permite cambiar a pantalla completa
+    fullscreen: false,
+    // No se inicia en verdadero modo pantalla completa
     icon: path.join(process.env.VITE_PUBLIC, "electron-vite.svg"),
     webPreferences: {
       preload: path.join(__dirname, "preload.mjs")
     }
   });
+  win.maximize();
   win.webContents.on("did-finish-load", () => {
     win == null ? void 0 : win.webContents.send("main-process-message", (/* @__PURE__ */ new Date()).toLocaleString());
   });

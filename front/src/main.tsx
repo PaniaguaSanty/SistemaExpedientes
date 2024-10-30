@@ -1,14 +1,11 @@
-import ReactDOM from 'react-dom/client'
-import './index.css'
-import ExpedientesCRUD from '../src/components/Expediente.tsx'
+import Dashboard from './components/Dashboard'
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
-  <>
-    <ExpedientesCRUD/>
-  </>,
-)
+function App() {
+  return (
+    <div className="App">
+      <Dashboard />
+    </div>
+  )
+}
 
-// Use contextBridge
-window.ipcRenderer.on('main-process-message', (_event, message) => {
-  console.log(message)
-})
+export default App
