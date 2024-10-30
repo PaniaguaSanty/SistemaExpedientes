@@ -23,7 +23,6 @@ public class ExpedientResponseDTO {
     private String correlativeNumber;
     private String solicitude;
     private String year;
-    private String status;
     private String pdfPath;
     private List<Regulation> regulations;
     private List<Location> locations;

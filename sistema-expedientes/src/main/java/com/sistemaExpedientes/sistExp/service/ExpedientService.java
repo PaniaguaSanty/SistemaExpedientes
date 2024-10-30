@@ -223,7 +223,22 @@ public class ExpedientService implements CRUD<ExpedientResponseDTO, ExpedientReq
                 .collect(Collectors.toList());
     }
 
-    // metodo para encontrar solicitudes por emisor
+    //Buscar todas las regulaciones correspondientes a un solicitante
+    public List<RegulationResponseDto> findRegulationsByIssuer(String issuer) {
+        logger.info("Entering findRegulationsByIssuer SERVICE method with issuer: {}", issuer);
+
+        // Obtiene todas las regulaciones y aplica el filtro de 'issuer'
+        List<Regulation> filteredRegulations = regulationRepository.findAll().stream()
+                .filter(regulation -> regulation.getExpedient().getIssuer().contains(issuer))
+                .collect(Collectors.toList());
+
+        // Convierte la lista filtrada a DTOs
+        return filteredRegulations.stream()
+                .map(regulationMapper::convertToDto)
+                .collect(Collectors.toList());
+
+    }
+
     public List<SolicitudeDto> findSolicitudeByIssuer(String issuer) {
         logger.info("Entering findSolicitudeByIssuer SERVICE method with issuer: {}", issuer);
 
@@ -243,10 +258,6 @@ public class ExpedientService implements CRUD<ExpedientResponseDTO, ExpedientReq
         return solicitudeDTOs;
     }
 
-    //Buscar todas las regulaciones correspondientes a un solicitante
-
-    //Buscar por regulación:
-
     public List<RegulationResponseDto> findRegulationsByExpedientId(Long expedientId) {
         logger.info("Entering findRegulationsByExpedientId SERVICE method with expedientId: {}", expedientId);
 
@@ -261,7 +272,6 @@ public class ExpedientService implements CRUD<ExpedientResponseDTO, ExpedientReq
         logger.info("Exiting findRegulationsByExpedientId SERVICE method successfully with {} results", regulationDTOs.size());
         return regulationDTOs;
     }
-
 
 }
 

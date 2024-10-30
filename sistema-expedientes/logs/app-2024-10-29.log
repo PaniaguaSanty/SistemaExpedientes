@@ -1,0 +1,808 @@
+2024-10-29 08:45:55 INFO  c.s.sistExp.SistExpApplication - Starting SistExpApplication using Java 17.0.11 with PID 21372 (C:\Users\pania\OneDrive\Documentos\GitHub\SistemaExpedientes\sistema-expedientes\target\classes started by pania in C:\Users\pania\OneDrive\Documentos\GitHub\SistemaExpedientes\sistema-expedientes)
+2024-10-29 08:45:55 INFO  c.s.sistExp.SistExpApplication - No active profile set, falling back to 1 default profile: "default"
+2024-10-29 08:45:55 INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2024-10-29 08:45:55 INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2024-10-29 08:45:57 INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-10-29 08:45:57 INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 101 ms. Found 5 JPA repository interfaces.
+2024-10-29 08:45:58 INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2024-10-29 08:45:58 INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2024-10-29 08:45:58 INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2024-10-29 08:45:58 INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.30]
+2024-10-29 08:45:58 INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2024-10-29 08:45:58 INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 3007 ms
+2024-10-29 08:45:59 INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-10-29 08:45:59 INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.5.3.Final
+2024-10-29 08:45:59 INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2024-10-29 08:45:59 INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-10-29 08:45:59 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2024-10-29 08:46:00 INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@15619c36
+2024-10-29 08:46:00 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2024-10-29 08:46:01 INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-10-29 08:46:01 INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-10-29 08:46:03 WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-10-29 08:46:05 INFO  o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2024-10-29 08:46:05 INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2024-10-29 08:46:05 INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2024-10-29 08:46:05 INFO  c.s.sistExp.SistExpApplication - Started SistExpApplication in 10.331 seconds (process running for 11.583)
+2024-10-29 08:53:15 INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-10-29 08:53:15 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2024-10-29 08:53:15 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2024-10-29 09:03:37 INFO  c.s.sistExp.SistExpApplication - Starting SistExpApplication using Java 17.0.11 with PID 18528 (C:\Users\pania\OneDrive\Documentos\GitHub\SistemaExpedientes\sistema-expedientes\target\classes started by pania in C:\Users\pania\OneDrive\Documentos\GitHub\SistemaExpedientes\sistema-expedientes)
+2024-10-29 09:03:37 INFO  c.s.sistExp.SistExpApplication - No active profile set, falling back to 1 default profile: "default"
+2024-10-29 09:03:37 INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2024-10-29 09:03:37 INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2024-10-29 09:03:38 INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-10-29 09:03:38 INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 95 ms. Found 5 JPA repository interfaces.
+2024-10-29 09:03:39 INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2024-10-29 09:03:39 INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2024-10-29 09:03:39 INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2024-10-29 09:03:39 INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.30]
+2024-10-29 09:03:40 INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2024-10-29 09:03:40 INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 2844 ms
+2024-10-29 09:03:40 INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-10-29 09:03:40 INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.5.3.Final
+2024-10-29 09:03:40 INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2024-10-29 09:03:41 INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-10-29 09:03:41 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2024-10-29 09:03:41 INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@65dedfd8
+2024-10-29 09:03:41 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2024-10-29 09:03:42 INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-10-29 09:03:43 INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-10-29 09:03:44 WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-10-29 09:03:46 INFO  o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2024-10-29 09:03:46 INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2024-10-29 09:03:46 INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2024-10-29 09:03:46 INFO  c.s.sistExp.SistExpApplication - Started SistExpApplication in 9.732 seconds (process running for 10.913)
+2024-10-29 09:04:32 INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-10-29 09:04:32 INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2024-10-29 09:04:32 INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 5 ms
+2024-10-29 09:04:34 INFO  c.s.sistExp.service.ExcelService - Total rows proccesed: 551
+2024-10-29 09:04:37 INFO  c.s.sistExp.service.ExcelService - Total de expedientes guardados: 551
+2024-10-29 09:06:50 INFO  c.s.s.controller.ExpedientController - Entering addLocation CONTROLLER method...
+2024-10-29 09:06:50 INFO  c.s.sistExp.service.ExpedientService - Entering in AddLocation SERVICE method...
+2024-10-29 09:06:50 INFO  c.s.sistExp.service.ExpedientService - Exiting addLocation SERVICE method succesfully!
+2024-10-29 09:06:50 INFO  c.s.s.controller.ExpedientController - Exiting addLocation CONTROLLER method successfully...
+2024-10-29 09:07:14 INFO  c.s.s.controller.ExpedientController - Entering findByCorrelativeNumber CONTROLLER method with number: 2
+2024-10-29 09:07:14 INFO  c.s.sistExp.service.ExpedientService - Entering in findByCorrelativeNumber SERVICE method with correlative number: 2
+2024-10-29 09:07:14 INFO  c.s.sistExp.service.ExpedientService - Exiting findByCorrelativeNumber SERVICE method...
+2024-10-29 09:07:14 INFO  c.s.s.controller.ExpedientController - Exiting findByCorrelativeNumber CONTROLLER method...
+2024-10-29 09:07:28 INFO  c.s.s.controller.ExpedientController - Entering findById CONTROLLER method with ID: 1
+2024-10-29 09:07:28 INFO  c.s.sistExp.service.ExpedientService - Entering in findOne SERVICE method...
+2024-10-29 09:07:28 INFO  c.s.sistExp.service.ExpedientService - Exiting findOne SERVICE method...
+2024-10-29 09:07:28 INFO  c.s.s.controller.ExpedientController - Exiting findById CONTROLLER method...
+2024-10-29 09:08:22 INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-10-29 09:08:22 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2024-10-29 09:08:22 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2024-10-29 09:21:45 INFO  c.s.sistExp.SistExpApplication - Starting SistExpApplication using Java 17.0.11 with PID 24464 (C:\Users\pania\OneDrive\Documentos\GitHub\SistemaExpedientes\sistema-expedientes\target\classes started by pania in C:\Users\pania\OneDrive\Documentos\GitHub\SistemaExpedientes\sistema-expedientes)
+2024-10-29 09:21:45 INFO  c.s.sistExp.SistExpApplication - No active profile set, falling back to 1 default profile: "default"
+2024-10-29 09:21:45 INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2024-10-29 09:21:45 INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2024-10-29 09:21:46 INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-10-29 09:21:47 INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 99 ms. Found 5 JPA repository interfaces.
+2024-10-29 09:21:48 INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2024-10-29 09:21:48 INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2024-10-29 09:21:48 INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2024-10-29 09:21:48 INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.30]
+2024-10-29 09:21:48 INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2024-10-29 09:21:48 INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 2855 ms
+2024-10-29 09:21:48 INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-10-29 09:21:48 INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.5.3.Final
+2024-10-29 09:21:48 INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2024-10-29 09:21:49 INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-10-29 09:21:49 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2024-10-29 09:21:49 INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@576fba22
+2024-10-29 09:21:49 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2024-10-29 09:21:51 INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-10-29 09:21:51 INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-10-29 09:21:52 WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-10-29 09:21:54 INFO  o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2024-10-29 09:21:54 INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2024-10-29 09:21:54 INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2024-10-29 09:21:54 INFO  c.s.sistExp.SistExpApplication - Started SistExpApplication in 9.722 seconds (process running for 10.92)
+2024-10-29 09:23:08 INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-10-29 09:23:08 INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2024-10-29 09:23:08 INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2024-10-29 09:23:08 INFO  c.s.s.controller.ExpedientController - Entering findById CONTROLLER method with ID: 1
+2024-10-29 09:23:08 INFO  c.s.sistExp.service.ExpedientService - Entering in findOne SERVICE method...
+2024-10-29 09:23:08 INFO  c.s.sistExp.service.ExpedientService - Exiting findOne SERVICE method...
+2024-10-29 09:23:08 INFO  c.s.s.controller.ExpedientController - Exiting findById CONTROLLER method...
+2024-10-29 09:24:23 INFO  c.s.s.controller.ExpedientController - Entering findById CONTROLLER method with ID: 5
+2024-10-29 09:24:23 INFO  c.s.sistExp.service.ExpedientService - Entering in findOne SERVICE method...
+2024-10-29 09:24:23 INFO  c.s.sistExp.service.ExpedientService - Exiting findOne SERVICE method...
+2024-10-29 09:24:23 INFO  c.s.s.controller.ExpedientController - Exiting findById CONTROLLER method...
+2024-10-29 09:24:47 INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-10-29 09:24:47 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2024-10-29 09:24:47 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2024-10-29 09:25:02 INFO  c.s.sistExp.SistExpApplication - Starting SistExpApplication using Java 17.0.11 with PID 21192 (C:\Users\pania\OneDrive\Documentos\GitHub\SistemaExpedientes\sistema-expedientes\target\classes started by pania in C:\Users\pania\OneDrive\Documentos\GitHub\SistemaExpedientes\sistema-expedientes)
+2024-10-29 09:25:02 INFO  c.s.sistExp.SistExpApplication - No active profile set, falling back to 1 default profile: "default"
+2024-10-29 09:25:02 INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2024-10-29 09:25:02 INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2024-10-29 09:25:04 INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-10-29 09:25:04 INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 111 ms. Found 5 JPA repository interfaces.
+2024-10-29 09:25:05 INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2024-10-29 09:25:05 INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2024-10-29 09:25:05 INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2024-10-29 09:25:05 INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.30]
+2024-10-29 09:25:05 INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2024-10-29 09:25:05 INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 3170 ms
+2024-10-29 09:25:06 INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-10-29 09:25:06 INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.5.3.Final
+2024-10-29 09:25:06 INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2024-10-29 09:25:07 INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-10-29 09:25:07 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2024-10-29 09:25:07 INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@72bebfb5
+2024-10-29 09:25:07 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2024-10-29 09:25:08 INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-10-29 09:25:08 INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-10-29 09:25:09 WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-10-29 09:25:11 INFO  o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2024-10-29 09:25:12 INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2024-10-29 09:25:12 INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2024-10-29 09:25:12 INFO  c.s.sistExp.SistExpApplication - Started SistExpApplication in 10.098 seconds (process running for 11.294)
+2024-10-29 09:25:33 INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-10-29 09:25:33 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2024-10-29 09:25:33 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2024-10-29 09:25:37 INFO  c.s.sistExp.SistExpApplication - Starting SistExpApplication using Java 17.0.11 with PID 10684 (C:\Users\pania\OneDrive\Documentos\GitHub\SistemaExpedientes\sistema-expedientes\target\classes started by pania in C:\Users\pania\OneDrive\Documentos\GitHub\SistemaExpedientes\sistema-expedientes)
+2024-10-29 09:25:37 INFO  c.s.sistExp.SistExpApplication - No active profile set, falling back to 1 default profile: "default"
+2024-10-29 09:25:37 INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2024-10-29 09:25:37 INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2024-10-29 09:25:39 INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-10-29 09:25:39 INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 112 ms. Found 5 JPA repository interfaces.
+2024-10-29 09:25:40 INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2024-10-29 09:25:40 INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2024-10-29 09:25:40 INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2024-10-29 09:25:40 INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.30]
+2024-10-29 09:25:40 INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2024-10-29 09:25:40 INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 3357 ms
+2024-10-29 09:25:41 INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-10-29 09:25:41 INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.5.3.Final
+2024-10-29 09:25:41 INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2024-10-29 09:25:42 INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-10-29 09:25:42 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2024-10-29 09:25:42 INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@72bebfb5
+2024-10-29 09:25:42 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2024-10-29 09:25:43 INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-10-29 09:25:43 INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-10-29 09:25:44 WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-10-29 09:25:46 INFO  o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2024-10-29 09:25:46 INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2024-10-29 09:25:47 INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2024-10-29 09:25:47 INFO  c.s.sistExp.SistExpApplication - Started SistExpApplication in 10.366 seconds (process running for 11.494)
+2024-10-29 09:26:15 INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-10-29 09:26:15 INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2024-10-29 09:26:15 INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 2 ms
+2024-10-29 09:26:15 INFO  c.s.s.controller.ExpedientController - Entering findById CONTROLLER method with ID: 5
+2024-10-29 09:26:15 INFO  c.s.sistExp.service.ExpedientService - Entering in findOne SERVICE method...
+2024-10-29 09:26:15 ERROR o.a.c.c.C.[.[.[.[dispatcherServlet] - Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: java.lang.RuntimeException: Expedient not found with ID 5] with root cause
+java.lang.RuntimeException: Expedient not found with ID 5
+	at com.sistemaExpedientes.sistExp.service.ExpedientService.lambda$findOne$3(ExpedientService.java:124)
+	at java.base/java.util.Optional.orElseThrow(Optional.java:403)
+	at com.sistemaExpedientes.sistExp.service.ExpedientService.findOne(ExpedientService.java:124)
+	at com.sistemaExpedientes.sistExp.controller.ExpedientController.findById(ExpedientController.java:101)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:255)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:188)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:926)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:831)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:564)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:195)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:483)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:384)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:905)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1190)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63)
+	at java.base/java.lang.Thread.run(Thread.java:842)
+2024-10-29 09:26:23 INFO  c.s.sistExp.service.ExcelService - Total rows proccesed: 551
+2024-10-29 09:26:26 INFO  c.s.sistExp.service.ExcelService - Total de expedientes guardados: 551
+2024-10-29 09:26:45 INFO  c.s.s.controller.ExpedientController - Entering findById CONTROLLER method with ID: 5
+2024-10-29 09:26:45 INFO  c.s.sistExp.service.ExpedientService - Entering in findOne SERVICE method...
+2024-10-29 09:26:45 INFO  c.s.sistExp.service.ExpedientService - Exiting findOne SERVICE method...
+2024-10-29 09:26:45 INFO  c.s.s.controller.ExpedientController - Exiting findById CONTROLLER method...
+2024-10-29 09:27:04 INFO  c.s.s.controller.ExpedientController - Entering addLocation CONTROLLER method...
+2024-10-29 09:27:04 INFO  c.s.sistExp.service.ExpedientService - Entering in AddLocation SERVICE method...
+2024-10-29 09:27:04 INFO  c.s.sistExp.service.ExpedientService - Exiting addLocation SERVICE method succesfully!
+2024-10-29 09:27:04 INFO  c.s.s.controller.ExpedientController - Exiting addLocation CONTROLLER method successfully...
+2024-10-29 09:27:07 INFO  c.s.s.controller.ExpedientController - Entering findById CONTROLLER method with ID: 5
+2024-10-29 09:27:07 INFO  c.s.sistExp.service.ExpedientService - Entering in findOne SERVICE method...
+2024-10-29 09:27:07 INFO  c.s.sistExp.service.ExpedientService - Exiting findOne SERVICE method...
+2024-10-29 09:27:07 INFO  c.s.s.controller.ExpedientController - Exiting findById CONTROLLER method...
+2024-10-29 09:28:13 INFO  c.s.s.controller.ExpedientController - Entering editLocation CONTROLLER method...
+2024-10-29 09:28:13 INFO  c.s.sistExp.service.ExpedientService - Entering in EditLocation SERVICE method...
+2024-10-29 09:28:13 ERROR o.a.c.c.C.[.[.[.[dispatcherServlet] - Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: java.lang.NullPointerException: Cannot invoke "com.sistemaExpedientes.sistExp.model.Location.setPlace(String)" because "locationToUpdate" is null] with root cause
+java.lang.NullPointerException: Cannot invoke "com.sistemaExpedientes.sistExp.model.Location.setPlace(String)" because "locationToUpdate" is null
+	at com.sistemaExpedientes.sistExp.service.ExpedientService.editLocation(ExpedientService.java:109)
+	at com.sistemaExpedientes.sistExp.controller.ExpedientController.editLocation(ExpedientController.java:88)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:255)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:188)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:926)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:831)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014)
+	at org.springframework.web.servlet.FrameworkServlet.doPut(FrameworkServlet.java:925)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:593)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:195)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:483)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:384)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:905)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1190)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63)
+	at java.base/java.lang.Thread.run(Thread.java:842)
+2024-10-29 09:29:41 INFO  c.s.s.controller.ExpedientController - Entering editLocation CONTROLLER method...
+2024-10-29 09:29:41 INFO  c.s.sistExp.service.ExpedientService - Entering in EditLocation SERVICE method...
+2024-10-29 09:29:41 INFO  c.s.s.controller.ExpedientController - Exiting editLocation CONTROLLER method successfully...
+2024-10-29 09:30:42 INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-10-29 09:30:43 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2024-10-29 09:30:43 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2024-10-29 09:33:44 INFO  c.s.sistExp.SistExpApplication - Starting SistExpApplication using Java 17.0.11 with PID 10832 (C:\Users\pania\OneDrive\Documentos\GitHub\SistemaExpedientes\sistema-expedientes\target\classes started by pania in C:\Users\pania\OneDrive\Documentos\GitHub\SistemaExpedientes\sistema-expedientes)
+2024-10-29 09:33:44 INFO  c.s.sistExp.SistExpApplication - No active profile set, falling back to 1 default profile: "default"
+2024-10-29 09:33:44 INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2024-10-29 09:33:44 INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2024-10-29 09:33:45 INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-10-29 09:33:45 INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 100 ms. Found 5 JPA repository interfaces.
+2024-10-29 09:33:46 INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2024-10-29 09:33:47 INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 2920 ms
+2024-10-29 09:33:47 INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-10-29 09:33:47 INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.5.3.Final
+2024-10-29 09:33:47 INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2024-10-29 09:33:48 INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-10-29 09:33:48 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2024-10-29 09:33:48 INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@25a29ef
+2024-10-29 09:33:48 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2024-10-29 09:33:50 INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-10-29 09:33:50 INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-10-29 09:33:51 WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-10-29 09:33:53 INFO  o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2024-10-29 09:33:53 INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2024-10-29 09:33:53 INFO  c.s.sistExp.SistExpApplication - Started SistExpApplication in 9.993 seconds (process running for 11.222)
+2024-10-29 09:33:53 INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-10-29 09:33:53 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2024-10-29 09:33:53 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2024-10-29 09:34:20 INFO  c.s.sistExp.SistExpApplication - Starting SistExpApplication using Java 17.0.11 with PID 24428 (C:\Users\pania\OneDrive\Documentos\GitHub\SistemaExpedientes\sistema-expedientes\target\classes started by pania in C:\Users\pania\OneDrive\Documentos\GitHub\SistemaExpedientes\sistema-expedientes)
+2024-10-29 09:34:20 INFO  c.s.sistExp.SistExpApplication - No active profile set, falling back to 1 default profile: "default"
+2024-10-29 09:34:20 INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2024-10-29 09:34:20 INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2024-10-29 09:34:21 INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-10-29 09:34:21 INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 96 ms. Found 5 JPA repository interfaces.
+2024-10-29 09:34:23 INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2024-10-29 09:34:23 INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2024-10-29 09:34:23 INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2024-10-29 09:34:23 INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.30]
+2024-10-29 09:34:23 INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2024-10-29 09:34:23 INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 3105 ms
+2024-10-29 09:34:23 INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-10-29 09:34:23 INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.5.3.Final
+2024-10-29 09:34:23 INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2024-10-29 09:34:24 INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-10-29 09:34:24 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2024-10-29 09:34:24 INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@64090866
+2024-10-29 09:34:24 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2024-10-29 09:34:26 INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-10-29 09:34:26 INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-10-29 09:34:27 WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-10-29 09:34:29 INFO  o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2024-10-29 09:34:29 INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2024-10-29 09:34:29 INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2024-10-29 09:34:29 INFO  c.s.sistExp.SistExpApplication - Started SistExpApplication in 9.822 seconds (process running for 11.072)
+2024-10-29 09:34:34 INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-10-29 09:34:34 INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2024-10-29 09:34:34 INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 2 ms
+2024-10-29 09:34:34 INFO  c.s.s.controller.ExpedientController - Entering editLocation CONTROLLER method...
+2024-10-29 09:34:34 INFO  c.s.sistExp.service.ExpedientService - Entering in EditLocation SERVICE method...
+2024-10-29 09:34:34 ERROR o.a.c.c.C.[.[.[.[dispatcherServlet] - Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: java.lang.NullPointerException: Cannot invoke "com.sistemaExpedientes.sistExp.model.Location.setPlace(String)" because "locationToUpdate" is null] with root cause
+java.lang.NullPointerException: Cannot invoke "com.sistemaExpedientes.sistExp.model.Location.setPlace(String)" because "locationToUpdate" is null
+	at com.sistemaExpedientes.sistExp.service.ExpedientService.editLocation(ExpedientService.java:108)
+	at com.sistemaExpedientes.sistExp.controller.ExpedientController.editLocation(ExpedientController.java:88)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:255)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:188)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:926)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:831)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014)
+	at org.springframework.web.servlet.FrameworkServlet.doPut(FrameworkServlet.java:925)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:593)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:195)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:483)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:384)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:905)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1190)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63)
+	at java.base/java.lang.Thread.run(Thread.java:842)
+2024-10-29 09:34:55 INFO  c.s.s.controller.ExpedientController - Entering findById CONTROLLER method with ID: 5
+2024-10-29 09:34:55 INFO  c.s.sistExp.service.ExpedientService - Entering in findOne SERVICE method...
+2024-10-29 09:34:55 INFO  c.s.sistExp.service.ExpedientService - Exiting findOne SERVICE method...
+2024-10-29 09:34:55 INFO  c.s.s.controller.ExpedientController - Exiting findById CONTROLLER method...
+2024-10-29 09:35:33 INFO  c.s.s.controller.ExpedientController - Entering editLocation CONTROLLER method...
+2024-10-29 09:35:33 INFO  c.s.sistExp.service.ExpedientService - Entering in EditLocation SERVICE method...
+2024-10-29 09:35:33 INFO  c.s.s.controller.ExpedientController - Exiting editLocation CONTROLLER method successfully...
+2024-10-29 09:35:45 INFO  c.s.s.controller.ExpedientController - Entering editLocation CONTROLLER method...
+2024-10-29 09:35:45 INFO  c.s.sistExp.service.ExpedientService - Entering in EditLocation SERVICE method...
+2024-10-29 09:35:45 INFO  c.s.s.controller.ExpedientController - Exiting editLocation CONTROLLER method successfully...
+2024-10-29 09:35:51 INFO  c.s.s.controller.ExpedientController - Entering findById CONTROLLER method with ID: 5
+2024-10-29 09:35:51 INFO  c.s.sistExp.service.ExpedientService - Entering in findOne SERVICE method...
+2024-10-29 09:35:51 INFO  c.s.sistExp.service.ExpedientService - Exiting findOne SERVICE method...
+2024-10-29 09:35:51 INFO  c.s.s.controller.ExpedientController - Exiting findById CONTROLLER method...
+2024-10-29 09:36:52 INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-10-29 09:36:52 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2024-10-29 09:36:52 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2024-10-29 09:45:19 INFO  c.s.sistExp.SistExpApplication - Starting SistExpApplication using Java 17.0.11 with PID 17924 (C:\Users\pania\OneDrive\Documentos\GitHub\SistemaExpedientes\sistema-expedientes\target\classes started by pania in C:\Users\pania\OneDrive\Documentos\GitHub\SistemaExpedientes\sistema-expedientes)
+2024-10-29 09:45:19 INFO  c.s.sistExp.SistExpApplication - No active profile set, falling back to 1 default profile: "default"
+2024-10-29 09:45:19 INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2024-10-29 09:45:19 INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2024-10-29 09:45:20 INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-10-29 09:45:20 INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 95 ms. Found 5 JPA repository interfaces.
+2024-10-29 09:45:21 INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2024-10-29 09:45:22 INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2024-10-29 09:45:22 INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2024-10-29 09:45:22 INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.30]
+2024-10-29 09:45:22 INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2024-10-29 09:45:22 INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 2980 ms
+2024-10-29 09:45:22 INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-10-29 09:45:22 INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.5.3.Final
+2024-10-29 09:45:22 INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2024-10-29 09:45:23 INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-10-29 09:45:23 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2024-10-29 09:45:23 INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@773a3946
+2024-10-29 09:45:23 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2024-10-29 09:45:25 INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-10-29 09:45:25 INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-10-29 09:45:26 WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-10-29 09:45:28 INFO  o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2024-10-29 09:45:28 INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2024-10-29 09:45:28 INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2024-10-29 09:45:28 INFO  c.s.sistExp.SistExpApplication - Started SistExpApplication in 9.698 seconds (process running for 10.86)
+2024-10-29 09:45:55 INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-10-29 09:45:55 INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2024-10-29 09:45:55 INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 4 ms
+2024-10-29 09:45:55 INFO  c.s.s.controller.ExpedientController - Entering editLocation CONTROLLER method...
+2024-10-29 09:45:55 INFO  c.s.sistExp.service.ExpedientService - Entering in EditLocation SERVICE method...
+2024-10-29 09:45:56 INFO  c.s.s.controller.ExpedientController - Exiting editLocation CONTROLLER method successfully...
+2024-10-29 09:46:00 INFO  c.s.s.controller.ExpedientController - Entering findById CONTROLLER method with ID: 5
+2024-10-29 09:46:00 INFO  c.s.sistExp.service.ExpedientService - Entering in findOne SERVICE method...
+2024-10-29 09:46:00 INFO  c.s.sistExp.service.ExpedientService - Exiting findOne SERVICE method...
+2024-10-29 09:46:00 INFO  c.s.s.controller.ExpedientController - Exiting findById CONTROLLER method...
+2024-10-29 09:46:33 INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-10-29 09:46:33 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2024-10-29 09:46:33 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2024-10-29 09:49:39 INFO  c.s.sistExp.SistExpApplication - Starting SistExpApplication using Java 17.0.11 with PID 14596 (C:\Users\pania\OneDrive\Documentos\GitHub\SistemaExpedientes\sistema-expedientes\target\classes started by pania in C:\Users\pania\OneDrive\Documentos\GitHub\SistemaExpedientes\sistema-expedientes)
+2024-10-29 09:49:39 INFO  c.s.sistExp.SistExpApplication - No active profile set, falling back to 1 default profile: "default"
+2024-10-29 09:49:39 INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2024-10-29 09:49:39 INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2024-10-29 09:49:41 INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-10-29 09:49:41 INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 156 ms. Found 5 JPA repository interfaces.
+2024-10-29 09:49:42 INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2024-10-29 09:49:42 INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2024-10-29 09:49:42 INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2024-10-29 09:49:42 INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.30]
+2024-10-29 09:49:42 INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2024-10-29 09:49:42 INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 3395 ms
+2024-10-29 09:49:43 INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-10-29 09:49:43 INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.5.3.Final
+2024-10-29 09:49:43 INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2024-10-29 09:49:43 INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-10-29 09:49:44 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2024-10-29 09:49:44 INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@15619c36
+2024-10-29 09:49:44 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2024-10-29 09:49:45 INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-10-29 09:49:45 INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-10-29 09:49:46 WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-10-29 09:49:48 INFO  o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2024-10-29 09:49:48 INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2024-10-29 09:49:48 INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2024-10-29 09:49:48 INFO  c.s.sistExp.SistExpApplication - Started SistExpApplication in 10.156 seconds (process running for 11.546)
+2024-10-29 09:50:03 INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-10-29 09:50:03 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2024-10-29 09:50:03 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2024-10-29 09:50:07 INFO  c.s.sistExp.SistExpApplication - Starting SistExpApplication using Java 17.0.11 with PID 18920 (C:\Users\pania\OneDrive\Documentos\GitHub\SistemaExpedientes\sistema-expedientes\target\classes started by pania in C:\Users\pania\OneDrive\Documentos\GitHub\SistemaExpedientes\sistema-expedientes)
+2024-10-29 09:50:07 INFO  c.s.sistExp.SistExpApplication - No active profile set, falling back to 1 default profile: "default"
+2024-10-29 09:50:07 INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2024-10-29 09:50:07 INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2024-10-29 09:50:09 INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-10-29 09:50:09 INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 112 ms. Found 5 JPA repository interfaces.
+2024-10-29 09:50:11 INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2024-10-29 09:50:11 INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2024-10-29 09:50:11 INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2024-10-29 09:50:11 INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.30]
+2024-10-29 09:50:11 INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2024-10-29 09:50:11 INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 3416 ms
+2024-10-29 09:50:11 INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-10-29 09:50:12 INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.5.3.Final
+2024-10-29 09:50:12 INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2024-10-29 09:50:12 INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-10-29 09:50:12 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2024-10-29 09:50:13 INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@7cb1c464
+2024-10-29 09:50:13 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2024-10-29 09:50:14 INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-10-29 09:50:14 INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-10-29 09:50:15 WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-10-29 09:50:17 INFO  o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2024-10-29 09:50:17 INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2024-10-29 09:50:17 INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2024-10-29 09:50:17 INFO  c.s.sistExp.SistExpApplication - Started SistExpApplication in 10.858 seconds (process running for 12.02)
+2024-10-29 09:50:41 INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-10-29 09:50:41 INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2024-10-29 09:50:41 INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2024-10-29 09:50:43 INFO  c.s.sistExp.service.ExcelService - Total rows proccesed: 551
+2024-10-29 09:50:47 INFO  c.s.sistExp.service.ExcelService - Total de expedientes guardados: 551
+2024-10-29 09:53:52 INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-10-29 09:53:52 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2024-10-29 09:53:52 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2024-10-29 11:08:27 INFO  c.s.sistExp.SistExpApplication - Starting SistExpApplication using Java 17.0.11 with PID 21332 (C:\Users\pania\OneDrive\Documentos\GitHub\SistemaExpedientes\sistema-expedientes\target\classes started by pania in C:\Users\pania\OneDrive\Documentos\GitHub\SistemaExpedientes\sistema-expedientes)
+2024-10-29 11:08:27 INFO  c.s.sistExp.SistExpApplication - No active profile set, falling back to 1 default profile: "default"
+2024-10-29 11:08:27 INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2024-10-29 11:08:27 INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2024-10-29 11:08:29 INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-10-29 11:08:29 INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 88 ms. Found 5 JPA repository interfaces.
+2024-10-29 11:08:30 INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2024-10-29 11:08:30 INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2024-10-29 11:08:30 INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2024-10-29 11:08:30 INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.30]
+2024-10-29 11:08:30 INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2024-10-29 11:08:30 INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 2825 ms
+2024-10-29 11:08:30 INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-10-29 11:08:31 INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.5.3.Final
+2024-10-29 11:08:31 INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2024-10-29 11:08:31 INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-10-29 11:08:31 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2024-10-29 11:08:32 INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@361ff055
+2024-10-29 11:08:32 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2024-10-29 11:08:33 INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-10-29 11:08:33 INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-10-29 11:08:34 WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-10-29 11:08:36 INFO  o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2024-10-29 11:08:36 INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2024-10-29 11:08:36 INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2024-10-29 11:08:36 INFO  c.s.sistExp.SistExpApplication - Started SistExpApplication in 9.973 seconds (process running for 10.993)
+2024-10-29 11:11:52 INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-10-29 11:11:52 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2024-10-29 11:11:52 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2024-10-29 11:11:59 INFO  c.s.sistExp.SistExpApplication - Starting SistExpApplication using Java 17.0.11 with PID 4044 (C:\Users\pania\OneDrive\Documentos\GitHub\SistemaExpedientes\sistema-expedientes\target\classes started by pania in C:\Users\pania\OneDrive\Documentos\GitHub\SistemaExpedientes\sistema-expedientes)
+2024-10-29 11:11:59 INFO  c.s.sistExp.SistExpApplication - No active profile set, falling back to 1 default profile: "default"
+2024-10-29 11:11:59 INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2024-10-29 11:11:59 INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2024-10-29 11:12:01 INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-10-29 11:12:01 INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 104 ms. Found 5 JPA repository interfaces.
+2024-10-29 11:12:02 INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2024-10-29 11:12:02 INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2024-10-29 11:12:02 INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2024-10-29 11:12:02 INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.30]
+2024-10-29 11:12:02 INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2024-10-29 11:12:02 INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 2976 ms
+2024-10-29 11:12:03 INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-10-29 11:12:03 INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.5.3.Final
+2024-10-29 11:12:03 INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2024-10-29 11:12:03 INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-10-29 11:12:03 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2024-10-29 11:12:04 INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@12a5da38
+2024-10-29 11:12:04 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2024-10-29 11:12:05 INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-10-29 11:12:05 INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-10-29 11:12:06 WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-10-29 11:12:08 INFO  o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2024-10-29 11:12:08 INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2024-10-29 11:12:08 INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2024-10-29 11:12:08 INFO  c.s.sistExp.SistExpApplication - Started SistExpApplication in 9.877 seconds (process running for 11.065)
+2024-10-29 11:13:00 INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-10-29 11:13:00 INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2024-10-29 11:13:00 INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2024-10-29 11:13:00 INFO  c.s.s.controller.ExpedientController - Entering findAll CONTROLLER method...
+2024-10-29 11:13:00 INFO  c.s.sistExp.service.ExpedientService - Entering in findAll SERVICE method...
+2024-10-29 11:13:00 INFO  c.s.sistExp.service.ExpedientService - Exiting findAll SERVICE method...
+2024-10-29 11:13:03 INFO  c.s.s.controller.ExpedientController - Exiting findAll CONTROLLER method...
+2024-10-29 11:15:47 INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-10-29 11:15:47 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2024-10-29 11:15:47 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2024-10-29 11:15:53 INFO  c.s.sistExp.SistExpApplication - Starting SistExpApplication using Java 17.0.11 with PID 10708 (C:\Users\pania\OneDrive\Documentos\GitHub\SistemaExpedientes\sistema-expedientes\target\classes started by pania in C:\Users\pania\OneDrive\Documentos\GitHub\SistemaExpedientes\sistema-expedientes)
+2024-10-29 11:15:53 INFO  c.s.sistExp.SistExpApplication - No active profile set, falling back to 1 default profile: "default"
+2024-10-29 11:15:54 INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2024-10-29 11:15:54 INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2024-10-29 11:15:55 INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-10-29 11:15:55 INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 116 ms. Found 5 JPA repository interfaces.
+2024-10-29 11:15:57 INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2024-10-29 11:15:57 INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2024-10-29 11:15:57 INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2024-10-29 11:15:57 INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.30]
+2024-10-29 11:15:57 INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2024-10-29 11:15:57 INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 3158 ms
+2024-10-29 11:15:57 INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-10-29 11:15:57 INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.5.3.Final
+2024-10-29 11:15:57 INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2024-10-29 11:15:58 INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-10-29 11:15:58 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2024-10-29 11:15:58 INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@773a3946
+2024-10-29 11:15:58 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2024-10-29 11:16:00 INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-10-29 11:16:00 INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-10-29 11:16:01 WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-10-29 11:16:03 INFO  o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2024-10-29 11:16:03 INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2024-10-29 11:16:03 INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2024-10-29 11:16:03 INFO  c.s.sistExp.SistExpApplication - Started SistExpApplication in 10.139 seconds (process running for 11.242)
+2024-10-29 11:16:53 INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-10-29 11:16:53 INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2024-10-29 11:16:53 INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 2 ms
+2024-10-29 11:16:54 INFO  c.s.s.controller.ExpedientController - Entering getRegulationsByExpedientId CONTROLLER method with expedientId: 519
+2024-10-29 11:16:54 INFO  c.s.sistExp.service.ExpedientService - Entering findRegulationsByExpedientId SERVICE method with expedientId: 519
+2024-10-29 11:16:54 INFO  c.s.sistExp.service.ExpedientService - Exiting findRegulationsByExpedientId SERVICE method successfully with 3 results
+2024-10-29 11:16:54 INFO  c.s.s.controller.ExpedientController - Exiting getRegulationsByExpedientId CONTROLLER method successfully with 3 results
+2024-10-29 11:17:41 INFO  c.s.s.controller.ExpedientController - Entering findById CONTROLLER method with ID: 519
+2024-10-29 11:17:41 INFO  c.s.sistExp.service.ExpedientService - Entering in findOne SERVICE method...
+2024-10-29 11:17:41 INFO  c.s.sistExp.service.ExpedientService - Exiting findOne SERVICE method...
+2024-10-29 11:17:41 INFO  c.s.s.controller.ExpedientController - Exiting findById CONTROLLER method...
+2024-10-29 11:19:48 INFO  c.s.s.controller.ExpedientController - Entering getRegulationsByExpedientId CONTROLLER method with expedientId: 8
+2024-10-29 11:19:48 INFO  c.s.sistExp.service.ExpedientService - Entering findRegulationsByExpedientId SERVICE method with expedientId: 8
+2024-10-29 11:19:48 INFO  c.s.sistExp.service.ExpedientService - Exiting findRegulationsByExpedientId SERVICE method successfully with 0 results
+2024-10-29 11:19:48 INFO  c.s.s.controller.ExpedientController - No regulations found for expedientId: 8
+2024-10-29 11:19:54 INFO  c.s.s.controller.ExpedientController - Entering getRegulationsByExpedientId CONTROLLER method with expedientId: 9
+2024-10-29 11:19:54 INFO  c.s.sistExp.service.ExpedientService - Entering findRegulationsByExpedientId SERVICE method with expedientId: 9
+2024-10-29 11:19:54 INFO  c.s.sistExp.service.ExpedientService - Exiting findRegulationsByExpedientId SERVICE method successfully with 0 results
+2024-10-29 11:19:54 INFO  c.s.s.controller.ExpedientController - No regulations found for expedientId: 9
+2024-10-29 11:20:17 INFO  c.s.s.controller.ExpedientController - Entering getRegulationsByExpedientId CONTROLLER method with expedientId: 320
+2024-10-29 11:20:17 INFO  c.s.sistExp.service.ExpedientService - Entering findRegulationsByExpedientId SERVICE method with expedientId: 320
+2024-10-29 11:20:17 INFO  c.s.sistExp.service.ExpedientService - Exiting findRegulationsByExpedientId SERVICE method successfully with 1 results
+2024-10-29 11:20:17 INFO  c.s.s.controller.ExpedientController - Exiting getRegulationsByExpedientId CONTROLLER method successfully with 1 results
+2024-10-29 11:20:53 INFO  c.s.s.controller.ExpedientController - Entering findById CONTROLLER method with ID: 320
+2024-10-29 11:20:53 INFO  c.s.sistExp.service.ExpedientService - Entering in findOne SERVICE method...
+2024-10-29 11:20:53 INFO  c.s.sistExp.service.ExpedientService - Exiting findOne SERVICE method...
+2024-10-29 11:20:53 INFO  c.s.s.controller.ExpedientController - Exiting findById CONTROLLER method...
+2024-10-29 11:21:23 INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-10-29 11:21:23 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2024-10-29 11:21:23 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2024-10-29 11:40:15 INFO  c.s.sistExp.SistExpApplication - Starting SistExpApplication using Java 17.0.11 with PID 18556 (C:\Users\pania\OneDrive\Documentos\GitHub\SistemaExpedientes\sistema-expedientes\target\classes started by pania in C:\Users\pania\OneDrive\Documentos\GitHub\SistemaExpedientes\sistema-expedientes)
+2024-10-29 11:40:15 INFO  c.s.sistExp.SistExpApplication - No active profile set, falling back to 1 default profile: "default"
+2024-10-29 11:40:15 INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2024-10-29 11:40:15 INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2024-10-29 11:40:17 INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-10-29 11:40:17 INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 86 ms. Found 5 JPA repository interfaces.
+2024-10-29 11:40:18 INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2024-10-29 11:40:18 INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2024-10-29 11:40:18 INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2024-10-29 11:40:18 INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.30]
+2024-10-29 11:40:18 INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2024-10-29 11:40:18 INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 3155 ms
+2024-10-29 11:40:19 INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-10-29 11:40:19 INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.5.3.Final
+2024-10-29 11:40:19 INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2024-10-29 11:40:19 INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-10-29 11:40:20 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2024-10-29 11:40:20 INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@72bebfb5
+2024-10-29 11:40:20 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2024-10-29 11:40:21 INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-10-29 11:40:21 INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-10-29 11:40:22 WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-10-29 11:40:25 INFO  o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2024-10-29 11:40:25 INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2024-10-29 11:40:25 INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2024-10-29 11:40:25 INFO  c.s.sistExp.SistExpApplication - Started SistExpApplication in 10.351 seconds (process running for 11.578)
+2024-10-29 11:41:07 INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-10-29 11:41:07 INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2024-10-29 11:41:07 INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 2 ms
+2024-10-29 11:41:07 INFO  c.s.s.controller.ExpedientController - Entering findByIssuer CONTROLLER method with issuer: subsecretaria
+2024-10-29 11:41:07 INFO  c.s.sistExp.service.ExpedientService - Entering in findByIssuer SERVICE method with issuer: subsecretaria
+2024-10-29 11:41:07 INFO  c.s.sistExp.service.ExpedientService - Exiting findByIssuer SERVICE method...
+2024-10-29 11:41:07 INFO  c.s.s.controller.ExpedientController - Exiting findByIssuer CONTROLLER method...
+2024-10-29 11:41:16 INFO  c.s.s.controller.ExpedientController - Entering findByIssuer CONTROLLER method with issuer: Subsecretaria
+2024-10-29 11:41:16 INFO  c.s.sistExp.service.ExpedientService - Entering in findByIssuer SERVICE method with issuer: Subsecretaria
+2024-10-29 11:41:16 INFO  c.s.sistExp.service.ExpedientService - Exiting findByIssuer SERVICE method...
+2024-10-29 11:41:16 INFO  c.s.s.controller.ExpedientController - Exiting findByIssuer CONTROLLER method...
+2024-10-29 11:41:49 INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-10-29 11:41:49 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2024-10-29 11:41:49 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2024-10-29 11:44:32 INFO  c.s.sistExp.SistExpApplication - Starting SistExpApplication using Java 17.0.11 with PID 17652 (C:\Users\pania\OneDrive\Documentos\GitHub\SistemaExpedientes\sistema-expedientes\target\classes started by pania in C:\Users\pania\OneDrive\Documentos\GitHub\SistemaExpedientes\sistema-expedientes)
+2024-10-29 11:44:32 INFO  c.s.sistExp.SistExpApplication - No active profile set, falling back to 1 default profile: "default"
+2024-10-29 11:44:32 INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2024-10-29 11:44:32 INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2024-10-29 11:44:34 INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-10-29 11:44:34 INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 96 ms. Found 5 JPA repository interfaces.
+2024-10-29 11:44:35 INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2024-10-29 11:44:35 INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2024-10-29 11:44:35 INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2024-10-29 11:44:35 INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.30]
+2024-10-29 11:44:35 INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2024-10-29 11:44:35 INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 2992 ms
+2024-10-29 11:44:36 INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-10-29 11:44:36 INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.5.3.Final
+2024-10-29 11:44:36 INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2024-10-29 11:44:36 INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-10-29 11:44:36 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2024-10-29 11:44:37 INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@64fbaa87
+2024-10-29 11:44:37 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2024-10-29 11:44:38 INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-10-29 11:44:38 INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-10-29 11:44:39 WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-10-29 11:44:41 INFO  o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2024-10-29 11:44:41 INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2024-10-29 11:44:41 INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2024-10-29 11:44:41 INFO  c.s.sistExp.SistExpApplication - Started SistExpApplication in 9.849 seconds (process running for 11.035)
+2024-10-29 11:44:54 INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-10-29 11:44:54 INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2024-10-29 11:44:54 INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2024-10-29 11:44:55 INFO  c.s.s.controller.ExpedientController - Entering findByIssuer CONTROLLER method with issuer: subsecretaria
+2024-10-29 11:44:55 INFO  c.s.sistExp.service.ExpedientService - Entering in findByIssuer SERVICE method with issuer: subsecretaria
+2024-10-29 11:44:55 INFO  c.s.sistExp.service.ExpedientService - Exiting findByIssuer SERVICE method...
+2024-10-29 11:44:55 INFO  c.s.s.controller.ExpedientController - Exiting findByIssuer CONTROLLER method...
+2024-10-29 11:45:04 INFO  c.s.s.controller.ExpedientController - Entering findByIssuer CONTROLLER method with issuer: Subsecretaria
+2024-10-29 11:45:04 INFO  c.s.sistExp.service.ExpedientService - Entering in findByIssuer SERVICE method with issuer: Subsecretaria
+2024-10-29 11:45:04 INFO  c.s.sistExp.service.ExpedientService - Exiting findByIssuer SERVICE method...
+2024-10-29 11:45:04 INFO  c.s.s.controller.ExpedientController - Exiting findByIssuer CONTROLLER method...
+2024-10-29 11:45:13 INFO  c.s.s.controller.ExpedientController - Entering findByIssuer CONTROLLER method with issuer: subsecretaria
+2024-10-29 11:45:13 INFO  c.s.sistExp.service.ExpedientService - Entering in findByIssuer SERVICE method with issuer: subsecretaria
+2024-10-29 11:45:13 INFO  c.s.sistExp.service.ExpedientService - Exiting findByIssuer SERVICE method...
+2024-10-29 11:45:13 INFO  c.s.s.controller.ExpedientController - Exiting findByIssuer CONTROLLER method...
+2024-10-29 11:45:48 INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-10-29 11:45:48 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2024-10-29 11:45:48 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2024-10-29 11:46:07 INFO  c.s.sistExp.SistExpApplication - Starting SistExpApplication using Java 17.0.11 with PID 20000 (C:\Users\pania\OneDrive\Documentos\GitHub\SistemaExpedientes\sistema-expedientes\target\classes started by pania in C:\Users\pania\OneDrive\Documentos\GitHub\SistemaExpedientes\sistema-expedientes)
+2024-10-29 11:46:07 INFO  c.s.sistExp.SistExpApplication - No active profile set, falling back to 1 default profile: "default"
+2024-10-29 11:46:07 INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2024-10-29 11:46:07 INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2024-10-29 11:46:09 INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-10-29 11:46:09 INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 90 ms. Found 5 JPA repository interfaces.
+2024-10-29 11:46:10 INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2024-10-29 11:46:10 INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2024-10-29 11:46:10 INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2024-10-29 11:46:10 INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.30]
+2024-10-29 11:46:10 INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2024-10-29 11:46:10 INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 2944 ms
+2024-10-29 11:46:11 INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-10-29 11:46:11 INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.5.3.Final
+2024-10-29 11:46:11 INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2024-10-29 11:46:11 INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-10-29 11:46:11 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2024-10-29 11:46:12 INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@64090866
+2024-10-29 11:46:12 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2024-10-29 11:46:13 INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-10-29 11:46:13 INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-10-29 11:46:14 WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-10-29 11:46:16 INFO  o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2024-10-29 11:46:16 INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2024-10-29 11:46:16 INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2024-10-29 11:46:16 INFO  c.s.sistExp.SistExpApplication - Started SistExpApplication in 9.802 seconds (process running for 11.027)
+2024-10-29 11:46:22 INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-10-29 11:46:22 INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2024-10-29 11:46:22 INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2024-10-29 11:46:22 INFO  c.s.s.controller.ExpedientController - Entering findByIssuer CONTROLLER method with issuer: subsecretaria
+2024-10-29 11:46:22 INFO  c.s.sistExp.service.ExpedientService - Entering in findByIssuer SERVICE method with issuer: subsecretaria
+2024-10-29 11:46:23 INFO  c.s.sistExp.service.ExpedientService - Exiting findByIssuer SERVICE method...
+2024-10-29 11:46:23 INFO  c.s.s.controller.ExpedientController - Exiting findByIssuer CONTROLLER method...
+2024-10-29 11:46:32 INFO  c.s.s.controller.ExpedientController - Entering findByIssuer CONTROLLER method with issuer: subsecretaria de educacion
+2024-10-29 11:46:32 INFO  c.s.sistExp.service.ExpedientService - Entering in findByIssuer SERVICE method with issuer: subsecretaria de educacion
+2024-10-29 11:46:32 INFO  c.s.sistExp.service.ExpedientService - Exiting findByIssuer SERVICE method...
+2024-10-29 11:46:32 INFO  c.s.s.controller.ExpedientController - Exiting findByIssuer CONTROLLER method...
+2024-10-29 11:47:15 INFO  c.s.s.controller.ExpedientController - Entering findByIssuer CONTROLLER method with issuer: CGE
+2024-10-29 11:47:15 INFO  c.s.sistExp.service.ExpedientService - Entering in findByIssuer SERVICE method with issuer: CGE
+2024-10-29 11:47:15 INFO  c.s.sistExp.service.ExpedientService - Exiting findByIssuer SERVICE method...
+2024-10-29 11:47:15 INFO  c.s.s.controller.ExpedientController - Exiting findByIssuer CONTROLLER method...
+2024-10-29 11:47:34 INFO  c.s.s.controller.ExpedientController - Entering findByIssuer CONTROLLER method with issuer: C.G.E
+2024-10-29 11:47:34 INFO  c.s.sistExp.service.ExpedientService - Entering in findByIssuer SERVICE method with issuer: C.G.E
+2024-10-29 11:47:34 INFO  c.s.sistExp.service.ExpedientService - Exiting findByIssuer SERVICE method...
+2024-10-29 11:47:34 INFO  c.s.s.controller.ExpedientController - Exiting findByIssuer CONTROLLER method...
+2024-10-29 11:47:44 INFO  c.s.s.controller.ExpedientController - Entering findByIssuer CONTROLLER method with issuer: cge
+2024-10-29 11:47:44 INFO  c.s.sistExp.service.ExpedientService - Entering in findByIssuer SERVICE method with issuer: cge
+2024-10-29 11:47:44 INFO  c.s.sistExp.service.ExpedientService - Exiting findByIssuer SERVICE method...
+2024-10-29 11:47:44 INFO  c.s.s.controller.ExpedientController - Exiting findByIssuer CONTROLLER method...
+2024-10-29 11:48:47 INFO  c.s.s.controller.ExpedientController - Entering findByIssuer CONTROLLER method with issuer: Direccion de educacion superior(CGE)
+2024-10-29 11:48:47 INFO  c.s.sistExp.service.ExpedientService - Entering in findByIssuer SERVICE method with issuer: Direccion de educacion superior(CGE)
+2024-10-29 11:48:47 INFO  c.s.sistExp.service.ExpedientService - Exiting findByIssuer SERVICE method...
+2024-10-29 11:48:47 INFO  c.s.s.controller.ExpedientController - Exiting findByIssuer CONTROLLER method...
+2024-10-29 11:49:24 INFO  c.s.s.controller.ExpedientController - Entering findByIssuer CONTROLLER method with issuer: MGCyT
+2024-10-29 11:49:24 INFO  c.s.sistExp.service.ExpedientService - Entering in findByIssuer SERVICE method with issuer: MGCyT
+2024-10-29 11:49:24 INFO  c.s.sistExp.service.ExpedientService - Exiting findByIssuer SERVICE method...
+2024-10-29 11:49:24 INFO  c.s.s.controller.ExpedientController - Exiting findByIssuer CONTROLLER method...
+2024-10-29 11:49:39 INFO  c.s.s.controller.ExpedientController - Entering findByIssuer CONTROLLER method with issuer: MGCEyT
+2024-10-29 11:49:39 INFO  c.s.sistExp.service.ExpedientService - Entering in findByIssuer SERVICE method with issuer: MGCEyT
+2024-10-29 11:49:39 INFO  c.s.sistExp.service.ExpedientService - Exiting findByIssuer SERVICE method...
+2024-10-29 11:49:39 INFO  c.s.s.controller.ExpedientController - Exiting findByIssuer CONTROLLER method...
+2024-10-29 11:49:45 INFO  c.s.s.controller.ExpedientController - Entering findByIssuer CONTROLLER method with issuer: MCyT
+2024-10-29 11:49:45 INFO  c.s.sistExp.service.ExpedientService - Entering in findByIssuer SERVICE method with issuer: MCyT
+2024-10-29 11:49:45 INFO  c.s.sistExp.service.ExpedientService - Exiting findByIssuer SERVICE method...
+2024-10-29 11:49:45 INFO  c.s.s.controller.ExpedientController - Exiting findByIssuer CONTROLLER method...
+2024-10-29 11:51:36 INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-10-29 11:51:36 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2024-10-29 11:51:36 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.

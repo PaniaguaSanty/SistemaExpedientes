@@ -11,8 +11,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RegulationRequestDto {
-    private String resolutionNumber;
     private String description;
-    private Status status;
     private Long expedientId; // Reference to the associated Expedient
 }

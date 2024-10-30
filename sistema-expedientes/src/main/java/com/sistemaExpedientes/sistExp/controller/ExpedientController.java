@@ -79,7 +79,6 @@ public class ExpedientController implements Controller<ExpedientResponseDTO, Exp
         }
     }
 
-    // Método para editar una ubicación existente
     @PutMapping("/editLocation/{id}/{existingPlace}")
     public ResponseEntity<AddLocationResponseDto> editLocation(@PathVariable Long id, @PathVariable String existingPlace,
                                                                @RequestBody AddLocationRequestDto locationDetails) {
@@ -91,6 +90,32 @@ public class ExpedientController implements Controller<ExpedientResponseDTO, Exp
         } catch (NotFoundException e) {
             logger.error("Error in editLocation CONTROLLER method: {}", e.getMessage());
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    // Endpoint para subir el archivo Excel, convertir a CSV e insertar en la base de datos
+    @PostMapping("/upload")
+    public ResponseEntity<String> uploadExcelFile(@RequestParam("file") MultipartFile file) {
+        try {
+            // Convertir Excel a CSV
+            File csvFile = excelService.convertExcelToCsv(file);
+            // Insertar el CSV en la base de datos
+            excelService.insertCsvToDatabase(csvFile);
+            return ResponseEntity.status(HttpStatus.OK).body("Archivo subido y datos guardados correctamente!");
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al procesar el archivo: " + e.getMessage());
+        }
+    }
+
+    // Endpoint para subir el archivo Excel de cursos e insertar en la base de datos
+    @PostMapping("/upload-courses")
+    public ResponseEntity<String> uploadCoursesExcel(@RequestParam("file") MultipartFile file) {
+        try {
+            excelService.insertCourseExcelToDatabase(file);
+            return ResponseEntity.status(HttpStatus.OK).body("Archivo de cursos subido y datos guardados correctamente!");
+        } catch (IOException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al procesar el archivo de cursos: " + e.getMessage());
         }
     }
 
@@ -112,7 +137,6 @@ public class ExpedientController implements Controller<ExpedientResponseDTO, Exp
         return ResponseEntity.ok(expedients);
     }
 
-    // Buscar por código de organización
     @GetMapping("/organization/{orgCode}")
     public ResponseEntity<List<ExpedientResponseDTO>> findByOrganizationCode(@PathVariable String orgCode) {
         logger.info("Entering findByOrganizationCode CONTROLLER method with orgCode: {}", orgCode);
@@ -121,7 +145,6 @@ public class ExpedientController implements Controller<ExpedientResponseDTO, Exp
         return ResponseEntity.ok(expedients);
     }
 
-    // Buscar por año
     @GetMapping("/year/{year}")
     public ResponseEntity<List<ExpedientResponseDTO>> findByYear(@PathVariable String year) {
         logger.info("Entering findByYear CONTROLLER method with year: {}", year);
@@ -130,7 +153,6 @@ public class ExpedientController implements Controller<ExpedientResponseDTO, Exp
         return ResponseEntity.ok(expedients);
     }
 
-    // Buscar por número correlativo
     @GetMapping("/correlative/{number}")
     public ResponseEntity<ExpedientResponseDTO> findByCorrelativeNumber(@PathVariable String number) {
         logger.info("Entering findByCorrelativeNumber CONTROLLER method with number: {}", number);
@@ -139,7 +161,6 @@ public class ExpedientController implements Controller<ExpedientResponseDTO, Exp
         return ResponseEntity.ok(expedient);
     }
 
-    // Buscar por emisor
     @GetMapping("/issuer/{issuer}")
     public ResponseEntity<List<ExpedientResponseDTO>> findByIssuer(@PathVariable String issuer) {
         logger.info("Entering findByIssuer CONTROLLER method with issuer: {}", issuer);
@@ -148,7 +169,6 @@ public class ExpedientController implements Controller<ExpedientResponseDTO, Exp
         return ResponseEntity.ok(expedients);
     }
 
-    //Buscar por Location
     @GetMapping("/location/{location}")
     public ResponseEntity<List<ExpedientResponseDTO>> findByLocation(@PathVariable String location) {
         logger.info("Entering in findByLocation CONTROLLER method with location {}", location);
@@ -157,7 +177,6 @@ public class ExpedientController implements Controller<ExpedientResponseDTO, Exp
         return ResponseEntity.ok(expedients);
     }
 
-    // Buscar por tipo de solicitud
     @GetMapping("regulations/{id}")
     public ResponseEntity<List<RegulationResponseDto>> findRegulationsByExpedientId(@PathVariable("id") Long expedientId) {
         logger.info("Entering getRegulationsByExpedientId CONTROLLER method with expedientId: {}", expedientId);
@@ -172,6 +191,7 @@ public class ExpedientController implements Controller<ExpedientResponseDTO, Exp
         logger.info("Exiting getRegulationsByExpedientId CONTROLLER method successfully with {} results", regulations.size());
         return new ResponseEntity<>(regulations, HttpStatus.OK);
     }
+
     @GetMapping("/solicitudes/{issuer}")
     public ResponseEntity<List<SolicitudeDto>> findSolicitudeByIssuer(@PathVariable String issuer) {
         logger.info("Entering findSolicitudeByIssuer CONTROLLER method with issuer: {}", issuer);
@@ -193,7 +213,6 @@ public class ExpedientController implements Controller<ExpedientResponseDTO, Exp
         logger.info("Exiting findBySolicitude CONTROLLER method...");
         return ResponseEntity.ok(expedients);
     }
-    // Buscar por estado
 
     @GetMapping("/status/{status}")
     public ResponseEntity<List<ExpedientResponseDTO>> findByStatus(@PathVariable String status) {
@@ -202,36 +221,28 @@ public class ExpedientController implements Controller<ExpedientResponseDTO, Exp
         logger.info("Exiting findByStatus CONTROLLER method...");
         return ResponseEntity.ok(expedients);
     }
-    // Endpoint para subir el archivo Excel, convertir a CSV e insertar en la base de datos
-
-    @PostMapping("/upload")
-    public ResponseEntity<String> uploadExcelFile(@RequestParam("file") MultipartFile file) {
-        try {
-            // Convertir Excel a CSV
-            File csvFile = excelService.convertExcelToCsv(file);
-            // Insertar el CSV en la base de datos
-            excelService.insertCsvToDatabase(csvFile);
-            return ResponseEntity.status(HttpStatus.OK).body("Archivo subido y datos guardados correctamente!");
-        } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al procesar el archivo: " + e.getMessage());
-        }
-    }
-    // Endpoint para subir el archivo Excel de cursos e insertar en la base de datos
-
-    @PostMapping("/upload-courses")
-    public ResponseEntity<String> uploadCoursesExcel(@RequestParam("file") MultipartFile file) {
-        try {
-            excelService.insertCourseExcelToDatabase(file);
-            return ResponseEntity.status(HttpStatus.OK).body("Archivo de cursos subido y datos guardados correctamente!");
-        } catch (IOException e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al procesar el archivo de cursos: " + e.getMessage());
-        }
-    }
 
     // Endpoint para obtener todos los expedientes desde la base de datos
     @GetMapping("/getAll")
     public List<Expedient> getAllExpedientes() {
         return excelService.getAllExpedientes();
     }
+
+    @GetMapping("/findRegulationsByIssuer/{issuer}")
+    public ResponseEntity<List<RegulationResponseDto>> findRegulationsByIssuer(@RequestParam String issuer) {
+        logger.info("Received request to get regulations by issuer: {}", issuer);
+
+        // Llama al servicio para obtener las regulaciones filtradas
+        List<RegulationResponseDto> regulationDTOs = expedientService.findRegulationsByIssuer(issuer);
+
+        // Devuelve la lista de RegulationResponseDto en la respuesta
+        if (regulationDTOs.isEmpty()) {
+            logger.info("No regulations found for issuer: {}", issuer);
+            return ResponseEntity.noContent().build();
+        } else {
+            logger.info("Returning {} regulations for issuer: {}", regulationDTOs.size(), issuer);
+            return ResponseEntity.ok(regulationDTOs);
+        }
+    }
+
 }
