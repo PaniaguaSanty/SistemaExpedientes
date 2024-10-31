@@ -1,31 +1,31 @@
-import { motion } from "framer-motion"
+import { motion } from "framer-motion";
 
 type StatBoxProps = {
-  title: string
-  value: number | string
-}
-
-const statBoxVariants = {
-  hidden: { opacity: 0, y: -20, scale: 0.8 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    transition: {
-      type: "spring",
-      stiffness: 300,
-      damping: 20,
-      duration: 0.5
-    }
-  },
-  hover: {
-    scale: 1.05,
-    boxShadow: "0px 5px 10px rgba(0,0,0,0.1)",
-    transition: { duration: 0.3 }
-  }
-}
+  title: string;
+  value: number | string;
+};
 
 const StatBox: React.FC<StatBoxProps> = ({ title, value }) => {
+  const statBoxVariants = {
+    hidden: { opacity: 0, y: -20, scale: 0.8 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: {
+        type: "spring",
+        stiffness: 300,
+        damping: 20,
+        duration: 0.5
+      }
+    },
+    hover: {
+      scale: 1.05,
+      boxShadow: "0px 5px 10px rgba(0,0,0,0.1)",
+      transition: { duration: 0.3 }
+    }
+  };
+
   return (
     <motion.div
       className="bg-white rounded-lg shadow p-4 cursor-pointer"
@@ -52,7 +52,7 @@ const StatBox: React.FC<StatBoxProps> = ({ title, value }) => {
         {value}
       </motion.div>
     </motion.div>
-  )
-}
+  );
+};
 
-export default StatBox
+export default StatBox;
