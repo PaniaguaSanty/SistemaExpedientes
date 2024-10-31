@@ -157,8 +157,9 @@ export default function Dashboard() {
             handleFileChange={handleFileChange}
             handleDeletePDF={handleDeletePDF}
             buttonVariants={buttonVariants}
-            fadeInVariants={fadeInVariants}
-          />
+            fadeInVariants={fadeInVariants} setNewExpediente={function (value: SetStateAction<Partial<Expediente>>): void {
+              throw new Error("Function not implemented.");
+            } }          />
         )}
       </AnimatePresence>
 
