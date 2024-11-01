@@ -272,6 +272,8 @@ public class ExpedientService implements CRUD<ExpedientResponseDTO, ExpedientReq
         return regulationDTOs;
     }
 
+
+
 }
 
 
