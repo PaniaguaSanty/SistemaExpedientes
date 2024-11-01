@@ -5,11 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7f0c8d7e-87f1-4a4f-b3fb-27a6f3fcde9c" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/app.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/app.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sistema-expedientes/src/main/java/com/sistemaExpedientes/sistExp/model/Expedient.java" beforeDir="false" afterPath="$PROJECT_DIR$/sistema-expedientes/src/main/java/com/sistemaExpedientes/sistExp/model/Expedient.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sistema-expedientes/src/main/java/com/sistemaExpedientes/sistExp/model/Location.java" beforeDir="false" afterPath="$PROJECT_DIR$/sistema-expedientes/src/main/java/com/sistemaExpedientes/sistExp/model/Location.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sistema-expedientes/src/main/java/com/sistemaExpedientes/sistExp/model/Regulation.java" beforeDir="false" afterPath="$PROJECT_DIR$/sistema-expedientes/src/main/java/com/sistemaExpedientes/sistExp/model/Regulation.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -24,6 +20,18 @@
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "facupedrozo"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/PaniaguaSanty/SistemaExpedientes.git",
+    "accountId": "1f40221a-2389-4243-9a7a-4fc45c00d017"
+  }
+}]]></component>
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
   &quot;associatedIndex&quot;: 4
