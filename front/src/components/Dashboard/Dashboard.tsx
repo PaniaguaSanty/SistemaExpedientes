@@ -1,6 +1,6 @@
 import { useState, useMemo, useRef, SetStateAction } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import ExpedienteForm from "../Dashboard/ExpedienteForm" ;
+import ExpedienteForm from "../Dashboard/ExpedienteForm";
 import ExpedienteTable from "../Dashboard/ExpedienteTable";
 import StatBox from "../StatBox";
 import { Expediente } from "../../model/Expediente";
@@ -9,6 +9,7 @@ import useExpedientes from "./useExpedientes";
 export default function Dashboard() {
   const {
     expedientes,
+    setExpedientes, // Añadir setExpedientes
     searchTerm,
     setSearchTerm,
     selectedYear,
@@ -41,7 +42,19 @@ export default function Dashboard() {
     fadeInVariants,
     listItemVariants,
     statBoxVariants,
+    findByYear, // Añadir la función findByYear
   } = useExpedientes();
+
+  const handleSearchByYear = async () => {
+    if (newYear) {
+      try {
+        const response = await findByYear(newYear);
+        setExpedientes(response.data);
+      } catch (error) {
+        console.error('Error finding expedients by year:', error);
+      }
+    }
+  };
 
   return (
     <motion.div
@@ -102,6 +115,19 @@ export default function Dashboard() {
               <path fillRule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clipRule="evenodd" />
             </svg>
             Añadir Año
+          </motion.button>
+          <motion.button
+            onClick={handleSearchByYear}
+            disabled={!newYear}
+            className="bg-green-500 text-white px-4 py-2 rounded-md disabled:opacity-50"
+            variants={buttonVariants}
+            whileHover="hover"
+            whileTap="tap"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 inline-block mr-2" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd" />
+            </svg>
+            Buscar por Año
           </motion.button>
         </div>
         <div className="flex items-center space-x-2">
@@ -171,9 +197,8 @@ export default function Dashboard() {
         toggleUbicaciones={toggleUbicaciones}
         expandedUbicaciones={expandedUbicaciones}
         buttonVariants={buttonVariants}
-        listItemVariants={listItemVariants} setExpedientes={function (value: SetStateAction<Expediente[]>): void {
-          throw new Error("Function not implemented.");
-        } }      />
+        listItemVariants={listItemVariants}
+      />
     </motion.div>
   );
 }

@@ -1,6 +1,10 @@
-import { useState, useMemo, useRef } from "react";
+import { useState, useMemo, useRef, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import ExpedienteForm from "../Dashboard/ExpedienteForm";
+import ExpedienteTable from "../Dashboard/ExpedienteTable";
+import StatBox from "../StatBox";
 import { Expediente, Ubicacion } from "../../model/Expediente";
-import { Regulation } from "../../model/Regulation";
+import ExpedienteService from '../../service/ExpedienteService';
 
 const useExpedientes = () => {
   const [expedientes, setExpedientes] = useState<Expediente[]>([]);
@@ -8,17 +12,30 @@ const useExpedientes = () => {
   const [selectedYear, setSelectedYear] = useState<number | null>(null);
   const [newYear, setNewYear] = useState<string>("");
   const [newExpediente, setNewExpediente] = useState<Partial<Expediente>>({
-    ano: selectedYear || undefined,
-    ubicaciones: [],
-    reglamentacion: []
+    year: selectedYear !== null ? selectedYear : undefined,
+    locations: [],
+    regulations: []
   });
   const [editingExpediente, setEditingExpediente] = useState<Expediente | null>(null);
   const [newUbicacion, setNewUbicacion] = useState<string>("");
-  const [expandedUbicaciones, setExpandedUbicaciones] = useState<number[]>([]);
+  const [expandedUbicaciones, setExpandedUbicaciones] = useState<any[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  useEffect(() => {
+    fetchExpedientes();
+  }, []);
+
+  const fetchExpedientes = async () => {
+    try {
+      const response = await ExpedienteService.findAllExpedients();
+      setExpedientes(response.data);
+    } catch (error) {
+      console.error('Error fetching expedientes:', error);
+    }
+  };
+
   const years = useMemo(() => {
-    const uniqueYears = Array.from(new Set(expedientes.map(exp => exp.ano)));
+    const uniqueYears = Array.from(new Set(expedientes.map(exp => exp.year)));
     return uniqueYears.sort((a, b) => b - a);
   }, [expedientes]);
 
@@ -29,22 +46,23 @@ const useExpedientes = () => {
         if (Array.isArray(value)) {
           return value.some(item =>
             Object.values(item).some(v =>
-              v.toString().toLowerCase().includes(searchTerm.toLowerCase())
+              value.toString().toLowerCase().includes(searchTerm.toLowerCase())
             )
           );
         }
         return value.toString().toLowerCase().includes(searchTerm.toLowerCase());
       });
-      const matchesYear = selectedYear ? expediente.ano === selectedYear : true;
+      const matchesYear = selectedYear ? expediente.year === selectedYear : true;
       return matchesSearch && matchesYear;
     });
   }, [expedientes, searchTerm, selectedYear]);
 
-  const handleAddYear = () => {
+  const handleAddYear = async () => {
     const yearToAdd = parseInt(newYear);
     if (yearToAdd && !years.includes(yearToAdd)) {
       setSelectedYear(yearToAdd);
       setNewYear("");
+      await fetchExpedientes();
     }
   };
 
@@ -57,35 +75,25 @@ const useExpedientes = () => {
       if (isEditing && editingExpediente) {
         setEditingExpediente({
           ...editingExpediente,
-          ubicaciones: [nuevaUbicacion, ...editingExpediente.ubicaciones]
+          locations: [nuevaUbicacion, ...editingExpediente.locations]
         });
       } else {
         setNewExpediente({
           ...newExpediente,
-          ubicaciones: [nuevaUbicacion, ...(newExpediente.ubicaciones || [])]
+          locations: [nuevaUbicacion, ...(newExpediente.locations || [])]
         });
       }
       setNewUbicacion("");
     }
   };
 
-  const handleAddExpediente = () => {
-    if (selectedYear) {
-      const id = Date.now();
-      const newExp: Expediente = {
-        id: id,
-        codigo: `EXP${id}`,
-        numeroOrden: newExpediente.numeroOrden || "",
-        numeroExpediente: newExpediente.numeroExpediente || "",
-        emisor: newExpediente.emisor || "",
-        ano: selectedYear,
-        reglamentacion: newExpediente.reglamentacion || [],
-        pedido: newExpediente.pedido || "",
-        ubicaciones: newExpediente.ubicaciones || [],
-        pdfPath: newExpediente.pdfPath
-      };
-      setExpedientes([...expedientes, newExp]);
-      setNewExpediente({ ano: selectedYear, ubicaciones: [], reglamentacion: [] });
+  const handleAddExpediente = async () => {
+    try {
+      const response = await ExpedienteService.createExpedient(newExpediente as Expediente);
+      setExpedientes([...expedientes, response.data]);
+      setNewExpediente({ year: selectedYear !== null ? selectedYear : undefined, locations: [], regulations: [] });
+    } catch (error) {
+      console.error('Error adding expediente:', error);
     }
   };
 
@@ -93,12 +101,17 @@ const useExpedientes = () => {
     setEditingExpediente(expediente);
   };
 
-  const handleSaveEdit = () => {
+  const handleSaveEdit = async () => {
     if (editingExpediente) {
-      setExpedientes(expedientes.map(exp =>
-        exp.id === editingExpediente.id ? editingExpediente : exp
-      ));
-      setEditingExpediente(null);
+      try {
+        const response = await ExpedienteService.updateExpedient(editingExpediente);
+        setExpedientes(expedientes.map(exp =>
+          exp.id === editingExpediente.id ? response.data : exp
+        ));
+        setEditingExpediente(null);
+      } catch (error) {
+        console.error('Error saving edit:', error);
+      }
     }
   };
 
@@ -144,7 +157,7 @@ const useExpedientes = () => {
   const handleEditUbicacion = (expedienteId: number, ubicacionIndex: number, newLugar: string, newFecha: string) => {
     setExpedientes(expedientes.map(exp => {
       if (exp.id === expedienteId) {
-        const updatedUbicaciones = [...exp.ubicaciones];
+        const updatedUbicaciones = [...exp.locations];
         updatedUbicaciones[ubicacionIndex] = {
           ...updatedUbicaciones[ubicacionIndex],
           lugar: newLugar,
@@ -197,8 +210,19 @@ const useExpedientes = () => {
     }
   };
 
+  const findByYear = async (year: string) => {
+    try {
+      const response = await ExpedienteService.findByYear(year);
+      return response;
+    } catch (error) {
+      console.error('Error finding expedients by year:', error);
+      throw error;
+    }
+  };
+
   return {
     expedientes,
+    setExpedientes, // Añadir setExpedientes al objeto de retorno
     searchTerm,
     setSearchTerm,
     selectedYear,
@@ -231,6 +255,7 @@ const useExpedientes = () => {
     fadeInVariants,
     listItemVariants,
     statBoxVariants,
+    findByYear, // Añadir la función findByYear
   };
 };
 

@@ -1,21 +1,20 @@
-import { motion, AnimatePresence } from "framer-motion";
-import { Expediente } from "../../model/Expediente";
+import React from 'react';
+import { Expediente } from '../../model/Expediente';
+import { motion } from 'framer-motion';
 
-type ExpedienteTableProps = {
+interface ExpedienteTableProps {
   expedientes: Expediente[];
-  setExpedientes: React.Dispatch<React.SetStateAction<Expediente[]>>;
   handleEditExpediente: (expediente: Expediente) => void;
   handleOpenPDF: (pdfPath: string) => void;
-  handleEditUbicacion: (expedienteId: number, ubicacionIndex: number, newLugar: string, newFecha: string) => void;
+  handleEditUbicacion: (id: number, ubicacionIndex: number, newLugar: string, newFecha: string) => void;
   toggleUbicaciones: (id: number) => void;
   expandedUbicaciones: number[];
   buttonVariants: any;
   listItemVariants: any;
-};
+}
 
 const ExpedienteTable: React.FC<ExpedienteTableProps> = ({
   expedientes,
-  setExpedientes,
   handleEditExpediente,
   handleOpenPDF,
   handleEditUbicacion,
@@ -26,204 +25,81 @@ const ExpedienteTable: React.FC<ExpedienteTableProps> = ({
 }) => {
   return (
     <motion.div
-      className="bg-white rounded-lg shadow overflow-x-auto"
+      className="bg-white p-4 rounded-md shadow-md"
       variants={listItemVariants}
+      initial="hidden"
+      animate="visible"
     >
-      <table className="min-w-full">
-        <thead className="bg-[#1A2E4A] text-white">
+      <h2 className="text-xl font-bold mb-4">Lista de Expedientes</h2>
+      <table className="w-full border-collapse">
+        <thead>
           <tr>
-            <th className="px-4 py-2 text-left">Código</th>
-            <th className="px-4 py-2 text-left">Número de Orden</th>
-            <th className="px-4 py-2 text-left">Número de Expediente</th>
-            <th className="px-4 py-2 text-left">Emisor</th>
-            <th className="px-4 py-2 text-left">Año</th>
-            <th className="px-4 py-2 text-left">Reglamentación</th>
-            <th className="px-4 py-2 text-left">Pedido</th>
-            <th className="px-4 py-2 text-left">Ubicaciones</th>
-            <th className="px-4 py-2 text-left">PDF</th>
-            <th className="px-4 py-2 text-left">Acciones</th>
+            <th className="border border-gray-300 p-2">Código</th>
+            <th className="border border-gray-300 p-2">Número de Orden</th>
+            <th className="border border-gray-300 p-2">Número de Expediente</th>
+            <th className="border border-gray-300 p-2">Emisor</th>
+            <th className="border border-gray-300 p-2">Año</th>
+            <th className="border border-gray-300 p-2">Pedido</th>
+            <th className="border border-gray-300 p-2">Acciones</th>
           </tr>
         </thead>
         <tbody>
-          <AnimatePresence>
-            {expedientes.map((expediente) => (
-              <motion.tr
-                key={expediente.id}
-                className="border-b hover:bg-gray-50"
-                variants={listItemVariants}
-                initial="hidden"
-                animate="visible"
-                exit="hidden"
-                transition={{ duration: 0.3 }}
-              >
-                <td className="px-4 py-2">{expediente.codigo}</td>
-                <td className="px-4 py-2">{expediente.numeroOrden}</td>
-                <td className="px-4 py-2">{expediente.numeroExpediente}</td>
-                <td className="px-4 py-2">{expediente.emisor}</td>
-                <td className="px-4 py-2">{expediente.ano}</td>
-                <td className="px-4 py-2 bg-blue-100 font-medium">{expediente.reglamentacion.map(reg => reg.description).join(', ')}</td>
-                <td className="px-4 py-2">{expediente.pedido}</td>
-                <td className="px-4 py-2">
-                  {expediente.ubicaciones.length > 0 && (
-                    <div>
-                      <div className="flex items-center space-x-2 mb-2">
-                        <input
-                          type="text"
-                          value={expediente.ubicaciones[0].lugar}
-                          onChange={(e) => handleEditUbicacion(expediente.id, 0, e.target.value, expediente.ubicaciones[0].fecha)}
-                          className="border border-gray-300 rounded-md px-2 py-1 text-sm mr-2"
-                        />
-                        <motion.button
-                          id={`save-button-${expediente.id}-0`}
-                          onClick={() => handleEditUbicacion(expediente.id, 0, expediente.ubicaciones[0].lugar, expediente.ubicaciones[0].fecha)}
-                          className="bg-green-500 text-white px-2 py-1 rounded-md text-sm transition-all duration-300 ease-in-out"
-                          variants={buttonVariants}
-                          whileHover="hover"
-                          whileTap="tap"
-                        >
-                          Guardar
-                        </motion.button>
-                        <motion.button
-                          onClick={() => {
-                            const newUbicaciones = expediente.ubicaciones.filter((_, i) => i !== 0);
-                            setExpedientes(expedientes.map(exp =>
-                              exp.id === expediente.id ? { ...exp, ubicaciones: newUbicaciones } : exp
-                            ));
-                          }}
-                          className="bg-red-500 text-white px-2 py-1 rounded-md text-sm ml-2"
-                          variants={buttonVariants}
-                          whileHover="hover"
-                          whileTap="tap"
-                        >
-                          Eliminar
-                        </motion.button>
-                      </div>
-                      {expediente.ubicaciones.length > 1 && (
-                        <div>
-                          <motion.button
-                            className="border border-gray-300 rounded-md px-2 py-1 text-sm"
-                            onClick={() => toggleUbicaciones(expediente.id)}
-                            variants={buttonVariants}
-                            whileHover="hover"
-                            whileTap="tap"
-                          >
-                            {expandedUbicaciones.includes(expediente.id) ? (
-                              <>
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 inline-block mr-2" viewBox="0 0 20 20" fill="currentColor">
-                                  <path fillRule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clipRule="evenodd" />
-                                </svg>
-                                Ocultar anteriores
-                              </>
-                            ) : (
-                              <>
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 inline-block mr-2" viewBox="0 0 20 20" fill="currentColor">
-                                  <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
-                                </svg>
-                                Ver anteriores
-                              </>
-                            )}
-                          </motion.button>
-                          <AnimatePresence>
-                            {expandedUbicaciones.includes(expediente.id) && (
-                              <motion.ul
-                                className="list-disc pl-5 mt-2"
-                                initial={{ opacity: 0, height: 0 }}
-                                animate={{ opacity: 1, height: 'auto' }}
-                                exit={{ opacity: 0, height: 0 }}
-                                transition={{ duration: 0.3 }}
-                              >
-                                {expediente.ubicaciones.map((ubicacion, index) => (
-                                  <motion.li
-                                    key={index}
-                                    className="flex items-center space-x-2 mb-2"
-                                    variants={listItemVariants}
-                                    initial="hidden"
-                                    animate="visible"
-                                    exit="hidden"
-                                    transition={{ duration: 0.3, delay: index * 0.1 }}
-                                  >
-                                    <input
-                                      type="text"
-                                      value={ubicacion.lugar}
-                                      onChange={(e) => handleEditUbicacion(expediente.id, index, e.target.value, ubicacion.fecha)}
-                                      className="border border-gray-300 rounded-md px-2 py-1 text-sm mr-2"
-                                    />
-                                    <input
-                                      type="date"
-                                      value={new Date(ubicacion.fecha).toISOString().split('T')[0]}
-                                      onChange={(e) => handleEditUbicacion(expediente.id, index, ubicacion.lugar, new Date(e.target.value).toISOString())}
-                                      className="border border-gray-300 rounded-md px-2 py-1 text-sm"
-                                    />
-                                    <motion.button
-                                      id={`save-button-${expediente.id}-${index}`}
-                                      onClick={() => handleEditUbicacion(expediente.id, index, ubicacion.lugar, ubicacion.fecha)}
-                                      className="bg-green-500 text-white px-2 py-1 rounded-md text-sm transition-all duration-300 ease-in-out"
-                                      variants={buttonVariants}
-                                      whileHover="hover"
-                                      whileTap="tap"
-                                    >
-                                      Guardar
-                                    </motion.button>
-                                    <motion.button
-                                      onClick={() => {
-                                        const newUbicaciones = expediente.ubicaciones.filter((_, i) => i !== index);
-                                        setExpedientes(expedientes.map(exp =>
-                                          exp.id === expediente.id ? { ...exp, ubicaciones: newUbicaciones } : exp
-                                        ));
-                                      }}
-                                      className="bg-red-500 text-white px-2 py-1 rounded-md text-sm ml-2"
-                                      variants={buttonVariants}
-                                      whileHover="hover"
-                                      whileTap="tap"
-                                    >
-                                      Eliminar
-                                    </motion.button>
-                                  </motion.li>
-                                ))}
-                              </motion.ul>
-                            )}
-                          </AnimatePresence>
-                        </div>
-                      )}
-                    </div>
-                  )}
-                </td>
-                <td className="px-4 py-2">
-                  {expediente.pdfPath ? (
-                    <motion.button
-                      className="border border-gray-300 text-gray-700 px-2 py-1 rounded-md text-sm"
-                      onClick={() => handleOpenPDF(expediente.pdfPath!)}
-                      variants={buttonVariants}
-                      whileHover="hover"
-                      whileTap="tap"
-                    >
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 inline-block mr-2" viewBox="0 0 20 20" fill="currentColor">
-                        <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
-                        <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
-                      </svg>
-                      Ver PDF
-                    </motion.button>
-                  ) : (
-                    "No hay PDF"
-                  )}
-                </td>
-                <td className="px-4 py-2">
+          {expedientes.map(expediente => (
+            <React.Fragment key={expediente.id}>
+              <tr>
+                <td className="border border-gray-300 p-2">{expediente.correlativeNumber}</td>
+                <td className="border border-gray-300 p-2">{expediente.organizationCode}</td>
+                <td className="border border-gray-300 p-2">{expediente.issuer}</td>
+                <td className="border border-gray-300 p-2">{expediente.year}</td>
+                <td className="border border-gray-300 p-2">{expediente.solicitude}</td>
+                <td className="border border-gray-300 p-2">
                   <motion.button
-                    className="border border-gray-300 text-gray-700 px-2 py-1 rounded-md text-sm"
                     onClick={() => handleEditExpediente(expediente)}
+                    className="bg-blue-500 text-white px-2 py-1 rounded-md mr-2"
                     variants={buttonVariants}
                     whileHover="hover"
                     whileTap="tap"
                   >
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 inline-block mr-2" viewBox="0 0 20 20" fill="currentColor">
-                      <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
-                    </svg>
                     Editar
                   </motion.button>
+                  {expediente.pdfPath && (
+                    <motion.button
+                      onClick={() => handleOpenPDF(expediente.pdfPath!)}
+                      className="bg-green-500 text-white px-2 py-1 rounded-md"
+                      variants={buttonVariants}
+                      whileHover="hover"
+                      whileTap="tap"
+                    >
+                      Ver PDF
+                    </motion.button>
+                  )}
                 </td>
-              </motion.tr>
-            ))}
-          </AnimatePresence>
+              </tr>
+              {expandedUbicaciones.includes(expediente.id) && (
+                <tr>
+                  <td colSpan={7} className="border border-gray-300 p-2">
+                    <h3 className="text-lg font-bold mb-2">Ubicaciones</h3>
+                    {expediente.locations.map((ubicacion, index) => (
+                      <div key={index} className="mb-2">
+                        <input
+                          type="text"
+                          value={ubicacion.lugar}
+                          onChange={(e) => handleEditUbicacion(expediente.id, index, e.target.value, ubicacion.fecha)}
+                          className="border border-gray-300 rounded-md p-2 w-full"
+                        />
+                        <input
+                          type="date"
+                          value={ubicacion.fecha}
+                          onChange={(e) => handleEditUbicacion(expediente.id, index, ubicacion.lugar, e.target.value)}
+                          className="border border-gray-300 rounded-md p-2 w-full mt-2"
+                        />
+                      </div>
+                    ))}
+                  </td>
+                </tr>
+              )}
+            </React.Fragment>
+          ))}
         </tbody>
       </table>
     </motion.div>
