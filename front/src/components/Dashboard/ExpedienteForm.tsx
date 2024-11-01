@@ -1,49 +1,51 @@
-import { motion } from "framer-motion"
-import { Expediente} from "../model/Expediente"
-import { Location } from "../model/Expediente"
+import { motion } from "framer-motion";
+import { Expediente, Ubicacion } from "../../model/Expediente";
+import { Regulation } from "../../model/Regulation";
+import { useRef } from "react";
 
 type ExpedienteFormProps = {
-  selectedYear?: string | null
-  newExpediente?: Partial<Expediente>
-  setNewExpediente?: React.Dispatch<React.SetStateAction<Partial<Expediente>>>
-  newLocation: string
-  setNewLocation: React.Dispatch<React.SetStateAction<string>>
-  handleAddLocation: (isEditing: boolean) => void
-  handleAddExpediente: () => void
-  fileInputRef: React.RefObject<HTMLInputElement>
-  handleFileChange: (event: React.ChangeEvent<HTMLInputElement>) => void
-  handleDeletePDF: (isEditing: boolean) => void
-  isEditing?: boolean
-  editingExpediente?: Expediente | null
-  setEditingExpediente?: React.Dispatch<React.SetStateAction<Expediente | null>>
-  handleSaveEdit?: () => void
-  handleCancelEdit?: () => void
-}
-
-const buttonVariants = {
-  hover: { scale: 1.05, transition: { duration: 0.2 } },
-  tap: { scale: 0.95, transition: { duration: 0.2 } },
-}
+  isEditing?: boolean;
+  expediente?: Expediente;
+  setExpediente: React.Dispatch<React.SetStateAction<Expediente | null>>;
+  newExpediente?: Partial<Expediente>;
+  setNewExpediente: React.Dispatch<React.SetStateAction<Partial<Expediente>>>;
+  newUbicacion: string;
+  setNewUbicacion: React.Dispatch<React.SetStateAction<string>>;
+  handleAddUbicacion: (isEditing?: boolean) => void;
+  handleAddExpediente?: () => void;
+  handleSaveEdit?: () => void;
+  handleCancelEdit?: () => void;
+  handleFileChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  handleDeletePDF: (isEditing?: boolean) => void;
+  buttonVariants: any;
+  fadeInVariants: any;
+};
 
 const ExpedienteForm: React.FC<ExpedienteFormProps> = ({
-  selectedYear,
+  isEditing,
+  expediente,
+  setExpediente,
   newExpediente,
   setNewExpediente,
-  newLocation,
-  setNewLocation,
-  handleAddLocation,
+  newUbicacion,
+  setNewUbicacion,
+  handleAddUbicacion,
   handleAddExpediente,
-  fileInputRef,
-  handleFileChange,
-  handleDeletePDF,
-  isEditing,
-  editingExpediente,
-  setEditingExpediente,
   handleSaveEdit,
   handleCancelEdit,
+  handleFileChange,
+  handleDeletePDF,
+  buttonVariants,
+  fadeInVariants,
 }) => {
-  const expediente = isEditing ? editingExpediente : newExpediente
-  const setExpediente = isEditing ? setEditingExpediente : setNewExpediente
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const currentExpediente = isEditing ? expediente : newExpediente;
+  const setCurrentExpediente = isEditing ? setExpediente : setNewExpediente;
+
+  if (!currentExpediente || !setCurrentExpediente) {
+    return null; // O manejar el caso de manera apropiada
+  }
 
   return (
     <motion.div
@@ -54,54 +56,54 @@ const ExpedienteForm: React.FC<ExpedienteFormProps> = ({
       transition={{ duration: 0.3 }}
     >
       <h2 className="text-xl font-bold mb-4">
-        {isEditing ? `Editar Expediente: ${editingExpediente?.correlativeNumber}` : `Añadir Nuevo Expediente para ${selectedYear}`}
+        {isEditing ? `Editar Expediente: ${currentExpediente?.codigo}` : `Añadir Nuevo Expediente para ${currentExpediente?.ano}`}
       </h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <input
           type="text"
+          placeholder="Número de Orden"
+          value={currentExpediente?.numeroOrden || ''}
+          onChange={(e) => setCurrentExpediente({ ...currentExpediente, numeroOrden: e.target.value } as any)}
+          className="border border-gray-300 rounded-md p-2"
+        />
+        <input
+          type="text"
+          placeholder="Número de Expediente"
+          value={currentExpediente?.numeroExpediente || ''}
+          onChange={(e) => setCurrentExpediente({ ...currentExpediente, numeroExpediente: e.target.value } as any)}
+          className="border border-gray-300 rounded-md p-2"
+        />
+        <input
+          type="text"
           placeholder="Emisor"
-          value={expediente?.issuer || ''}
-          onChange={(e) => setExpediente && setExpediente({...expediente, issuer: e.target.value})}
+          value={currentExpediente?.emisor || ''}
+          onChange={(e) => setCurrentExpediente({ ...currentExpediente, emisor: e.target.value } as any)}
           className="border border-gray-300 rounded-md p-2"
         />
         <input
           type="text"
-          placeholder="Código de Organización"
-          value={expediente?.organizationCode || ''}
-          onChange={(e) => setExpediente && setExpediente({...expediente, organizationCode: e.target.value})}
+          placeholder="Reglamentación"
+          value={currentExpediente?.reglamentacion?.map(reg => reg.description).join(', ') || ''}
+          onChange={(e) => setCurrentExpediente({ ...currentExpediente, reglamentacion: e.target.value.split(',').map(desc => ({ id: Date.now(), description: desc })) } as any)}
           className="border border-gray-300 rounded-md p-2"
         />
         <input
           type="text"
-          placeholder="Número Correlativo"
-          value={expediente?.correlativeNumber || ''}
-          onChange={(e) => setExpediente && setExpediente({...expediente, correlativeNumber: e.target.value})}
-          className="border border-gray-300 rounded-md p-2"
-        />
-        <input
-          type="text"
-          placeholder="Solicitud"
-          value={expediente?.solicitude || ''}
-          onChange={(e) => setExpediente && setExpediente({...expediente, solicitude: e.target.value})}
-          className="border border-gray-300 rounded-md p-2"
-        />
-        <input
-          type="text"
-          placeholder="Estado"
-          value={expediente?.status || ''}
-          onChange={(e) => setExpediente && setExpediente({...expediente, status: e.target.value})}
+          placeholder="Pedido"
+          value={currentExpediente?.pedido || ''}
+          onChange={(e) => setCurrentExpediente({ ...currentExpediente, pedido: e.target.value } as any)}
           className="border border-gray-300 rounded-md p-2"
         />
         <div className="flex items-center space-x-2">
           <input
             type="text"
             placeholder="Nueva ubicación"
-            value={newLocation}
-            onChange={(e) => setNewLocation(e.target.value)}
+            value={newUbicacion}
+            onChange={(e) => setNewUbicacion(e.target.value)}
             className="border border-gray-300 rounded-md p-2 flex-grow"
           />
           <motion.button
-            onClick={() => handleAddLocation(isEditing || false)}
+            onClick={() => handleAddUbicacion(isEditing)}
             className="bg-blue-500 text-white px-4 py-2 rounded-md"
             variants={buttonVariants}
             whileHover="hover"
@@ -110,46 +112,36 @@ const ExpedienteForm: React.FC<ExpedienteFormProps> = ({
             Añadir
           </motion.button>
         </div>
-        {expediente?.locations && expediente.locations.length > 0 && (
+        {currentExpediente?.ubicaciones && currentExpediente.ubicaciones.length > 0 && (
           <div className="col-span-full mt-2">
             <h4 className="font-medium mb-2">Ubicaciones añadidas:</h4>
             <ul className="space-y-2">
-              {expediente.locations.map((location, index) => (
+              {currentExpediente.ubicaciones.map((ubicacion, index) => (
                 <li key={index} className="flex items-center space-x-2">
                   <input
                     type="text"
-                    value={location.origin}
+                    value={ubicacion.lugar}
                     onChange={(e) => {
-                      const newLocations = [...expediente.locations];
-                      newLocations[index] = { ...newLocations[index], origin: e.target.value };
-                      setExpediente && setExpediente({...expediente, locations: newLocations});
+                      const newUbicaciones = [...(currentExpediente.ubicaciones || [])];
+                      newUbicaciones[index] = { ...newUbicaciones[index], lugar: e.target.value };
+                      setCurrentExpediente({ ...currentExpediente, ubicaciones: newUbicaciones } as any);
                     }}
                     className="border border-gray-300 rounded-md px-2 py-1 text-sm"
                   />
                   <input
-                    type="text"
-                    value={location.destiny}
+                    type="date"
+                    value={new Date(ubicacion.fecha).toISOString().split('T')[0]}
                     onChange={(e) => {
-                      const newLocations = [...expediente.locations];
-                      newLocations[index] = { ...newLocations[index], destiny: e.target.value };
-                      setExpediente && setExpediente({...expediente, locations: newLocations});
-                    }}
-                    className="border border-gray-300 rounded-md px-2 py-1 text-sm"
-                  />
-                  <input
-                    type="text"
-                    value={location.place}
-                    onChange={(e) => {
-                      const newLocations = [...expediente.locations];
-                      newLocations[index] = { ...newLocations[index], place: e.target.value };
-                      setExpediente && setExpediente({...expediente, locations: newLocations});
+                      const newUbicaciones = [...(currentExpediente.ubicaciones || [])];
+                      newUbicaciones[index] = { ...newUbicaciones[index], fecha: new Date(e.target.value).toISOString() };
+                      setCurrentExpediente({ ...currentExpediente, ubicaciones: newUbicaciones } as any);
                     }}
                     className="border border-gray-300 rounded-md px-2 py-1 text-sm"
                   />
                   <motion.button
                     onClick={() => {
-                      const newLocations = expediente.locations.filter((_, i) => i !== index);
-                      setExpediente && setExpediente({...expediente, locations: newLocations});
+                      const newUbicaciones = currentExpediente.ubicaciones?.filter((_, i) => i !== index) || [];
+                      setCurrentExpediente({ ...currentExpediente, ubicaciones: newUbicaciones } as any);
                     }}
                     className="bg-red-500 text-white px-2 py-1 rounded-md text-sm"
                     variants={buttonVariants}
@@ -178,11 +170,11 @@ const ExpedienteForm: React.FC<ExpedienteFormProps> = ({
             whileHover="hover"
             whileTap="tap"
           >
-            {expediente?.pdfPath ? 'Cambiar PDF' : 'Adjuntar PDF'}
+            {currentExpediente.pdfPath ? 'Cambiar PDF' : 'Adjuntar PDF'}
           </motion.button>
-          {expediente?.pdfPath && (
+          {currentExpediente.pdfPath && (
             <motion.button
-              onClick={() => handleDeletePDF(isEditing || false)}
+              onClick={() => handleDeletePDF(isEditing)}
               className="bg-red-500 text-white px-4 py-2 rounded-md"
               variants={buttonVariants}
               whileHover="hover"
@@ -192,7 +184,7 @@ const ExpedienteForm: React.FC<ExpedienteFormProps> = ({
             </motion.button>
           )}
           <span className="text-sm text-gray-500">
-            {expediente?.pdfPath ? (new URL(expediente.pdfPath)).pathname.split('/').pop() : 'Ningún PDF adjuntado'}
+            {currentExpediente.pdfPath ? (new URL(currentExpediente.pdfPath)).pathname.split('/').pop() : 'Ningún PDF adjuntado'}
           </span>
         </div>
         <motion.button
@@ -210,7 +202,7 @@ const ExpedienteForm: React.FC<ExpedienteFormProps> = ({
         {isEditing && (
           <motion.button
             onClick={handleCancelEdit}
-            className="col-span-full bg-gray-200 text-gray-700 px-4 py-2 rounded-md mt-2"
+            className="col-span-full bg-red-500 text-white px-4 py-2 rounded-md mt-2"
             variants={buttonVariants}
             whileHover="hover"
             whileTap="tap"
@@ -223,7 +215,7 @@ const ExpedienteForm: React.FC<ExpedienteFormProps> = ({
         )}
       </div>
     </motion.div>
-  )
-}
+  );
+};
 
-export default ExpedienteForm
+export default ExpedienteForm;

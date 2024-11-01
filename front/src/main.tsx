@@ -1,11 +1,10 @@
-import Dashboard from './components/Dashboard'
+import React from 'react';
+import ReactDOM from 'react-dom';
+import App from './components/Dashboard/Dashboard';
 
-function App() {
-  return (
-    <div className="App">
-      <Dashboard />
-    </div>
-  )
-}
-
-export default App
+ReactDOM.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+  document.getElementById('root')
+);
