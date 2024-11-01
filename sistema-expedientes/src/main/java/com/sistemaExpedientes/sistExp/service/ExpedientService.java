@@ -207,12 +207,11 @@ public class ExpedientService implements CRUD<ExpedientResponseDTO, ExpedientReq
 
         // Obtener todos los expedientes
         List<Expedient> expedients = expedientRepository.findAll();
-
         // Filtrar los expedientes que tienen la ubicación especificada
         List<Expedient> filteredExpedients = expedients.stream()
                 .filter(expedient -> expedient.getLocations() != null &&
                         expedient.getLocations().stream()
-                                .anyMatch(loc -> loc.getPlace().equals(location)))
+                                .anyMatch(loc -> loc.getPlace() != null && loc.getPlace().equals(location)))
                 .collect(Collectors.toList());
 
         logger.info("Exiting findByLocation SERVICE method...");
