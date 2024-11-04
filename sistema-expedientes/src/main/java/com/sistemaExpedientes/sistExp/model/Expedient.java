@@ -22,7 +22,7 @@ public class Expedient {
     private String status;
     private String pdfPath;
 
-    @OneToMany(mappedBy = "expedient", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "expedient", cascade = CascadeType.ALL)
     private List<Regulation> regulations;
 
     @OneToMany(mappedBy = "expedient", cascade = CascadeType.ALL)

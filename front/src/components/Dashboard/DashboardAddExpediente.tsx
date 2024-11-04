@@ -1,26 +1,11 @@
 import { motion } from "framer-motion"
 import { Dispatch, SetStateAction, RefObject } from "react"
-
-type Ubicacion = {
-  fecha: string;
-  lugar: string;
-}
-
-type Expediente = {
-  id: number
-  codigo: string
-  numeroOrden: string
-  numeroExpediente: string
-  emisor: string
-  ano: number
-  reglamentacion: string
-  pedido: string
-  ubicaciones: Ubicacion[]
-  pdfPath?: string
-}
+import { Expediente } from '../../model/Expediente'; // Ajusta la ruta según la ubicación de tus modelos
+import { Ubicacion } from '../../model/Ubicacion'; // Ajusta la ruta según la ubicación de tus modelos
+import { Regulation } from '../../model/Regulation'; // Ajusta la ruta según la ubicación de tus modelos
 
 type DashboardAddExpedienteProps = {
-  selectedYear: number | null;
+  selectedYear: string | null;
   newExpediente: Partial<Expediente>;
   setNewExpediente: Dispatch<SetStateAction<Partial<Expediente>>>;
   newUbicacion: string;
@@ -46,6 +31,34 @@ const DashboardAddExpediente: React.FC<DashboardAddExpedienteProps> = ({
   fileInputRef,
   buttonVariants
 }) => {
+  const handleAddRegulation = () => {
+    const newRegulation: Regulation = {
+      id: Date.now(),
+      description: ''
+    };
+    setNewExpediente({
+      ...newExpediente,
+      regulations: [...(newExpediente.regulations || []), newRegulation]
+    });
+  };
+
+  const handleRegulationChange = (index: number, value: string) => {
+    const newRegulations = [...(newExpediente.regulations || [])];
+    newRegulations[index].description = value;
+    setNewExpediente({
+      ...newExpediente,
+      regulations: newRegulations
+    });
+  };
+
+  const handleDeleteRegulation = (index: number) => {
+    const newRegulations = (newExpediente.regulations || []).filter((_, i) => i !== index);
+    setNewExpediente({
+      ...newExpediente,
+      regulations: newRegulations
+    });
+  };
+
   return (
     <motion.div
       className="bg-white rounded-lg shadow p-4 mb-8"
@@ -59,36 +72,66 @@ const DashboardAddExpediente: React.FC<DashboardAddExpedienteProps> = ({
         <input
           type="text"
           placeholder="Número de Orden"
-          value={newExpediente.numeroOrden || ''}
-          onChange={(e) => setNewExpediente({...newExpediente, numeroOrden: e.target.value})}
+          value={newExpediente.correlativeNumber || ''}
+          onChange={(e) => setNewExpediente({ ...newExpediente, correlativeNumber: e.target.value })}
           className="border border-gray-300 rounded-md p-2"
         />
         <input
           type="text"
           placeholder="Número de Expediente"
-          value={newExpediente.numeroExpediente || ''}
-          onChange={(e) => setNewExpediente({...newExpediente, numeroExpediente: e.target.value})}
+          value={newExpediente.organizationCode || ''}
+          onChange={(e) => setNewExpediente({ ...newExpediente, organizationCode: e.target.value })}
           className="border border-gray-300 rounded-md p-2"
         />
         <input
           type="text"
           placeholder="Emisor"
-          value={newExpediente.emisor || ''}
-          onChange={(e) => setNewExpediente({...newExpediente, emisor: e.target.value})}
+          value={newExpediente.issuer || ''}
+          onChange={(e) => setNewExpediente({ ...newExpediente, issuer: e.target.value })}
           className="border border-gray-300 rounded-md p-2"
         />
-        <input
-          type="text"
-          placeholder="Reglamentación"
-          value={newExpediente.reglamentacion || ''}
-          onChange={(e) => setNewExpediente({...newExpediente, reglamentacion: e.target.value})}
-          className="border border-gray-300 rounded-md p-2"
-        />
+        <div className="col-span-full">
+          <h3 className="text-lg font-semibold mb-2">Reglamentaciones</h3>
+          {newExpediente.regulations && newExpediente.regulations.length > 0 && (
+            <div>
+              {newExpediente.regulations.map((regulation, index) => (
+                <div key={index} className="flex items-center space-x-2 mb-2">
+                  <input
+                    type="text"
+                    value={regulation.description}
+                    onChange={(e) => handleRegulationChange(index, e.target.value)}
+                    className="border border-gray-300 rounded-md px-2 py-1 text-sm flex-grow"
+                  />
+                  <motion.button
+                    onClick={() => handleDeleteRegulation(index)}
+                    className="bg-red-500 text-white px-2 py-1 rounded-md text-sm"
+                    variants={buttonVariants}
+                    whileHover="hover"
+                    whileTap="tap"
+                  >
+                    Eliminar
+                  </motion.button>
+                </div>
+              ))}
+            </div>
+          )}
+          <div className="flex items-center space-x-2 mt-2">
+            <motion.button
+              onClick={handleAddRegulation}
+              className="bg-blue-500 text-white px-4 py-2 rounded-md"
+              variants={buttonVariants}
+              whileHover="hover"
+              whileTap="tap"
+            >
+              Añadir Reglamentación
+            </motion.button>
+          </div>
+        </div>
         <input
           type="text"
           placeholder="Pedido"
-          value={newExpediente.pedido || ''}
-          onChange={(e) => setNewExpediente({...newExpediente, pedido: e.target.value})}
+          value={newExpediente.solicitude || ''}
+          onChange={(e) => setNewExpediente({ ...newExpediente, solicitude: e.target.value })}
           className="border border-gray-300 rounded-md p-2"
         />
         <div className="flex items-center space-x-2">
@@ -109,19 +152,19 @@ const DashboardAddExpediente: React.FC<DashboardAddExpedienteProps> = ({
             Añadir
           </motion.button>
         </div>
-        {newExpediente.ubicaciones && newExpediente.ubicaciones.length > 0 && (
+        {newExpediente.locations && newExpediente.locations.length > 0 && (
           <div className="col-span-full mt-2">
             <h4 className="font-medium mb-2">Ubicaciones añadidas:</h4>
             <ul className="space-y-2">
-              {newExpediente.ubicaciones.map((ubicacion, index) => (
+              {newExpediente.locations.map((ubicacion, index) => (
                 <li key={index} className="flex items-center space-x-2">
                   <input
                     type="text"
                     value={ubicacion.lugar}
                     onChange={(e) => {
-                      const newUbicaciones = [...(newExpediente.ubicaciones || [])];
+                      const newUbicaciones = [...(newExpediente.locations || [])];
                       newUbicaciones[index] = { ...newUbicaciones[index], lugar: e.target.value };
-                      setNewExpediente({...newExpediente, ubicaciones: newUbicaciones});
+                      setNewExpediente({ ...newExpediente, locations: newUbicaciones });
                     }}
                     className="border border-gray-300 rounded-md px-2 py-1 text-sm"
                   />
@@ -129,16 +172,16 @@ const DashboardAddExpediente: React.FC<DashboardAddExpedienteProps> = ({
                     type="date"
                     value={new Date(ubicacion.fecha).toISOString().split('T')[0]}
                     onChange={(e) => {
-                      const newUbicaciones = [...(newExpediente.ubicaciones || [])];
+                      const newUbicaciones = [...(newExpediente.locations || [])];
                       newUbicaciones[index] = { ...newUbicaciones[index], fecha: new Date(e.target.value).toISOString() };
-                      setNewExpediente({...newExpediente, ubicaciones: newUbicaciones});
+                      setNewExpediente({ ...newExpediente, locations: newUbicaciones });
                     }}
                     className="border border-gray-300 rounded-md px-2 py-1 text-sm"
                   />
                   <motion.button
                     onClick={() => {
-                      const newUbicaciones = (newExpediente.ubicaciones || []).filter((_, i) => i !== index);
-                      setNewExpediente({...newExpediente, ubicaciones: newUbicaciones});
+                      const newUbicaciones = (newExpediente.locations || []).filter((_, i) => i !== index);
+                      setNewExpediente({ ...newExpediente, locations: newUbicaciones });
                     }}
                     className="bg-red-500 text-white px-2 py-1 rounded-md text-sm"
                     variants={buttonVariants}
@@ -201,4 +244,4 @@ const DashboardAddExpediente: React.FC<DashboardAddExpedienteProps> = ({
   )
 }
 
-export default DashboardAddExpediente
+export default DashboardAddExpediente;

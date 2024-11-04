@@ -1,23 +1,7 @@
-import { motion, AnimatePresence } from "framer-motion"
-import { Dispatch, SetStateAction } from "react"
-
-type Ubicacion = {
-  fecha: string;
-  lugar: string;
-}
-
-type Expediente = {
-  id: number
-  codigo: string
-  numeroOrden: string
-  numeroExpediente: string
-  emisor: string
-  ano: number
-  reglamentacion: string
-  pedido: string
-  ubicaciones: Ubicacion[]
-  pdfPath?: string
-}
+import { motion, AnimatePresence } from "framer-motion";
+import { Dispatch, SetStateAction } from "react";
+import { Expediente } from '../../model/Expediente'; // Ajusta la ruta según la ubicación de tus modelos
+import { Ubicacion } from '../../model/Ubicacion'; // Ajusta la ruta según la ubicación de tus modelos
 
 type DashboardUbicacionesProps = {
   expediente: Expediente;
@@ -40,18 +24,18 @@ const DashboardUbicaciones: React.FC<DashboardUbicacionesProps> = ({
 }) => {
   return (
     <td className="px-4 py-2">
-      {expediente.ubicaciones.length > 0 && (
+      {expediente.locations && expediente.locations.length > 0 ? (
         <div>
           <div className="flex items-center space-x-2 mb-2">
             <input
               type="text"
-              value={expediente.ubicaciones[0].lugar}
-              onChange={(e) => handleEditUbicacion(expediente.id, 0, e.target.value, expediente.ubicaciones[0].fecha)}
+              value={expediente.locations[0].lugar}
+              onChange={(e) => handleEditUbicacion(expediente.id, 0, e.target.value, expediente.locations[0].fecha)}
               className="border border-gray-300 rounded-md px-2 py-1 text-sm mr-2"
             />
             <motion.button
               id={`save-button-${expediente.id}-0`}
-              onClick={() => handleEditUbicacion(expediente.id, 0, expediente.ubicaciones[0].lugar, expediente.ubicaciones[0].fecha)}
+              onClick={() => handleEditUbicacion(expediente.id, 0, expediente.locations[0].lugar, expediente.locations[0].fecha)}
               className="bg-green-500 text-white px-2 py-1 rounded-md text-sm transition-all duration-300 ease-in-out"
               variants={buttonVariants}
               whileHover="hover"
@@ -61,7 +45,7 @@ const DashboardUbicaciones: React.FC<DashboardUbicacionesProps> = ({
             </motion.button>
             <motion.button
               onClick={() => {
-                const newUbicaciones = expediente.ubicaciones.filter((_, i) => i !== 0);
+                const newUbicaciones = expediente.locations.filter((_, i) => i !== 0);
                 setExpandedUbicaciones(prev =>
                   prev.filter(id => id !== expediente.id).concat(expediente.id)
                 );
@@ -74,7 +58,7 @@ const DashboardUbicaciones: React.FC<DashboardUbicacionesProps> = ({
               Eliminar
             </motion.button>
           </div>
-          {expediente.ubicaciones.length > 1 && (
+          {expediente.locations.length > 1 && (
             <div>
               <motion.button
                 className="border border-gray-300 rounded-md px-2 py-1 text-sm"
@@ -108,7 +92,7 @@ const DashboardUbicaciones: React.FC<DashboardUbicacionesProps> = ({
                     exit={{ opacity: 0, height: 0 }}
                     transition={{ duration: 0.3 }}
                   >
-                    {expediente.ubicaciones.map((ubicacion, index) => (
+                    {expediente.locations.map((ubicacion, index) => (
                       <motion.li
                         key={index}
                         className="flex items-center space-x-2 mb-2"
@@ -142,7 +126,7 @@ const DashboardUbicaciones: React.FC<DashboardUbicacionesProps> = ({
                         </motion.button>
                         <motion.button
                           onClick={() => {
-                            const newUbicaciones = expediente.ubicaciones.filter((_, i) => i !== index);
+                            const newUbicaciones = expediente.locations.filter((_, i) => i !== index);
                             setExpandedUbicaciones(prev =>
                               prev.filter(id => id !== expediente.id).concat(expediente.id)
                             );
@@ -162,9 +146,11 @@ const DashboardUbicaciones: React.FC<DashboardUbicacionesProps> = ({
             </div>
           )}
         </div>
+      ) : (
+        <span>No hay ubicaciones</span>
       )}
     </td>
-  )
+  );
 }
 
-export default DashboardUbicaciones
+export default DashboardUbicaciones;
