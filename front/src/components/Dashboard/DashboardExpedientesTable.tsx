@@ -156,7 +156,7 @@ const DashboardExpedientesTable: React.FC<DashboardExpedientesTableProps> = ({
                               >
                                 {expediente.ubicaciones.map((ubicacion, index) => (
                                   <motion.li
-                                    key={index}
+                                    key={`${expediente.id}-${index}`} // Cambiado aquí
                                     className="flex items-center space-x-2 mb-2"
                                     variants={listItemVariants}
                                     initial="hidden"
