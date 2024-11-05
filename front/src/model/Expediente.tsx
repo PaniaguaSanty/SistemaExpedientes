@@ -3,11 +3,10 @@ import { Regulation } from './Regulation';
 
 export type Expediente = {
   id: any;
-  code: string;
   organizationCode: string;
   correlativeNumber: string;
   issuer: string;
-  year: number;
+  year: string;
   regulations: Regulation[];
   solicitude: string;
   locations: Ubicacion[];
