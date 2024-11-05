@@ -1,11 +1,10 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { Dispatch, SetStateAction } from "react";
 import { Expediente } from '../../model/Expediente'; // Ajusta la ruta según la ubicación de tus modelos
-import { Ubicacion } from '../../model/Ubicacion'; // Ajusta la ruta según la ubicación de tus modelos
 
 type DashboardUbicacionesProps = {
   expediente: Expediente;
-  handleEditUbicacion: (expedienteId: number, ubicacionIndex: number, newLugar: string, newFecha: string) => void;
+  handleEditUbicacion: (expedienteId: number, ubicacionIndex: number, newLugar: string) => void;
   expandedUbicaciones: number[];
   setExpandedUbicaciones: Dispatch<SetStateAction<number[]>>;
   toggleUbicaciones: (id: number) => void;
@@ -29,13 +28,13 @@ const DashboardUbicaciones: React.FC<DashboardUbicacionesProps> = ({
           <div className="flex items-center space-x-2 mb-2">
             <input
               type="text"
-              value={expediente.locations[0].lugar}
-              onChange={(e) => handleEditUbicacion(expediente.id, 0, e.target.value, expediente.locations[0].fecha)}
+              value={expediente.locations[0].place}
+              onChange={() => handleEditUbicacion(expediente.id, 0, expediente.locations[0].place)}
               className="border border-gray-300 rounded-md px-2 py-1 text-sm mr-2"
             />
             <motion.button
               id={`save-button-${expediente.id}-0`}
-              onClick={() => handleEditUbicacion(expediente.id, 0, expediente.locations[0].lugar, expediente.locations[0].fecha)}
+              onClick={() => handleEditUbicacion(expediente.id, 0, expediente.locations[0].place)}
               className="bg-green-500 text-white px-2 py-1 rounded-md text-sm transition-all duration-300 ease-in-out"
               variants={buttonVariants}
               whileHover="hover"
@@ -104,19 +103,13 @@ const DashboardUbicaciones: React.FC<DashboardUbicacionesProps> = ({
                       >
                         <input
                           type="text"
-                          value={ubicacion.lugar}
-                          onChange={(e) => handleEditUbicacion(expediente.id, index, e.target.value, ubicacion.fecha)}
+                          value={ubicacion.place}
+                          onChange={() => handleEditUbicacion(expediente.id, index, ubicacion.place)}
                           className="border border-gray-300 rounded-md px-2 py-1 text-sm mr-2"
-                        />
-                        <input
-                          type="date"
-                          value={new Date(ubicacion.fecha).toISOString().split('T')[0]}
-                          onChange={(e) => handleEditUbicacion(expediente.id, index, ubicacion.lugar, new Date(e.target.value).toISOString())}
-                          className="border border-gray-300 rounded-md px-2 py-1 text-sm"
                         />
                         <motion.button
                           id={`save-button-${expediente.id}-${index}`}
-                          onClick={() => handleEditUbicacion(expediente.id, index, ubicacion.lugar, ubicacion.fecha)}
+                          onClick={() => handleEditUbicacion(expediente.id, index, ubicacion.place)}
                           className="bg-green-500 text-white px-2 py-1 rounded-md text-sm transition-all duration-300 ease-in-out"
                           variants={buttonVariants}
                           whileHover="hover"

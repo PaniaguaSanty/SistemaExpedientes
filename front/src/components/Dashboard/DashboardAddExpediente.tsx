@@ -32,7 +32,7 @@ const DashboardAddExpediente: React.FC<DashboardAddExpedienteProps> = ({
 }) => {
   const handleAddRegulation = () => {
     const newRegulation: Regulation = {
-      id: Date.now(),
+      id: String, 
       description: ''
     };
     setNewExpediente({
@@ -159,20 +159,10 @@ const DashboardAddExpediente: React.FC<DashboardAddExpedienteProps> = ({
                 <li key={index} className="flex items-center space-x-2">
                   <input
                     type="text"
-                    value={ubicacion.lugar}
+                    value={ubicacion.place}
                     onChange={(e) => {
                       const newUbicaciones = [...(newExpediente.locations || [])];
-                      newUbicaciones[index] = { ...newUbicaciones[index], lugar: e.target.value };
-                      setNewExpediente({ ...newExpediente, locations: newUbicaciones });
-                    }}
-                    className="border border-gray-300 rounded-md px-2 py-1 text-sm"
-                  />
-                  <input
-                    type="date"
-                    value={new Date(ubicacion.fecha).toISOString().split('T')[0]}
-                    onChange={(e) => {
-                      const newUbicaciones = [...(newExpediente.locations || [])];
-                      newUbicaciones[index] = { ...newUbicaciones[index], fecha: new Date(e.target.value).toISOString() };
+                      newUbicaciones[index] = { ...newUbicaciones[index], place: e.target.value };
                       setNewExpediente({ ...newExpediente, locations: newUbicaciones });
                     }}
                     className="border border-gray-300 rounded-md px-2 py-1 text-sm"

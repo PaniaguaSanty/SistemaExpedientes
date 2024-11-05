@@ -6,6 +6,7 @@ import { Regulation } from '../model/Regulation';
 const API_URL = 'http://localhost:8080/api/expedients';
 
 class ExpedienteService {
+    
     async createExpedient(expedientRequest: Expediente): Promise<AxiosResponse<Expediente>> {
         try {
             const response = await axios.post(`${API_URL}/create`, expedientRequest);

@@ -3,8 +3,6 @@
 import { motion, AnimatePresence } from "framer-motion"
 import { Dispatch, SetStateAction, useEffect, useState } from "react"
 import { Expediente } from '../../model/Expediente'
-import { Ubicacion } from '../../model/Ubicacion'
-import { Regulation } from '../../model/Regulation'
 import Pagination from '../../components/Pagination'
 import ExpedienteService from '../../service/ExpedienteService'
 
@@ -29,7 +27,6 @@ export default function DashboardExpedientesTable({
   handleEditUbicacion,
   handleOpenPDF,
   expandedUbicaciones,
-  setExpandedUbicaciones,
   toggleUbicaciones,
   buttonVariants,
   listItemVariants,
@@ -111,7 +108,7 @@ export default function DashboardExpedientesTable({
                         <input
                           type="text"
                           value={expediente.locations[0].place}
-                          onChange={(e) => handleEditUbicacion(expediente.id, 0, expediente.locations[0].place)}
+                          onChange={() => handleEditUbicacion(expediente.id, 0, expediente.locations[0].place)}
                           className="border border-gray-300 rounded-md px-2 py-1 text-sm mr-2"
                         />
                         <motion.button

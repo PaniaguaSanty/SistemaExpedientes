@@ -10,7 +10,6 @@ import DashboardFilters from './DashboardFilters'
 import DashboardAddExpediente from './DashboardAddExpediente'
 import DashboardEditExpediente from './DashboardEditExpediente'
 import DashboardExpedientesTable from './DashboardExpedientesTable'
-import DashboardUbicaciones from 'src/components/Dashboard/DashboardUbicaciones'; // Ajusta la ruta según la ubicación de tu componente
 
 export default function Dashboard() {
   const [expedientes, setExpedientes] = useState<Expediente[]>([])
@@ -19,7 +18,7 @@ export default function Dashboard() {
   const [newYear, setNewYear] = useState<string>("")
   const [newExpediente, setNewExpediente] = useState<Partial<Expediente>>({
     year: selectedYear || undefined,
-    locations: [], // Inicializar como un array vacío
+    locations: [],
   })
   const [editingExpediente, setEditingExpediente] = useState<Expediente | null>(null)
   const [newUbicacion, setNewUbicacion] = useState<string>("")
@@ -33,11 +32,11 @@ export default function Dashboard() {
 
   const filteredExpedientes = useMemo(() => {
     return expedientes.filter((expediente) => {
-      const matchesSearch = Object.entries(expediente).some(([key, value]) => {
+      const matchesSearch = Object.entries(expediente).some(([, value]) => {
         if (value === undefined || value === null) return false
         if (Array.isArray(value)) {
           return value.some(item =>
-            Object.values(item).some(v =>
+            Object.values(item).some(() =>
               value.toString().toLowerCase().includes(searchTerm.toLowerCase())
             )
           )
@@ -218,25 +217,6 @@ export default function Dashboard() {
     visible: { opacity: 1, y: 0 },
   }
 
-  const statBoxVariants = {
-    hidden: { opacity: 0, y: -20, scale: 0.8 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      scale: 1,
-      transition: {
-        type: "spring",
-        stiffness: 300,
-        damping: 20,
-        duration: 0.5
-      }
-    },
-    hover: {
-      scale: 1.05,
-      boxShadow: "0px 5px 10px rgba(0,0,0,0.1)",
-      transition: { duration: 0.3 }
-    }
-  };
 
   return (
     <motion.div
