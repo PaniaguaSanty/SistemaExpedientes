@@ -75,8 +75,7 @@ export default function Dashboard() {
   const handleAddUbicacion = (isEditing: boolean = false) => {
     if (newUbicacion) {
       const nuevaUbicacion: Ubicacion = {
-        fecha: new Date().toISOString(),
-        lugar: newUbicacion
+        place: newUbicacion
       }
       if (isEditing && editingExpediente) {
         setEditingExpediente({
@@ -184,14 +183,13 @@ export default function Dashboard() {
     )
   }
 
-  const handleEditUbicacion = (expedienteId: number, ubicacionIndex: number, newLugar: string, newFecha: string) => {
+  const handleEditUbicacion = (expedienteId: number, ubicacionIndex: number, newLugar: string) => {
     setExpedientes(expedientes.map(exp => {
       if (exp.id === expedienteId) {
         const updatedUbicaciones = [...exp.locations];
         updatedUbicaciones[ubicacionIndex] = {
           ...updatedUbicaciones[ubicacionIndex],
-          lugar: newLugar,
-          fecha: newFecha
+          place: newLugar,
         };
         return { ...exp, ubicaciones: updatedUbicaciones };
       }

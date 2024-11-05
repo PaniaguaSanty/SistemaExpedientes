@@ -1,7 +1,6 @@
 import { motion } from "framer-motion"
 import { Dispatch, SetStateAction, RefObject } from "react"
 import { Expediente } from '../../model/Expediente'; // Ajusta la ruta según la ubicación de tus modelos
-import { Ubicacion } from '../../model/Ubicacion'; // Ajusta la ruta según la ubicación de tus modelos
 import { Regulation } from '../../model/Regulation'; // Ajusta la ruta según la ubicación de tus modelos
 
 type DashboardAddExpedienteProps = {

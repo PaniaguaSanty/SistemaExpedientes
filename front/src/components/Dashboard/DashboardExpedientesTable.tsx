@@ -1,24 +1,28 @@
-import { motion, AnimatePresence } from "framer-motion";
-import { Dispatch, SetStateAction } from "react";
-import { Expediente } from '../../model/Expediente'; // Ajusta la ruta según la ubicación de tus modelos
-import { Ubicacion } from '../../model/Ubicacion'; // Ajusta la ruta según la ubicación de tus modelos
-import { Regulation } from '../../model/Regulation'; // Ajusta la ruta según la ubicación de tus modelos
+'use client'
+
+import { motion, AnimatePresence } from "framer-motion"
+import { Dispatch, SetStateAction, useEffect, useState } from "react"
+import { Expediente } from '../../model/Expediente'
+import { Ubicacion } from '../../model/Ubicacion'
+import { Regulation } from '../../model/Regulation'
+import Pagination from '../../components/Pagination'
+import ExpedienteService from '../../service/ExpedienteService'
 
 type DashboardExpedientesTableProps = {
-  expedientes: Expediente[];
-  setExpedientes: Dispatch<SetStateAction<Expediente[]>>;
-  handleEditExpediente: (expediente: Expediente) => void;
-  handleEditUbicacion: (expedienteId: number, ubicacionIndex: number, newLugar: string, newFecha: string) => void;
-  handleOpenPDF: (pdfPath: string) => void;
-  expandedUbicaciones: number[];
-  setExpandedUbicaciones: Dispatch<SetStateAction<number[]>>;
-  toggleUbicaciones: (id: number) => void;
-  buttonVariants: any;
-  listItemVariants: any;
-  fadeInVariants: any;
+  expedientes: Expediente[]
+  setExpedientes: Dispatch<SetStateAction<Expediente[]>>
+  handleEditExpediente: (expediente: Expediente) => void
+  handleEditUbicacion: (expedienteId: number, ubicacionIndex: number, newLugar: string) => void
+  handleOpenPDF: (pdfPath: string) => void
+  expandedUbicaciones: number[]
+  setExpandedUbicaciones: Dispatch<SetStateAction<number[]>>
+  toggleUbicaciones: (id: number) => void
+  buttonVariants: any
+  listItemVariants: any
+  fadeInVariants: any
 }
 
-const DashboardExpedientesTable: React.FC<DashboardExpedientesTableProps> = ({
+export default function DashboardExpedientesTable({
   expedientes,
   setExpedientes,
   handleEditExpediente,
@@ -30,7 +34,31 @@ const DashboardExpedientesTable: React.FC<DashboardExpedientesTableProps> = ({
   buttonVariants,
   listItemVariants,
   fadeInVariants
-}) => {
+}: DashboardExpedientesTableProps) {
+  const [currentPage, setCurrentPage] = useState(1)
+  const [itemsPerPage] = useState(40)
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page)
+  }
+
+  useEffect(() => {
+    const fetchExpedientes = async () => {
+      try {
+        const response = await ExpedienteService.findAllExpedientsPageable(currentPage, itemsPerPage)
+        setExpedientes(response.data)
+      } catch (error) {
+        console.error('Error fetching expedients:', error)
+      }
+    }
+
+    fetchExpedientes()
+  }, [currentPage, itemsPerPage, setExpedientes])
+
+  const indexOfLastItem = currentPage * itemsPerPage
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage
+  const currentExpedientes = expedientes.slice(indexOfFirstItem, indexOfLastItem)
+
   return (
     <motion.div
       className="bg-white rounded-lg shadow overflow-x-auto"
@@ -53,7 +81,7 @@ const DashboardExpedientesTable: React.FC<DashboardExpedientesTableProps> = ({
         </thead>
         <tbody>
           <AnimatePresence>
-            {expedientes.map((expediente) => (
+            {currentExpedientes.map((expediente) => (
               <motion.tr
                 key={expediente.id}
                 className="border-b hover:bg-gray-50"
@@ -82,13 +110,12 @@ const DashboardExpedientesTable: React.FC<DashboardExpedientesTableProps> = ({
                       <div className="flex items-center space-x-2 mb-2">
                         <input
                           type="text"
-                          value={expediente.locations[0].lugar}
-                          onChange={(e) => handleEditUbicacion(expediente.id, 0, e.target.value, expediente.locations[0].fecha)}
+                          value={expediente.locations[0].place}
+                          onChange={(e) => handleEditUbicacion(expediente.id, 0, expediente.locations[0].place)}
                           className="border border-gray-300 rounded-md px-2 py-1 text-sm mr-2"
                         />
                         <motion.button
-                          id={`save-button-${expediente.id}-0`}
-                          onClick={() => handleEditUbicacion(expediente.id, 0, expediente.locations[0].lugar, expediente.locations[0].fecha)}
+                          onClick={() => handleEditUbicacion(expediente.id, 0, expediente.locations[0].place)}
                           className="bg-green-500 text-white px-2 py-1 rounded-md text-sm transition-all duration-300 ease-in-out"
                           variants={buttonVariants}
                           whileHover="hover"
@@ -100,7 +127,7 @@ const DashboardExpedientesTable: React.FC<DashboardExpedientesTableProps> = ({
                           onClick={() => {
                             const newUbicaciones = expediente.locations.filter((_, i) => i !== 0);
                             setExpedientes(expedientes.map(exp =>
-                              exp.id === expediente.id ? { ...exp, ubicaciones: newUbicaciones } : exp
+                              exp.id === expediente.id ? { ...exp, locations: newUbicaciones } : exp
                             ));
                           }}
                           className="bg-red-500 text-white px-2 py-1 rounded-md text-sm ml-2"
@@ -145,9 +172,9 @@ const DashboardExpedientesTable: React.FC<DashboardExpedientesTableProps> = ({
                                 exit={{ opacity: 0, height: 0 }}
                                 transition={{ duration: 0.3 }}
                               >
-                                {expediente.locations.map((ubicacion, index) => (
+                                {expediente.locations.slice(1).map((ubicacion, index) => (
                                   <motion.li
-                                    key={`${expediente.id}-${index}`}
+                                    key={`${expediente.id}-${index + 1}`}
                                     className="flex items-center space-x-2 mb-2"
                                     variants={listItemVariants}
                                     initial="hidden"
@@ -157,12 +184,12 @@ const DashboardExpedientesTable: React.FC<DashboardExpedientesTableProps> = ({
                                   >
                                     <input
                                       type="text"
-                                      value={ubicacion.lugar}
-                                      onChange={(e) => handleEditUbicacion(expediente.id, index, e.target.value, ubicacion.fecha)}
+                                      value={ubicacion.place}
+                                      onChange={(e) => handleEditUbicacion(expediente.id, index + 1, e.target.value)}
                                       className="border border-gray-300 rounded-md px-2 py-1 text-sm mr-2"
                                     />
                                     <motion.button
-                                      onClick={() => handleEditUbicacion(expediente.id, index, ubicacion.lugar, ubicacion.fecha)}
+                                      onClick={() => handleEditUbicacion(expediente.id, index + 1, ubicacion.place)}
                                       className="bg-green-500 text-white px-2 py-1 rounded-md text-sm transition-all duration-300 ease-in-out"
                                       variants={buttonVariants}
                                       whileHover="hover"
@@ -172,9 +199,9 @@ const DashboardExpedientesTable: React.FC<DashboardExpedientesTableProps> = ({
                                     </motion.button>
                                     <motion.button
                                       onClick={() => {
-                                        const newUbicaciones = expediente.locations.filter((_, i) => i !== index);
+                                        const newUbicaciones = expediente.locations.filter((_, i) => i !== index + 1);
                                         setExpedientes(expedientes.map(exp =>
-                                          exp.id === expediente.id ? { ...exp, ubicaciones: newUbicaciones } : exp
+                                          exp.id === expediente.id ? { ...exp, locations: newUbicaciones } : exp
                                         ));
                                       }}
                                       className="bg-red-500 text-white px-2 py-1 rounded-md text-sm ml-2"
@@ -198,9 +225,9 @@ const DashboardExpedientesTable: React.FC<DashboardExpedientesTableProps> = ({
                 </td>
                 <td className="px-4 py-2">
                   <button
-                    onClick={() => handleOpenPDF(expediente.pdfPath || "")} // Proporciona un string vacío como valor por defecto
+                    onClick={() => handleOpenPDF(expediente.pdfPath || "")}
                     className="text-blue-500 hover:underline"
-                    disabled={!expediente.pdfPath} // Deshabilitar el botón si pdfPath no está disponible
+                    disabled={!expediente.pdfPath}
                   >
                     {expediente.pdfPath ? "Ver PDF" : "No disponible"}
                   </button>
@@ -215,8 +242,12 @@ const DashboardExpedientesTable: React.FC<DashboardExpedientesTableProps> = ({
           </AnimatePresence>
         </tbody>
       </table>
+      <Pagination
+        currentPage={currentPage}
+        itemsPerPage={itemsPerPage}
+        totalItems={expedientes.length}
+        onPageChange={handlePageChange}
+      />
     </motion.div>
-  );
+  )
 }
-
-export default DashboardExpedientesTable;

@@ -23,7 +23,6 @@ const DashboardEditExpediente: React.FC<DashboardEditExpedienteProps> = ({
   setEditingExpediente,
   newUbicacion,
   setNewUbicacion,
-  handleAddUbicacion,
   handleSaveEdit,
   handleCancelEdit,
   handleFileChange,

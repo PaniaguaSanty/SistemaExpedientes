@@ -108,6 +108,19 @@ class ExpedienteService {
         }
     }
 
+    async findAllExpedientsPageable(page: number, size: number): Promise<{ data: Expediente[], totalItems: number }> {
+        try {
+            const response = await axios.get(`${API_URL}/expedientes?page=${page}&size=${size}`);
+            return {
+                data: response.data.content, // Ajusta según la estructura de tu respuesta
+                totalItems: response.data.totalElements, // Asegúrate de que esto esté presente
+            };
+        } catch (error) {
+            console.error('Error finding all expedients pageable:', error);
+            throw error;
+        }
+    }
+
     async findByOrganizationCode(orgCode: string): Promise<AxiosResponse<Expediente[]>> {
         try {
             const response = await axios.get(`${API_URL}/organization/${orgCode}`);

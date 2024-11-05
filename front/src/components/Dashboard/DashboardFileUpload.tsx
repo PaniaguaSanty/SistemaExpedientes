@@ -19,7 +19,6 @@ const DashboardFileUpload: React.FC<DashboardFileUploadProps> = ({
   handleDeletePDF,
   buttonVariants,
   newExpediente,
-  editingExpediente
 }) => {
   return (
     <div className="col-span-full flex items-center space-x-2 mt-4">
