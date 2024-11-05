@@ -1,5 +1,5 @@
+
 export type Ubicacion = {
-    fecha: string;
-    lugar: string;
+    place: string;
   }
   
