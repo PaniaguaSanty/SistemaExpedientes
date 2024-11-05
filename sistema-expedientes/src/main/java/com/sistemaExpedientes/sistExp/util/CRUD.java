@@ -13,6 +13,4 @@ public interface CRUD<R, Q> {
     R findOne(String id);
 
     List<R> findAll();
-
-
 }
