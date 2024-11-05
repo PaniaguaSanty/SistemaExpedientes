@@ -2,6 +2,8 @@
 package com.sistemaExpedientes.sistExp.repository;
 
 import com.sistemaExpedientes.sistExp.model.Expedient;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -22,6 +24,7 @@ public interface ExpedientRepository extends JpaRepository<Expedient, Long> {
 
     List<Expedient> findByStatus(String status);
 
+    Page<Expedient> findAll(Pageable pageable);
 
 }
 

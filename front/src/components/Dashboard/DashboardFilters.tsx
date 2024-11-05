@@ -4,12 +4,12 @@ import { Dispatch, SetStateAction } from "react"
 type DashboardFiltersProps = {
   searchTerm: string;
   setSearchTerm: Dispatch<SetStateAction<string>>;
-  selectedYear: number | null;
-  setSelectedYear: Dispatch<SetStateAction<number | null>>;
+  selectedYear: string | null;
+  setSelectedYear: Dispatch<SetStateAction<string | null>>;
   newYear: string;
   setNewYear: Dispatch<SetStateAction<string>>;
   handleAddYear: () => void;
-  years: number[];
+  years: string[];
   fadeInVariants: any;
 }
 
@@ -37,13 +37,12 @@ const DashboardFilters: React.FC<DashboardFiltersProps> = ({
       <div className="flex items-center space-x-2">
         <select
           value={selectedYear || ""}
-          onChange={(e) => setSelectedYear(e.target.value ? Number(e.target.value) : null)}
+          onChange={(e) => setSelectedYear(e.target.value ? String(e.target.value) : null)}
           className="border border-gray-300 rounded-md p-2"
         >
-          <option value="">Seleccionar año</option>
-          {years.map((year) => (
-            <option key={year} value={year}>{year}</option>
-          ))}
+         {years?.map((year, index) => (
+  <option key={`${year}-${index}`} value={year}>{year}</option>
+))}
         </select>
         <input
           type="number"

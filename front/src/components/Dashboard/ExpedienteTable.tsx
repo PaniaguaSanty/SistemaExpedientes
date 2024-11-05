@@ -47,11 +47,13 @@ const ExpedienteTable: React.FC<ExpedienteTableProps> = ({
           {expedientes.map(expediente => (
             <React.Fragment key={expediente.id}>
               <tr>
+                <td className="border border-gray-300 p-2">{expediente.id}</td>
                 <td className="border border-gray-300 p-2">{expediente.correlativeNumber}</td>
                 <td className="border border-gray-300 p-2">{expediente.organizationCode}</td>
                 <td className="border border-gray-300 p-2">{expediente.issuer}</td>
                 <td className="border border-gray-300 p-2">{expediente.year}</td>
                 <td className="border border-gray-300 p-2">{expediente.solicitude}</td>
+
                 <td className="border border-gray-300 p-2">
                   <motion.button
                     onClick={() => handleEditExpediente(expediente)}

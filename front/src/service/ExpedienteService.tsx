@@ -6,6 +6,7 @@ import { Regulation } from '../model/Regulation';
 const API_URL = 'http://localhost:8080/api/expedients';
 
 class ExpedienteService {
+    
     async createExpedient(expedientRequest: Expediente): Promise<AxiosResponse<Expediente>> {
         try {
             const response = await axios.post(`${API_URL}/create`, expedientRequest);
@@ -104,6 +105,19 @@ class ExpedienteService {
             return response;
         } catch (error) {
             console.error('Error finding all expedients:', error);
+            throw error;
+        }
+    }
+
+    async findAllExpedientsPageable(page: number, size: number): Promise<{ data: Expediente[], totalItems: number }> {
+        try {
+            const response = await axios.get(`${API_URL}/expedientes?page=${page}&size=${size}`);
+            return {
+                data: response.data.content, // Ajusta según la estructura de tu respuesta
+                totalItems: response.data.totalElements, // Asegúrate de que esto esté presente
+            };
+        } catch (error) {
+            console.error('Error finding all expedients pageable:', error);
             throw error;
         }
     }
