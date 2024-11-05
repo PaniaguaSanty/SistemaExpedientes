@@ -1,8 +1,23 @@
 import { motion } from "framer-motion"
 import { Dispatch, SetStateAction, RefObject } from "react"
-import { Expediente } from '../../model/Expediente'; // Ajusta la ruta según la ubicación de tus modelos
-import { Ubicacion } from '../../model/Ubicacion'; // Ajusta la ruta según la ubicación de tus modelos
-import { Regulation } from '../../model/Regulation'; // Ajusta la ruta según la ubicación de tus modelos
+
+type Ubicacion = {
+  fecha: string;
+  lugar: string;
+}
+
+type Expediente = {
+  id: number
+  codigo: string
+  numeroOrden: string
+  numeroExpediente: string
+  emisor: string
+  ano: number
+  reglamentacion: string
+  pedido: string
+  ubicaciones: Ubicacion[]
+  pdfPath?: string
+}
 
 type DashboardEditExpedienteProps = {
   editingExpediente: Expediente;
@@ -23,6 +38,7 @@ const DashboardEditExpediente: React.FC<DashboardEditExpedienteProps> = ({
   setEditingExpediente,
   newUbicacion,
   setNewUbicacion,
+  handleAddUbicacion,
   handleSaveEdit,
   handleCancelEdit,
   handleFileChange,
@@ -30,34 +46,6 @@ const DashboardEditExpediente: React.FC<DashboardEditExpedienteProps> = ({
   fileInputRef,
   buttonVariants
 }) => {
-  const handleAddRegulation = () => {
-    const newRegulation: Regulation = {
-      id: Date.now(),
-      description: ''
-    };
-    setEditingExpediente({
-      ...editingExpediente,
-      regulations: [...editingExpediente.regulations, newRegulation]
-    });
-  };
-
-  const handleRegulationChange = (index: number, value: string) => {
-    const newRegulations = [...editingExpediente.regulations];
-    newRegulations[index].description = value;
-    setEditingExpediente({
-      ...editingExpediente,
-      regulations: newRegulations
-    });
-  };
-
-  const handleDeleteRegulation = (index: number) => {
-    const newRegulations = editingExpediente.regulations.filter((_, i) => i !== index);
-    setEditingExpediente({
-      ...editingExpediente,
-      regulations: newRegulations
-    });
-  };
-
   return (
     <motion.div
       className="bg-white rounded-lg shadow p-4 mb-8"
@@ -66,90 +54,71 @@ const DashboardEditExpediente: React.FC<DashboardEditExpedienteProps> = ({
       exit={{ opacity: 0, y: -20 }}
       transition={{ duration: 0.3 }}
     >
-      <h2 className="text-xl font-bold mb-4">Editar Expediente: {editingExpediente.id}</h2>
+      <h2 className="text-xl font-bold mb-4">Editar Expediente: {editingExpediente.codigo}</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <input
           type="text"
           placeholder="Número de Orden"
-          value={editingExpediente.correlativeNumber}
-          onChange={(e) => setEditingExpediente({ ...editingExpediente, correlativeNumber: e.target.value })}
+          value={editingExpediente.numeroOrden}
+          onChange={(e) => setEditingExpediente({...editingExpediente, numeroOrden: e.target.value})}
           className="border border-gray-300 rounded-md p-2"
         />
         <input
           type="text"
           placeholder="Número de Expediente"
-          value={editingExpediente.organizationCode}
-          onChange={(e) => setEditingExpediente({ ...editingExpediente, organizationCode: e.target.value })}
+          value={editingExpediente.numeroExpediente}
+          onChange={(e) => setEditingExpediente({...editingExpediente, numeroExpediente: e.target.value})}
           className="border border-gray-300 rounded-md p-2"
         />
         <input
           type="text"
           placeholder="Emisor"
-          value={editingExpediente.issuer}
-          onChange={(e) => setEditingExpediente({ ...editingExpediente, issuer: e.target.value })}
+          value={editingExpediente.emisor}
+          onChange={(e) => setEditingExpediente({...editingExpediente, emisor: e.target.value})}
+          className="border border-gray-300 rounded-md p-2"
+        />
+        <input
+          type="text"
+          placeholder="Reglamentación"
+          value={editingExpediente.reglamentacion}
+          onChange={(e) => setEditingExpediente({...editingExpediente, reglamentacion: e.target.value})}
+          className="border border-gray-300 rounded-md p-2"
+        />
+        <input
+          type="text"
+          placeholder="Pedido"
+          value={editingExpediente.pedido}
+          onChange={(e) => setEditingExpediente({...editingExpediente, pedido: e.target.value})}
           className="border border-gray-300 rounded-md p-2"
         />
         <div className="col-span-full">
-          <h3 className="text-lg font-semibold mb-2">Reglamentaciones</h3>
-          {editingExpediente.regulations.map((regulation, index) => (
-            <div key={index} className="flex items-center space-x-2 mb-2">
-              <input
-                type="text"
-                value={regulation.description}
-                onChange={(e) => handleRegulationChange(index, e.target.value)}
-                className="border border-gray-300 rounded-md px-2 py-1 text-sm flex-grow"
-              />
-              <motion.button
-                onClick={() => handleDeleteRegulation(index)}
-                className="bg-red-500 text-white px-2 py-1 rounded-md text-sm"
-                variants={buttonVariants}
-                whileHover="hover"
-                whileTap="tap"
-              >
-                Eliminar
-              </motion.button>
-            </div>
-          ))}
-          <div className="flex items-center space-x-2 mt-2">
-            <motion.button
-              onClick={handleAddRegulation}
-              className="bg-blue-500 text-white px-4 py-2 rounded-md"
-              variants={buttonVariants}
-              whileHover="hover"
-              whileTap="tap"
-            >
-              Añadir Reglamentación
-            </motion.button>
-          </div>
-        </div>
-        <div className="col-span-full">
           <h3 className="text-lg font-semibold mb-2">Ubicaciones</h3>
-          {editingExpediente.locations.map((location, index) => (
+          {editingExpediente.ubicaciones.map((ubicacion, index) => (
             <div key={index} className="flex items-center space-x-2 mb-2">
               <input
                 type="text"
-                value={location.lugar}
+                value={ubicacion.lugar}
                 onChange={(e) => {
-                  const newUbicaciones = [...editingExpediente.locations];
+                  const newUbicaciones = [...editingExpediente.ubicaciones];
                   newUbicaciones[index] = { ...newUbicaciones[index], lugar: e.target.value };
-                  setEditingExpediente({ ...editingExpediente, locations: newUbicaciones });
+                  setEditingExpediente({...editingExpediente, ubicaciones: newUbicaciones});
                 }}
                 className="border border-gray-300 rounded-md px-2 py-1 text-sm flex-grow"
               />
               <input
                 type="date"
-                value={new Date(location.fecha).toISOString().split('T')[0]}
+                value={new Date(ubicacion.fecha).toISOString().split('T')[0]}
                 onChange={(e) => {
-                  const newUbicaciones = [...editingExpediente.locations];
+                  const newUbicaciones = [...editingExpediente.ubicaciones];
                   newUbicaciones[index] = { ...newUbicaciones[index], fecha: new Date(e.target.value).toISOString() };
-                  setEditingExpediente({ ...editingExpediente, locations: newUbicaciones });
+                  setEditingExpediente({...editingExpediente, ubicaciones: newUbicaciones});
                 }}
                 className="border border-gray-300 rounded-md px-2 py-1 text-sm"
               />
               <motion.button
                 onClick={() => {
-                  const newUbicaciones = editingExpediente.locations.filter((_, i) => i !== index);
-                  setEditingExpediente({ ...editingExpediente, locations: newUbicaciones });
+                  const newUbicaciones = editingExpediente.ubicaciones.filter((_, i) => i !== index);
+                  setEditingExpediente({...editingExpediente, ubicaciones: newUbicaciones});
                 }}
                 className="bg-red-500 text-white px-2 py-1 rounded-md text-sm"
                 variants={buttonVariants}
@@ -171,13 +140,13 @@ const DashboardEditExpediente: React.FC<DashboardEditExpedienteProps> = ({
             <motion.button
               onClick={() => {
                 if (newUbicacion) {
-                  const nuevaUbicacion: Ubicacion = {
+                  const nuevaUbicacion = {
                     fecha: new Date().toISOString(),
                     lugar: newUbicacion
                   };
                   setEditingExpediente({
                     ...editingExpediente,
-                    locations: [nuevaUbicacion, ...editingExpediente.locations]
+                    ubicaciones: [nuevaUbicacion, ...editingExpediente.ubicaciones]
                   });
                   setNewUbicacion("");
                 }
@@ -243,7 +212,7 @@ const DashboardEditExpediente: React.FC<DashboardEditExpedienteProps> = ({
             whileHover="hover"
             whileTap="tap"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 inline-block mr-2" viewBox="0 0 20 20" fill="currentColor">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 inline-block mr-2" viewBox="0 0 20 20"  fill="currentColor">
               <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
             </svg>
             Guardar Cambios
@@ -255,4 +224,3 @@ const DashboardEditExpediente: React.FC<DashboardEditExpedienteProps> = ({
 }
 
 export default DashboardEditExpediente
-

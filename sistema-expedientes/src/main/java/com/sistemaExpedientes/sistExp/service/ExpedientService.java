@@ -19,8 +19,6 @@ import com.sistemaExpedientes.sistExp.repository.RegulationRepository;
 import com.sistemaExpedientes.sistExp.util.CRUD;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -140,21 +138,11 @@ public class ExpedientService implements CRUD<ExpedientResponseDTO, ExpedientReq
     public List<ExpedientResponseDTO> findAll() {
         logger.info("Entering in findAll SERVICE method...");
         List<Expedient> expedients = expedientRepository.findAll();
+        logger.info("Exiting findAll SERVICE method...");
         return expedients.stream()
                 .map(expedientMapper::convertToDto)
                 .collect(Collectors.toList());
     }
-
-
-    public Page<ExpedientResponseDTO> findAllPageable(Pageable pageable) {
-        logger.info("Entering in findAll SERVICE method with pageable: {}", pageable);
-        Page<Expedient> expedientPage = expedientRepository.findAll(pageable);
-        logger.info("Exiting findAll SERVICE method...");
-
-        // Mapear cada Expedient a ExpedientResponseDTO
-        return expedientPage.map(expedientMapper::convertToDto);
-    }
-
 
     //buscar por codigo de org.
     public List<ExpedientResponseDTO> findByOrganizationCode(String orgCode) {
@@ -283,6 +271,7 @@ public class ExpedientService implements CRUD<ExpedientResponseDTO, ExpedientReq
         logger.info("Exiting findRegulationsByExpedientId SERVICE method successfully with {} results", regulationDTOs.size());
         return regulationDTOs;
     }
+
 
 
 }

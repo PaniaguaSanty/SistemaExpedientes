@@ -1,8 +1,23 @@
-//DashboardFileUpload.tsx
 import { motion } from "framer-motion"
 import { RefObject } from "react"
-import { Expediente } from "../../model/Expediente"
 
+type Ubicacion = {
+  fecha: string;
+  lugar: string;
+}
+
+type Expediente = {
+  id: number
+  codigo: string
+  numeroOrden: string
+  numeroExpediente: string
+  emisor: string
+  ano: number
+  reglamentacion: string
+  pedido: string
+  ubicaciones: Ubicacion[]
+  pdfPath?: string
+}
 
 type DashboardFileUploadProps = {
   fileInputRef: RefObject<HTMLInputElement>;
@@ -19,6 +34,7 @@ const DashboardFileUpload: React.FC<DashboardFileUploadProps> = ({
   handleDeletePDF,
   buttonVariants,
   newExpediente,
+  editingExpediente
 }) => {
   return (
     <div className="col-span-full flex items-center space-x-2 mt-4">
