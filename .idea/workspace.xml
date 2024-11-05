@@ -6,6 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="7f0c8d7e-87f1-4a4f-b3fb-27a6f3fcde9c" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sistema-expedientes/src/main/java/com/sistemaExpedientes/sistExp/config/CorsConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/sistema-expedientes/src/main/java/com/sistemaExpedientes/sistExp/config/CorsConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sistema-expedientes/src/main/java/com/sistemaExpedientes/sistExp/controller/ExpedientController.java" beforeDir="false" afterPath="$PROJECT_DIR$/sistema-expedientes/src/main/java/com/sistemaExpedientes/sistExp/controller/ExpedientController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sistema-expedientes/src/main/java/com/sistemaExpedientes/sistExp/model/Expedient.java" beforeDir="false" afterPath="$PROJECT_DIR$/sistema-expedientes/src/main/java/com/sistemaExpedientes/sistExp/model/Expedient.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
