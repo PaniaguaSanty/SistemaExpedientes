@@ -13,6 +13,5 @@ import lombok.Setter;
 public class LocationRequestDto {
 
     private String place;
-    private String date;
     private Expedient expedient;
 }

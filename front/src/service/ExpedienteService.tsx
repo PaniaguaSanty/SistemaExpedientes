@@ -39,6 +39,7 @@ class ExpedienteService {
 
     async addLocation(id: number, locationDto: Ubicacion): Promise<AxiosResponse<Ubicacion>> {
         try {
+            //hacer logica de seteo de id de referencia.
             const response = await axios.put(`${API_URL}/addLocation/${id}`, locationDto);
             return response;
         } catch (error) {

@@ -2,14 +2,15 @@
 
 import { useState, useMemo, useRef, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import ExpedienteService from '../../service/ExpedienteService'; // Ajusta la ruta según la ubicación de tu servicio
-import { Expediente } from '../../model/Expediente'; // Ajusta la ruta según la ubicación de tus modelos
-import { Ubicacion } from '../../model/Ubicacion'; // Ajusta la ruta según la ubicación de tus modelos
+import ExpedienteService from '../../service/ExpedienteService';
+import { Expediente } from '../../model/Expediente';
+import { Ubicacion } from '../../model/Ubicacion';
 import DashboardHeader from './DashboardHeader'
 import DashboardFilters from './DashboardFilters'
 import DashboardAddExpediente from './DashboardAddExpediente'
 import DashboardEditExpediente from './DashboardEditExpediente'
 import DashboardExpedientesTable from './DashboardExpedientesTable'
+import { Link } from 'react-router-dom';
 
 export default function Dashboard() {
   const [expedientes, setExpedientes] = useState<Expediente[]>([])
@@ -49,7 +50,6 @@ export default function Dashboard() {
   }, [expedientes, searchTerm, selectedYear])
 
   useEffect(() => {
-    // Fetch expedientes from the backend using the ExpedienteService
     ExpedienteService.findAllExpedients()
       .then(response => {
         if (Array.isArray(response.data)) {
@@ -66,8 +66,8 @@ export default function Dashboard() {
   const handleAddYear = () => {
     const yearToAdd = parseInt(newYear);
     if (!isNaN(yearToAdd) && !years.includes(yearToAdd.toString())) {
-      setSelectedYear(yearToAdd.toString()); // Convertir a string
-      setNewYear(""); // Reiniciar newYear
+      setSelectedYear(yearToAdd.toString());
+      setNewYear("");
     }
   }
 
@@ -190,12 +190,11 @@ export default function Dashboard() {
           ...updatedUbicaciones[ubicacionIndex],
           place: newLugar,
         };
-        return { ...exp, ubicaciones: updatedUbicaciones };
+        return { ...exp, locations: updatedUbicaciones };
       }
       return exp;
     }));
 
-    // Add this line to trigger the animation
     document.getElementById(`save-button-${expedienteId}-${ubicacionIndex}`)?.classList.add('animate-pulse');
     setTimeout(() => {
       document.getElementById(`save-button-${expedienteId}-${ubicacionIndex}`)?.classList.remove('animate-pulse');
@@ -216,7 +215,6 @@ export default function Dashboard() {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0 },
   }
-
 
   return (
     <motion.div
@@ -284,6 +282,9 @@ export default function Dashboard() {
         listItemVariants={listItemVariants}
         fadeInVariants={fadeInVariants}
       />
+      <Link to="/course-upload" className="bg-green-500 text-white p-2 mt-4 inline-block">
+        Subir Archivo de Cursos
+      </Link>
     </motion.div>
   )
 }

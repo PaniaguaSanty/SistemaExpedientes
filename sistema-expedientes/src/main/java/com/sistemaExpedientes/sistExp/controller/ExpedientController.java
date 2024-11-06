@@ -70,10 +70,11 @@ public class ExpedientController implements Controller<ExpedientResponseDTO, Exp
 
     @PutMapping("/addLocation/{id}")
     public ResponseEntity<AddLocationResponseDto> addLocation(@PathVariable Long id,
-                                                              @RequestBody AddLocationRequestDto locationDto) {
+                                                              @RequestBody AddLocationRequestDto locationDto,
+                                                              @RequestParam String newPlace) {
         logger.info("Entering addLocation CONTROLLER method...");
         try {
-            AddLocationResponseDto location = expedientService.addLocation(id, locationDto);
+            AddLocationResponseDto location = expedientService.addLocation(id, locationDto, newPlace);
             logger.info("Exiting addLocation CONTROLLER method successfully...");
             return new ResponseEntity<>(location, HttpStatus.CREATED);
         } catch (NotFoundException e) {

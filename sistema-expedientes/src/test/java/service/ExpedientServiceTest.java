@@ -181,6 +181,8 @@ class ExpedientServiceTest {
         AddLocationRequestDto locationRequestDto = new AddLocationRequestDto();
         locationRequestDto.setPlace("New Location");
 
+        String newPlace = "New Place";
+
         Expedient expedient = new Expedient();
         expedient.setLocations(new ArrayList<>());
 
@@ -191,7 +193,7 @@ class ExpedientServiceTest {
         when(locationMapper.convertAddedLocationToDto(locationToAdd)).thenReturn(new AddLocationResponseDto());
 
         // Act
-        AddLocationResponseDto result = expedientService.addLocation(expedientId, locationRequestDto);
+        AddLocationResponseDto result = expedientService.addLocation(expedientId, locationRequestDto, newPlace);
 
         // Assert
         assertNotNull(result);
@@ -205,13 +207,15 @@ class ExpedientServiceTest {
     void addLocation_ShouldThrowNotFoundException_WhenExpedientDoesNotExist() {
         // Arrange
         AddLocationRequestDto locationRequestDto = new AddLocationRequestDto();
+        String newPlace = "New Place";
 
         when(expedientRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         // Act & Assert
-        NotFoundException exception = assertThrows(NotFoundException.class, () -> expedientService.addLocation(1L, locationRequestDto));
+        NotFoundException exception = assertThrows(NotFoundException.class, () -> expedientService.addLocation(1L, locationRequestDto, newPlace));
         assertEquals("Expedient not found with id: 1", exception.getMessage());
     }
+
 
     @Test
     void editLocation_ShouldUpdateLocation_WhenExpedientAndLocationExist() {
