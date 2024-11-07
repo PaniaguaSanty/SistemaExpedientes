@@ -4,7 +4,6 @@ import ExpedienteService from '../../service/ExpedienteService';
 import * as XLSX from 'xlsx';
 
 interface CourseData {
-  id: number;
   denominations: string;
   recipients: string;
   responsible_institutions: string;
@@ -29,25 +28,44 @@ const CourseUploadPage: React.FC = () => {
       const reader = new FileReader();
       reader.onload = (e) => {
         const data = new Uint8Array(e.target?.result as ArrayBuffer);
-        const workbook = XLSX.read(data, { type: 'array' });
+        
+        // Detectar el tipo de archivo
+        const fileType = file.name.split('.').pop()?.toLowerCase();
+        const workbook = fileType === 'csv' 
+          ? XLSX.read(data, { type: 'array', codepage: 65001 })  // Leer CSV correctamente
+          : XLSX.read(data, { type: 'array' });  // Leer Excel
+
         const allData: CourseData[] = [];
 
         workbook.SheetNames.forEach(sheetName => {
           const worksheet = workbook.Sheets[sheetName];
           const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 }) as any[][];
 
-          // Mapea los datos a las columnas de la base de datos
-          const mappedData = jsonData.slice(1).map((row: any[]) => ({
-            id: row[0] as number,
-            denominations: row[1] as string,
-            recipients: row[2] as string,
-            responsible_institutions: row[3] as string,
-            year: sheetName, // Usa el nombre de la hoja como el año
-          })) as CourseData[];
+          // Mapea los datos a las columnas de la base de datos (sin `id`)
+          const mappedData = jsonData.slice(1).map((row: any[]) => {
+            const year = sheetName.trim() || ""; // Asegúrate de que el año no sea vacío
 
-          allData.push(...mappedData);
+            return {
+              denominations: row[0] as string,  // Denominaciones
+              recipients: row[1] as string,      // Destinatarios
+              responsible_institutions: row[2] as string,  // Instituciones responsables
+              year: year,  // Año
+            };
+          }) as CourseData[];
+
+          // Filtrar las filas que tienen al menos un campo con datos válidos (y eliminar aquellas con solo año)
+          const validData = mappedData.filter(course => {
+            // Filtramos las filas que solo tienen año y no tienen ninguna denominación, destinatario o institución.
+            return (course.denominations !== "" || 
+                    course.recipients !== "" || 
+                    course.responsible_institutions !== "") && 
+                    !(course.year && !course.denominations && !course.recipients && !course.responsible_institutions);
+          });
+
+          allData.push(...validData);
         });
 
+        // Establecemos el estado con los datos validados
         setCourseData(allData);
         setMessage('Archivo subido y datos guardados correctamente!');
         setFile(null);
@@ -87,7 +105,6 @@ const CourseUploadPage: React.FC = () => {
           <table className="min-w-full bg-white">
             <thead>
               <tr>
-                <th className="py-2 px-4 border-b">ID</th>
                 <th className="py-2 px-4 border-b">Denominaciones</th>
                 <th className="py-2 px-4 border-b">Destinatarios</th>
                 <th className="py-2 px-4 border-b">Instituciones Responsables</th>
@@ -97,7 +114,6 @@ const CourseUploadPage: React.FC = () => {
             <tbody>
               {courseData.map((row, rowIndex) => (
                 <tr key={rowIndex}>
-                  <td className="py-2 px-4 border-b">{row.id}</td>
                   <td className="py-2 px-4 border-b">{row.denominations}</td>
                   <td className="py-2 px-4 border-b">{row.recipients}</td>
                   <td className="py-2 px-4 border-b">{row.responsible_institutions}</td>
