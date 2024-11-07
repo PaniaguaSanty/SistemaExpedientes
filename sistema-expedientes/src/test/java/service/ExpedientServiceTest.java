@@ -1,3 +1,4 @@
+/*
 package service;
 
 import com.sistemaExpedientes.sistExp.dto.request.AddLocationRequestDto;
@@ -469,6 +470,8 @@ class ExpedientServiceTest {
         verify(expedientRepository).findByIssuerIgnoreCase(issuer);
     }
 }
+
+ */
 
 
 

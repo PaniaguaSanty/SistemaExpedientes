@@ -2,10 +2,7 @@ package com.sistemaExpedientes.sistExp.controller;
 
 import com.sistemaExpedientes.sistExp.dto.request.AddLocationRequestDto;
 import com.sistemaExpedientes.sistExp.dto.request.ExpedientRequestDTO;
-import com.sistemaExpedientes.sistExp.dto.response.AddLocationResponseDto;
-import com.sistemaExpedientes.sistExp.dto.response.ExpedientResponseDTO;
-import com.sistemaExpedientes.sistExp.dto.response.RegulationResponseDto;
-import com.sistemaExpedientes.sistExp.dto.response.SolicitudeDto;
+import com.sistemaExpedientes.sistExp.dto.response.*;
 import com.sistemaExpedientes.sistExp.exception.NotFoundException;
 import com.sistemaExpedientes.sistExp.model.Expedient;
 import com.sistemaExpedientes.sistExp.service.ExcelService;
@@ -154,6 +151,21 @@ public class ExpedientController implements Controller<ExpedientResponseDTO, Exp
         Page<ExpedientResponseDTO> expedients = expedientService.findAllPageable(pageable);
         return ResponseEntity.ok(expedients);
     }
+
+    @GetMapping("/findAllCoursesPaged")
+    public ResponseEntity<Page<CourseResponseDto>> getAllCourses(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "40") int size,
+            @RequestParam(defaultValue = "id") String sort,
+            @RequestParam(defaultValue = "asc") String order) {
+
+        Sort.Direction sortDirection = order.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, sort));
+
+        Page<CourseResponseDto> courses = expedientService.findAllCoursesPageable(pageable);
+        return ResponseEntity.ok(courses);
+    }
+
 
     @GetMapping("/organization/{orgCode}")
     public ResponseEntity<List<ExpedientResponseDTO>> findByOrganizationCode(@PathVariable String orgCode) {

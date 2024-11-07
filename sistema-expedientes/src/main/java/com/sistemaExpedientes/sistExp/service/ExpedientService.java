@@ -2,17 +2,17 @@ package com.sistemaExpedientes.sistExp.service;
 
 import com.sistemaExpedientes.sistExp.dto.request.AddLocationRequestDto;
 import com.sistemaExpedientes.sistExp.dto.request.ExpedientRequestDTO;
-import com.sistemaExpedientes.sistExp.dto.response.AddLocationResponseDto;
-import com.sistemaExpedientes.sistExp.dto.response.ExpedientResponseDTO;
-import com.sistemaExpedientes.sistExp.dto.response.RegulationResponseDto;
-import com.sistemaExpedientes.sistExp.dto.response.SolicitudeDto;
+import com.sistemaExpedientes.sistExp.dto.response.*;
 import com.sistemaExpedientes.sistExp.exception.NotFoundException;
+import com.sistemaExpedientes.sistExp.mapper.CourseMapper;
 import com.sistemaExpedientes.sistExp.mapper.ExpedientMapper;
 import com.sistemaExpedientes.sistExp.mapper.LocationMapper;
 import com.sistemaExpedientes.sistExp.mapper.RegulationMapper;
+import com.sistemaExpedientes.sistExp.model.Course;
 import com.sistemaExpedientes.sistExp.model.Expedient;
 import com.sistemaExpedientes.sistExp.model.Location;
 import com.sistemaExpedientes.sistExp.model.Regulation;
+import com.sistemaExpedientes.sistExp.repository.CourseRepository;
 import com.sistemaExpedientes.sistExp.repository.ExpedientRepository;
 import com.sistemaExpedientes.sistExp.repository.LocationRepository;
 import com.sistemaExpedientes.sistExp.repository.RegulationRepository;
@@ -33,23 +33,22 @@ public class ExpedientService implements CRUD<ExpedientResponseDTO, ExpedientReq
     private static final Logger logger = LoggerFactory.getLogger(ExpedientService.class);
     private final ExpedientRepository expedientRepository;
     private final LocationRepository locationRepository;
+    private final CourseRepository courseRepository;
     private final ExpedientMapper expedientMapper;
     private final LocationMapper locationMapper;
     private final RegulationRepository regulationRepository;
     private final RegulationMapper regulationMapper;
+    private final CourseMapper courseMapper;
 
-    public ExpedientService(ExpedientRepository expedientRepository,
-                            LocationRepository locationRepository,
-                            ExpedientMapper expedientMapper,
-                            LocationMapper locationMapper,
-                            RegulationRepository regulationRepository,
-                            RegulationMapper regulationMapper) {
+    public ExpedientService(ExpedientRepository expedientRepository, LocationRepository locationRepository, CourseRepository courseRepository, ExpedientMapper expedientMapper, LocationMapper locationMapper, RegulationRepository regulationRepository, RegulationMapper regulationMapper, CourseMapper courseMapper) {
         this.expedientRepository = expedientRepository;
         this.locationRepository = locationRepository;
+        this.courseRepository = courseRepository;
         this.expedientMapper = expedientMapper;
         this.locationMapper = locationMapper;
         this.regulationRepository = regulationRepository;
         this.regulationMapper = regulationMapper;
+        this.courseMapper = courseMapper;
     }
 
     @Override
@@ -102,8 +101,7 @@ public class ExpedientService implements CRUD<ExpedientResponseDTO, ExpedientReq
         Expedient expedient = expedientRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Expedient not found with id: " + id));
         Location locationToAdd = locationMapper.convertAddedLocationToEntity(newLocation);
-        if (expedient != null) {        //acá, si el expediente es encontrado, se le agrega el nuevo place.
-            //con un "locationToAdd.setPlace()"
+        if (expedient != null) {
             locationToAdd.setPlace(newPlace);
             expedient.getLocations().add(locationToAdd);
             locationToAdd.setExpedient(expedient);
@@ -154,6 +152,13 @@ public class ExpedientService implements CRUD<ExpedientResponseDTO, ExpedientReq
         Page<Expedient> expedientPage = expedientRepository.findAll(pageable);
         logger.info("Exiting findAll SERVICE method...");
         return expedientPage.map(expedientMapper::convertToDto);
+    }
+
+    public Page<CourseResponseDto> findAllCoursesPageable(Pageable pageable) {
+        logger.info("Entering in findAllCourses SERVICE method with pageable: {}", pageable);
+        Page<Course> coursePage = courseRepository.findAll(pageable);
+        logger.info("Exiting findAllCourses SERVICE method...");
+        return coursePage.map(courseMapper::convertToDto);
     }
 
     //buscar por codigo de org.
