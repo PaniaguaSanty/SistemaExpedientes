@@ -9,7 +9,7 @@ const CourseUploadPage: React.FC = () => {
   const [file, setFile] = useState<File | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [courses, setCourses] = useState<Course[]>([]);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(0);
   const [itemsPerPage] = useState(40);
   const [totalItems, setTotalItems] = useState(0);
 
