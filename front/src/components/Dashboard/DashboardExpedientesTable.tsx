@@ -5,6 +5,7 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react"
 import { Expediente } from '../../model/Expediente'
 import Pagination from '../../components/Pagination'
 import ExpedienteService from '../../service/ExpedienteService'
+import '../../styles/Pagination.css'
 
 type DashboardExpedientesTableProps = {
   expedientes: Expediente[]

@@ -108,7 +108,7 @@ export default function Dashboard() {
       ExpedienteService.createExpedient(newExp)
         .then(response => {
           setExpedientes([...expedientes, response.data])
-          setNewExpediente({ year: selectedYear, locations: [] })
+          setNewExpediente({ year: selectedYear, locations: [], })
         })
         .catch(error => {
           console.error('Error adding expediente:', error)

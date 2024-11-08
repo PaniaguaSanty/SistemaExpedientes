@@ -9,6 +9,7 @@ interface PaginationProps {
 
 export default function Pagination({ currentPage, itemsPerPage, totalItems, onPageChange }: PaginationProps) {
   const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const range = 10; // Número de páginas a mostrar
 
   const handlePrevious = () => {
     if (currentPage > 1) {
@@ -22,32 +23,48 @@ export default function Pagination({ currentPage, itemsPerPage, totalItems, onPa
     }
   };
 
+  const handlePageChange = (page: number) => {
+    if (page >= 1 && page <= totalPages) {
+      onPageChange(page);
+    }
+  };
+
+  const renderPageNumbers = () => {
+    const startPage = Math.max(1, currentPage - Math.floor(range / 2));
+    const endPage = Math.min(totalPages, startPage + range - 1);
+    const pageNumbers = [];
+
+    for (let i = startPage; i <= endPage; i++) {
+      pageNumbers.push(
+        <button
+          key={i}
+          onClick={() => handlePageChange(i)}
+          className={`pagination-button ${currentPage === i ? 'active' : ''}`}
+        >
+          {i}
+        </button>
+      );
+    }
+
+    return pageNumbers;
+  };
+
   return (
-    <div className="flex items-center justify-center space-x-4 mt-8">
+    <div className="pagination-container">
       <button
         onClick={handlePrevious}
         disabled={currentPage === 1}
-        className={`px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200 ease-in-out
-          ${currentPage === 1
-            ? 'bg-blue-300 text-white cursor-not-allowed'
-            : 'bg-blue-500 text-white hover:bg-blue-600'
-          }`}
+        className={`pagination-button ${currentPage === 1 ? 'disabled' : ''}`}
       >
-        Previous
+        Anterior
       </button>
-      <span className="text-sm font-medium">
-        Page {currentPage} of {totalPages}
-      </span>
+      {renderPageNumbers()}
       <button
         onClick={handleNext}
         disabled={currentPage === totalPages}
-        className={`px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200 ease-in-out
-          ${currentPage === totalPages
-            ? 'bg-blue-300 text-white cursor-not-allowed'
-            : 'bg-blue-500 text-white hover:bg-blue-600'
-          }`}
+        className={`pagination-button ${currentPage === totalPages ? 'disabled' : ''}`}
       >
-        Next
+        Siguiente
       </button>
     </div>
   );
