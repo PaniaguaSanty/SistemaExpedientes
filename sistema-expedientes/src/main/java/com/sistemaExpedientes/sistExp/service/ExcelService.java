@@ -167,7 +167,7 @@ public class ExcelService {
             // Iterar sobre todas las hojas del archivo Excel
             for (int i = 0; i < workbook.getNumberOfSheets(); i++) {
                 Sheet sheet = workbook.getSheetAt(i);
-                String year = sheet.getSheetName(); //ejemplo, "año 2021"
+                String year = sheet.getSheetName(); // Ejemplo, "año 2021"
                 Iterator<Row> rowIterator = sheet.iterator();
                 rowIterator.next(); // Saltar la primera fila si es un encabezado
 
@@ -199,8 +199,15 @@ public class ExcelService {
                         course.setResponsibleInstitutions(""); // Valor predeterminado si está vacío
                     }
 
-                    course.setYear(year); //esta linea establece el año antes de guardarla
-                    courses.add(course);
+                    course.setYear(year); // Esta línea establece el año antes de guardarla
+
+                    // Verificar si el curso tiene al menos un campo lleno
+                    if (!course.getDenominations().isEmpty() ||
+                            !course.getRecipients().isEmpty() ||
+                            !course.getResponsibleInstitutions().isEmpty()) {
+
+                        courses.add(course); // Agregar solo si tiene al menos un campo no vacío
+                    }
                 }
             }
         }
@@ -210,6 +217,7 @@ public class ExcelService {
             courseRepository.saveAll(courses);
         }
     }
+
 
 
     private boolean isValidLong(String value) {

@@ -13,10 +13,8 @@ public class Location {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private String origin;
-    private String destiny;
     private String place;
-
+    
     @ManyToOne
     @JoinColumn(name = "expedient_id")
     @JsonBackReference // Rompe el ciclo de serialización aquí

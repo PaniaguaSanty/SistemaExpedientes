@@ -22,12 +22,11 @@ public class Expedient {
     private String status;
     private String pdfPath;
 
-    @OneToMany(mappedBy = "expedient")
-    @JsonManagedReference // Rompe el ciclo para regulations
+    @OneToMany(mappedBy = "expedient", cascade = CascadeType.ALL)
     private List<Regulation> regulations;
 
-    @OneToMany(mappedBy = "expedient")
-    @JsonManagedReference // Rompe el ciclo para locations
+    @OneToMany(mappedBy = "expedient", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<Location> locations;
 
     public void setRegulations(String value) {

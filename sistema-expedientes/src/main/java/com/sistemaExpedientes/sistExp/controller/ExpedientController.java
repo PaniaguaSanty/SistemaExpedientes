@@ -2,10 +2,7 @@ package com.sistemaExpedientes.sistExp.controller;
 
 import com.sistemaExpedientes.sistExp.dto.request.AddLocationRequestDto;
 import com.sistemaExpedientes.sistExp.dto.request.ExpedientRequestDTO;
-import com.sistemaExpedientes.sistExp.dto.response.AddLocationResponseDto;
-import com.sistemaExpedientes.sistExp.dto.response.ExpedientResponseDTO;
-import com.sistemaExpedientes.sistExp.dto.response.RegulationResponseDto;
-import com.sistemaExpedientes.sistExp.dto.response.SolicitudeDto;
+import com.sistemaExpedientes.sistExp.dto.response.*;
 import com.sistemaExpedientes.sistExp.exception.NotFoundException;
 import com.sistemaExpedientes.sistExp.model.Expedient;
 import com.sistemaExpedientes.sistExp.service.ExcelService;
@@ -13,6 +10,10 @@ import com.sistemaExpedientes.sistExp.service.ExpedientService;
 import com.sistemaExpedientes.sistExp.util.Controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -64,13 +65,13 @@ public class ExpedientController implements Controller<ExpedientResponseDTO, Exp
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    // Método para agregar una ubicación a un expediente
     @PutMapping("/addLocation/{id}")
     public ResponseEntity<AddLocationResponseDto> addLocation(@PathVariable Long id,
-                                                              @RequestBody AddLocationRequestDto locationDto) {
+                                                              @RequestBody AddLocationRequestDto locationDto,
+                                                              @RequestParam String newPlace) {
         logger.info("Entering addLocation CONTROLLER method...");
         try {
-            AddLocationResponseDto location = expedientService.addLocation(id, locationDto);
+            AddLocationResponseDto location = expedientService.addLocation(id, locationDto, newPlace);
             logger.info("Exiting addLocation CONTROLLER method successfully...");
             return new ResponseEntity<>(location, HttpStatus.CREATED);
         } catch (NotFoundException e) {
@@ -136,6 +137,35 @@ public class ExpedientController implements Controller<ExpedientResponseDTO, Exp
         logger.info("Exiting findAll CONTROLLER method...");
         return ResponseEntity.ok(expedients);
     }
+
+    @GetMapping("/findAllPaged")
+    public ResponseEntity<Page<ExpedientResponseDTO>> findAllPaged(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "40") int size,
+            @RequestParam(defaultValue = "id") String sort,
+            @RequestParam(defaultValue = "asc") String order) {
+
+        Sort.Direction sortDirection = order.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, sort));
+
+        Page<ExpedientResponseDTO> expedients = expedientService.findAllPageable(pageable);
+        return ResponseEntity.ok(expedients);
+    }
+
+    @GetMapping("/findAllCoursesPaged")
+    public ResponseEntity<Page<CourseResponseDto>> getAllCourses(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "40") int size,
+            @RequestParam(defaultValue = "id") String sort,
+            @RequestParam(defaultValue = "asc") String order) {
+
+        Sort.Direction sortDirection = order.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, sort));
+
+        Page<CourseResponseDto> courses = expedientService.findAllCoursesPageable(pageable);
+        return ResponseEntity.ok(courses);
+    }
+
 
     @GetMapping("/organization/{orgCode}")
     public ResponseEntity<List<ExpedientResponseDTO>> findByOrganizationCode(@PathVariable String orgCode) {
@@ -246,3 +276,5 @@ public class ExpedientController implements Controller<ExpedientResponseDTO, Exp
     }
 
 }
+
+

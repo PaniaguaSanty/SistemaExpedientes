@@ -1,6 +1,5 @@
 package com.sistemaExpedientes.sistExp.dto.request;
 
-import com.sistemaExpedientes.sistExp.model.Expedient;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,8 +9,9 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class LocationRequestDto {
-
-    private String place;
-    private Expedient expedient;
+public class CourseRequestDto {
+    private String denominations;
+    private String recipients;
+    private String responsibleInstitutions;
+    private String year;
 }

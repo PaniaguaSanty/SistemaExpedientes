@@ -1,5 +1,6 @@
+//Regulation.tsx
 export type Regulation = {
-    id: number;
+    id: any;
     description: string;
   }
   

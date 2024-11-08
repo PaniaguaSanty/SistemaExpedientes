@@ -1,0 +1,46 @@
+/* src/styles/UploadButton.css */
+.upload-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 5px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  position: absolute; /* Asegúrate de que esta línea esté presente */
+  top: 50px;
+  right: 20px;
+  z-index: 1000; /* Añade esta línea para asegurarte de que el botón esté por encima de otros elementos */
+}
+
+.upload-button:hover {
+  background-color: #45a049;
+}
+
+.upload-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.loading-spinner {
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-top: 4px solid #4CAF50;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
