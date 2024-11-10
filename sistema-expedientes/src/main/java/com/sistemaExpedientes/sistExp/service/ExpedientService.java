@@ -29,7 +29,6 @@ import java.util.stream.Collectors;
 @Service
 public class ExpedientService implements CRUD<ExpedientResponseDTO, ExpedientRequestDTO> {
 
-
     private static final Logger logger = LoggerFactory.getLogger(ExpedientService.class);
     private final ExpedientRepository expedientRepository;
     private final LocationRepository locationRepository;
@@ -57,6 +56,33 @@ public class ExpedientService implements CRUD<ExpedientResponseDTO, ExpedientReq
         try {
             Expedient expedient = expedientMapper.convertToEntity(expedientRequestDTO);
             Expedient expedientSaved = expedientRepository.save(expedient);
+
+            // Asociar regulaciones
+            List<Regulation> regulations = expedientRequestDTO.getRegulations().stream()
+                    .map(regulationDto -> {
+                        Regulation regulation = new Regulation();
+                        regulation.setDescription(regulationDto.getDescription());
+                        regulation.setExpedient(expedientSaved);
+                        return regulation;
+                    })
+                    .collect(Collectors.toList());
+            regulationRepository.saveAll(regulations);
+
+            // Asociar ubicaciones
+            List<Location> locations = expedientRequestDTO.getLocations().stream()
+                    .map(locationDto -> {
+                        Location location = new Location();
+                        location.setPlace(locationDto.getPlace());
+                        location.setExpedient(expedientSaved);
+                        return location;
+                    })
+                    .collect(Collectors.toList());
+            locationRepository.saveAll(locations);
+
+            // Actualizar el expediente con las regulaciones y ubicaciones asociadas
+            expedientSaved.setRegulations(regulations.toString());
+            expedientSaved.setLocations(locations);
+
             logger.info("Exiting create SERVICE method...");
             return expedientMapper.convertToDto(expedientSaved);
         } catch (Exception e) {
@@ -75,8 +101,33 @@ public class ExpedientService implements CRUD<ExpedientResponseDTO, ExpedientReq
             existingExpedient.setCorrelativeNumber(expedientRequestDTO.getCorrelativeNumber());
             existingExpedient.setSolicitude(expedientRequestDTO.getSolicitude());
             existingExpedient.setYear(expedientRequestDTO.getYear());
-            existingExpedient.setRegulations(String.valueOf(expedientRequestDTO.getRegulations()));
             existingExpedient.setPdfPath(expedientRequestDTO.getPdfPath());
+
+            // Actualizar regulaciones
+            List<Regulation> regulations = expedientRequestDTO.getRegulations().stream()
+                    .map(regulationDto -> {
+                        Regulation regulation = new Regulation();
+                        regulation.setDescription(regulationDto.getDescription());
+                        regulation.setExpedient(existingExpedient);
+                        return regulation;
+                    })
+                    .collect(Collectors.toList());
+            regulationRepository.saveAll(regulations);
+
+            // Actualizar ubicaciones
+            List<Location> locations = expedientRequestDTO.getLocations().stream()
+                    .map(locationDto -> {
+                        Location location = new Location();
+                        location.setPlace(locationDto.getPlace());
+                        location.setExpedient(existingExpedient);
+                        return location;
+                    })
+                    .collect(Collectors.toList());
+            locationRepository.saveAll(locations);
+
+            // Actualizar el expediente con las regulaciones y ubicaciones asociadas
+            existingExpedient.setRegulations(regulations.toString());
+            existingExpedient.setLocations(locations);
 
             Expedient updatedExpedient = expedientRepository.save(existingExpedient);
             logger.info("Exiting Update SERVICE method...");
@@ -95,7 +146,7 @@ public class ExpedientService implements CRUD<ExpedientResponseDTO, ExpedientReq
         expedientRepository.delete(expedient);
     }
 
-    //Puede recibir un String "Place"
+    // Puede recibir un String "Place"
     public AddLocationResponseDto addLocation(Long id, AddLocationRequestDto newLocation, String newPlace) {
         logger.info("Entering in AddLocation SERVICE method...");
         Expedient expedient = expedientRepository.findById(id)
@@ -105,7 +156,7 @@ public class ExpedientService implements CRUD<ExpedientResponseDTO, ExpedientReq
             locationToAdd.setPlace(newPlace);
             expedient.getLocations().add(locationToAdd);
             locationToAdd.setExpedient(expedient);
-            logger.info("Exiting addLocation SERVICE method succesfully!");
+            logger.info("Exiting addLocation SERVICE method successfully!");
             locationRepository.save(locationToAdd);
             return locationMapper.convertAddedLocationToDto(locationToAdd);
         }
@@ -120,7 +171,7 @@ public class ExpedientService implements CRUD<ExpedientResponseDTO, ExpedientReq
         Location locationToUpdate = locationRepository.findByPlace(existingPlace)
                 .orElseThrow(() -> new NotFoundException("Location not found with place: " + existingPlace));
 
-        //si en el front se bajan las ubicaciones, agregar un stream o foreach pa solucionarlo
+        // Si en el front se bajan las ubicaciones, agregar un stream o foreach para solucionarlo
         locationToUpdate.setPlace(locationDetails.getPlace());
         locationToUpdate.setExpedient(expedient);
         Location updatedLocation = locationRepository.save(locationToUpdate);
@@ -161,7 +212,7 @@ public class ExpedientService implements CRUD<ExpedientResponseDTO, ExpedientReq
         return coursePage.map(courseMapper::convertToDto);
     }
 
-    //buscar por codigo de org.
+    // Buscar por código de organización
     public List<ExpedientResponseDTO> findByOrganizationCode(String orgCode) {
         logger.info("Entering in findByOrganizationCode SERVICE method with organization code: {}", orgCode);
         List<Expedient> expedients = expedientRepository.findByOrganizationCode(orgCode);
@@ -171,7 +222,7 @@ public class ExpedientService implements CRUD<ExpedientResponseDTO, ExpedientReq
                 .collect(Collectors.toList());
     }
 
-    //buscar por año
+    // Buscar por año
     public List<ExpedientResponseDTO> findByYear(String year) {
         logger.info("Entering in findByYear SERVICE method with year: {}", year);
         List<Expedient> expedients = expedientRepository.findByYear(year);
@@ -181,7 +232,7 @@ public class ExpedientService implements CRUD<ExpedientResponseDTO, ExpedientReq
                 .collect(Collectors.toList());
     }
 
-    //buscar por n° correlativo
+    // Buscar por número correlativo
     public ExpedientResponseDTO findByCorrelativeNumber(String number) {
         logger.info("Entering in findByCorrelativeNumber SERVICE method with correlative number: {}", number);
         Expedient expedient = expedientRepository.findByCorrelativeNumber(number);
@@ -189,7 +240,7 @@ public class ExpedientService implements CRUD<ExpedientResponseDTO, ExpedientReq
         return expedientMapper.convertToDto(expedient);
     }
 
-    //buscar por emisor
+    // Buscar por emisor
     public List<ExpedientResponseDTO> findByIssuer(String issuer) {
         logger.info("Entering in findByIssuer SERVICE method with issuer: {}", issuer);
         List<Expedient> expedients = expedientRepository.findByIssuerIgnoreCase(issuer);
@@ -199,7 +250,7 @@ public class ExpedientService implements CRUD<ExpedientResponseDTO, ExpedientReq
                 .collect(Collectors.toList());
     }
 
-    //buscar por tipo de solicitud
+    // Buscar por tipo de solicitud
     public List<ExpedientResponseDTO> findBySolicitude(String solicitude) {
         logger.info("Entering in findBySolicitude SERVICE method with solicitude: {}", solicitude);
         List<Expedient> expedients = expedientRepository.findBySolicitude(solicitude);
@@ -209,7 +260,7 @@ public class ExpedientService implements CRUD<ExpedientResponseDTO, ExpedientReq
                 .collect(Collectors.toList());
     }
 
-    //buscar por estado
+    // Buscar por estado
     public List<ExpedientResponseDTO> findByStatus(String status) {
         logger.info("Entering in findByStatus SERVICE method with status: {}", status);
         List<Expedient> expedients = expedientRepository.findByStatus(status);
@@ -235,7 +286,7 @@ public class ExpedientService implements CRUD<ExpedientResponseDTO, ExpedientReq
                 .collect(Collectors.toList());
     }
 
-    //Buscar todas las regulaciones correspondientes a un solicitante
+    // Buscar todas las regulaciones correspondientes a un solicitante
     public List<RegulationResponseDto> findRegulationsByIssuer(String issuer) {
         logger.info("Entering findRegulationsByIssuer SERVICE method with issuer: {}", issuer);
         List<Regulation> filteredRegulations = regulationRepository.findAll().stream()
@@ -273,6 +324,3 @@ public class ExpedientService implements CRUD<ExpedientResponseDTO, ExpedientReq
         return regulationDTOs;
     }
 }
-
-
-
