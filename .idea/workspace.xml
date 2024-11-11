@@ -6,6 +6,12 @@
   <component name="ChangeListManager">
     <list default="true" id="7f0c8d7e-87f1-4a4f-b3fb-27a6f3fcde9c" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/logs/app.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/app.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sistema-expedientes/src/main/java/com/sistemaExpedientes/sistExp/controller/ExpedientController.java" beforeDir="false" afterPath="$PROJECT_DIR$/sistema-expedientes/src/main/java/com/sistemaExpedientes/sistExp/controller/ExpedientController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sistema-expedientes/src/main/java/com/sistemaExpedientes/sistExp/dto/request/ExpedientRequestDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/sistema-expedientes/src/main/java/com/sistemaExpedientes/sistExp/dto/request/ExpedientRequestDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sistema-expedientes/src/main/java/com/sistemaExpedientes/sistExp/model/Expedient.java" beforeDir="false" afterPath="$PROJECT_DIR$/sistema-expedientes/src/main/java/com/sistemaExpedientes/sistExp/model/Expedient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sistema-expedientes/src/main/java/com/sistemaExpedientes/sistExp/model/Location.java" beforeDir="false" afterPath="$PROJECT_DIR$/sistema-expedientes/src/main/java/com/sistemaExpedientes/sistExp/model/Location.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sistema-expedientes/src/main/java/com/sistemaExpedientes/sistExp/repository/LocationRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/sistema-expedientes/src/main/java/com/sistemaExpedientes/sistExp/repository/LocationRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sistema-expedientes/src/main/java/com/sistemaExpedientes/sistExp/service/ExpedientService.java" beforeDir="false" afterPath="$PROJECT_DIR$/sistema-expedientes/src/main/java/com/sistemaExpedientes/sistExp/service/ExpedientService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -33,6 +39,9 @@
     &quot;accountId&quot;: &quot;1f40221a-2389-4243-9a7a-4fc45c00d017&quot;
   }
 }</component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
   &quot;associatedIndex&quot;: 4

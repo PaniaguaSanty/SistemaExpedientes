@@ -47,14 +47,14 @@ public class ExpedientController implements Controller<ExpedientResponseDTO, Exp
         return new ResponseEntity<>(createdExp, HttpStatus.CREATED);
     }
 
-    @Override
-    @PutMapping("/update")
-    public ResponseEntity<ExpedientResponseDTO> update(@RequestBody ExpedientRequestDTO expedientRequestDto) {
-        logger.info("Entering update CONTROLLER method with data: {}", expedientRequestDto);
-        ExpedientResponseDTO updatedExp = expedientService.update(expedientRequestDto);
-        logger.info("Exiting update CONTROLLER method...");
-        return ResponseEntity.ok(updatedExp);
-    }
+        @Override
+        @PutMapping("/update")
+        public ResponseEntity<ExpedientResponseDTO> update(@RequestBody ExpedientRequestDTO expedientRequestDto) {
+            logger.info("Entering update CONTROLLER method with data: {}", expedientRequestDto);
+            ExpedientResponseDTO updatedExp = expedientService.update(expedientRequestDto);
+            logger.info("Exiting update CONTROLLER method...");
+            return ResponseEntity.ok(updatedExp);
+        }
 
     @Override
     @DeleteMapping("/{id}")

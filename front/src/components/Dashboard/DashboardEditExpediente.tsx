@@ -89,6 +89,13 @@ const DashboardEditExpediente: React.FC<DashboardEditExpedienteProps> = ({
           onChange={(e) => setEditingExpediente({ ...editingExpediente, issuer: e.target.value })}
           className="border border-gray-300 rounded-md p-2"
         />
+        <input
+  type="text"
+  placeholder="Solicitud"
+  value={editingExpediente.solicitude}
+  onChange={(e) => setEditingExpediente({ ...editingExpediente, solicitude: e.target.value })}
+  className="border border-gray-300 rounded-md p-2 mb-4"
+/>
         <div className="col-span-full">
           <h3 className="text-lg font-semibold mb-2">Reglamentaciones</h3>
           {editingExpediente.regulations.map((regulation, index) => (
@@ -128,23 +135,13 @@ const DashboardEditExpediente: React.FC<DashboardEditExpedienteProps> = ({
             <div key={index} className="flex items-center space-x-2 mb-2">
               <input
                 type="text"
-                value={location.lugar}
+                value={location.place}
                 onChange={(e) => {
                   const newUbicaciones = [...editingExpediente.locations];
-                  newUbicaciones[index] = { ...newUbicaciones[index], lugar: e.target.value };
+                  newUbicaciones[index] = { ...newUbicaciones[index], place: e.target.value };
                   setEditingExpediente({ ...editingExpediente, locations: newUbicaciones });
                 }}
                 className="border border-gray-300 rounded-md px-2 py-1 text-sm flex-grow"
-              />
-              <input
-                type="date"
-                value={new Date(location.fecha).toISOString().split('T')[0]}
-                onChange={(e) => {
-                  const newUbicaciones = [...editingExpediente.locations];
-                  newUbicaciones[index] = { ...newUbicaciones[index], fecha: new Date(e.target.value).toISOString() };
-                  setEditingExpediente({ ...editingExpediente, locations: newUbicaciones });
-                }}
-                className="border border-gray-300 rounded-md px-2 py-1 text-sm"
               />
               <motion.button
                 onClick={() => {
@@ -172,8 +169,8 @@ const DashboardEditExpediente: React.FC<DashboardEditExpedienteProps> = ({
               onClick={() => {
                 if (newUbicacion) {
                   const nuevaUbicacion: Ubicacion = {
-                    fecha: new Date().toISOString(),
-                    lugar: newUbicacion
+
+                    place: newUbicacion
                   };
                   setEditingExpediente({
                     ...editingExpediente,

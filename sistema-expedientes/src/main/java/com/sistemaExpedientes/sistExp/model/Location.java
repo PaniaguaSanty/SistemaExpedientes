@@ -14,8 +14,8 @@ public class Location {
     private Long id;
 
     private String place;
-    
-    @ManyToOne
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "expedient_id")
     @JsonBackReference // Rompe el ciclo de serialización aquí
     private Expedient expedient;

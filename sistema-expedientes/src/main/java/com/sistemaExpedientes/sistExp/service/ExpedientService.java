@@ -23,7 +23,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -54,48 +57,67 @@ public class ExpedientService implements CRUD<ExpedientResponseDTO, ExpedientReq
     public ExpedientResponseDTO create(ExpedientRequestDTO expedientRequestDTO) {
         logger.info("Entering in create SERVICE method with data: {} ", expedientRequestDTO);
         try {
+            // Verificar el contenido del DTO
+            logger.info("Locations in request DTO: {}", expedientRequestDTO.getLocations());
+
+            // Crear y guardar primero el expediente base
             Expedient expedient = expedientMapper.convertToEntity(expedientRequestDTO);
-            Expedient expedientSaved = expedientRepository.save(expedient);
 
-            // Asociar regulaciones
-            List<Regulation> regulations = expedientRequestDTO.getRegulations().stream()
-                    .map(regulationDto -> {
-                        Regulation regulation = new Regulation();
-                        regulation.setDescription(regulationDto.getDescription());
-                        regulation.setExpedient(expedientSaved);
-                        return regulation;
-                    })
-                    .collect(Collectors.toList());
-            regulationRepository.saveAll(regulations);
+            // Inicializar las colecciones
+            expedient.setLocations(new ArrayList<>());
+            expedient.setRegulations(new ArrayList<>());
 
-            // Asociar ubicaciones
-            List<Location> locations = expedientRequestDTO.getLocations().stream()
-                    .map(locationDto -> {
-                        Location location = new Location();
-                        location.setPlace(locationDto.getPlace());
-                        location.setExpedient(expedientSaved);
-                        return location;
-                    })
-                    .collect(Collectors.toList());
-            locationRepository.saveAll(locations);
+            // Guardar el expediente primero para tener el ID y marcarlo como final
+            final Expedient finalExpedient = expedientRepository.save(expedient);
 
-            // Actualizar el expediente con las regulaciones y ubicaciones asociadas
-            expedientSaved.setRegulations(regulations.toString());
-            expedientSaved.setLocations(locations);
+            // Asociar y guardar regulaciones
+            if (expedientRequestDTO.getRegulations() != null && !expedientRequestDTO.getRegulations().isEmpty()) {
+                List<Regulation> regulations = expedientRequestDTO.getRegulations().stream()
+                        .map(regulationDto -> {
+                            Regulation regulation = new Regulation();
+                            regulation.setDescription(regulationDto.getDescription());
+                            regulation.setExpedient(finalExpedient); // Usando la variable final
+                            return regulation;
+                        })
+                        .collect(Collectors.toList());
+                finalExpedient.setRegulations(regulations);
+            }
 
-            logger.info("Exiting create SERVICE method...");
-            return expedientMapper.convertToDto(expedientSaved);
+            // Asociar y guardar ubicaciones
+            if (expedientRequestDTO.getLocations() != null && !expedientRequestDTO.getLocations().isEmpty()) {
+                List<Location> locations = expedientRequestDTO.getLocations().stream()
+                        .map(locationDto -> {
+                            Location location = new Location();
+                            location.setPlace(locationDto.getPlace());
+                            location.setExpedient(finalExpedient); // Usando la variable final
+                            return location;
+                        })
+                        .collect(Collectors.toList());
+                finalExpedient.setLocations(locations);
+            }
+
+            // Guardar el expediente con todas sus relaciones
+            Expedient savedExpedient = expedientRepository.save(finalExpedient);
+
+            logger.info("Exiting create SERVICE method with saved expedient ID: {}", savedExpedient.getId());
+            return expedientMapper.convertToDto(savedExpedient);
         } catch (Exception e) {
-            throw new NotFoundException("Error while creating the expedient...");
+            logger.error("Error while creating the expedient: {}", e.getMessage(), e);
+            throw new NotFoundException("Error while creating the expedient: " + e.getMessage());
         }
     }
+
+
+
 
     @Override
     public ExpedientResponseDTO update(ExpedientRequestDTO expedientRequestDTO) {
         logger.info("Entering in update SERVICE method with data: {} ", expedientRequestDTO);
         try {
-            Expedient existingExpedient = expedientRepository.findByCorrelativeNumber(expedientRequestDTO.getCorrelativeNumber());
+            Expedient existingExpedient = expedientRepository.findById(expedientRequestDTO.getId())
+                    .orElseThrow(() -> new NotFoundException("Expedient not found with ID " + expedientRequestDTO.getId()));
 
+            // Actualizar todos los campos proporcionados
             existingExpedient.setIssuer(expedientRequestDTO.getIssuer());
             existingExpedient.setOrganizationCode(expedientRequestDTO.getOrganizationCode());
             existingExpedient.setCorrelativeNumber(expedientRequestDTO.getCorrelativeNumber());
@@ -103,31 +125,35 @@ public class ExpedientService implements CRUD<ExpedientResponseDTO, ExpedientReq
             existingExpedient.setYear(expedientRequestDTO.getYear());
             existingExpedient.setPdfPath(expedientRequestDTO.getPdfPath());
 
-            // Actualizar regulaciones
+            // Crear y asignar regulaciones
             List<Regulation> regulations = expedientRequestDTO.getRegulations().stream()
                     .map(regulationDto -> {
                         Regulation regulation = new Regulation();
                         regulation.setDescription(regulationDto.getDescription());
-                        regulation.setExpedient(existingExpedient);
+                        regulation.setExpedient(existingExpedient); // Establece la relación
                         return regulation;
                     })
                     .collect(Collectors.toList());
-            regulationRepository.saveAll(regulations);
 
-            // Actualizar ubicaciones
+            // Crear y asignar ubicaciones
             List<Location> locations = expedientRequestDTO.getLocations().stream()
                     .map(locationDto -> {
                         Location location = new Location();
                         location.setPlace(locationDto.getPlace());
-                        location.setExpedient(existingExpedient);
+                        location.setExpedient(existingExpedient); // Establece la relación
                         return location;
                     })
                     .collect(Collectors.toList());
+
+            // Persistir en la base de datos
+            regulationRepository.saveAll(regulations);
             locationRepository.saveAll(locations);
 
-            // Actualizar el expediente con las regulaciones y ubicaciones asociadas
-            existingExpedient.setRegulations(regulations.toString());
-            existingExpedient.setLocations(locations);
+            // Agregar relaciones a `existingExpedient`
+            existingExpedient.getRegulations().clear();
+            existingExpedient.getRegulations().addAll(regulations);
+            existingExpedient.getLocations().clear();
+            existingExpedient.getLocations().addAll(locations);
 
             Expedient updatedExpedient = expedientRepository.save(existingExpedient);
             logger.info("Exiting Update SERVICE method...");
@@ -136,6 +162,7 @@ public class ExpedientService implements CRUD<ExpedientResponseDTO, ExpedientReq
             throw new NotFoundException("Error while updating the expedient...");
         }
     }
+//nuevoCOde
 
     @Override
     public void delete(String id) {

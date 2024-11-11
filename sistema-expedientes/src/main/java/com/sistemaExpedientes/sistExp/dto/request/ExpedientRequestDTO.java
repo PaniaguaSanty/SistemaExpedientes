@@ -10,6 +10,7 @@ import java.util.List;
 @NoArgsConstructor
 public class ExpedientRequestDTO {
 
+    private Long id;
     private String issuer;
     private String organizationCode;
     private String correlativeNumber;
