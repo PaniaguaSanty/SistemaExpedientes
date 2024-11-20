@@ -58,6 +58,37 @@ class ExpedienteService {
         }
     }
 
+    async deleteLocation(id: number, location: string): Promise<AxiosResponse<void>> {
+        try {
+            const response = await axios.delete(`${API_URL}/expedients/deleteLocation/${id}/${location}`);
+            return response;
+        } catch (error) {
+            console.error('Error deleting location:', error);
+            throw error;
+        }
+    }
+
+    async editRegulation(expedientId: number, regulationId: number, regulationDetails: Regulation): Promise<AxiosResponse<Regulation>> {
+        try {
+            const response = await axios.put(`${API_URL}/expedients/editRegulation/${expedientId}/${regulationId}`, regulationDetails);
+            return response;
+        } catch (error) {
+            console.error('Error editing regulation:', error);
+            throw error;
+        }
+    }
+
+    async deleteRegulation(expedientId: number, regulationId: number): Promise<AxiosResponse<void>> {
+        try {
+            const response = await axios.delete(`${API_URL}/expedients/deleteRegulation/${expedientId}/${regulationId}`);
+            return response;
+        } catch (error) {
+            console.error('Error deleting regulation:', error);
+            throw error;
+        }
+    }
+
+
     async uploadExcelFile(file: File): Promise<AxiosResponse<string>> {
         try {
             const formData = new FormData();

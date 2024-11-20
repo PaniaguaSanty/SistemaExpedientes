@@ -13,3 +13,4 @@ export type Expediente = {
   pdfPath?: string;
 }
 export type { Ubicacion };
+export type { Regulation };

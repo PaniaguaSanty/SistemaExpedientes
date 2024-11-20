@@ -2,6 +2,7 @@ package com.sistemaExpedientes.sistExp.controller;
 
 import com.sistemaExpedientes.sistExp.dto.request.AddLocationRequestDto;
 import com.sistemaExpedientes.sistExp.dto.request.ExpedientRequestDTO;
+import com.sistemaExpedientes.sistExp.dto.request.RegulationRequestDto;
 import com.sistemaExpedientes.sistExp.dto.response.*;
 import com.sistemaExpedientes.sistExp.exception.NotFoundException;
 import com.sistemaExpedientes.sistExp.model.Expedient;
@@ -47,14 +48,14 @@ public class ExpedientController implements Controller<ExpedientResponseDTO, Exp
         return new ResponseEntity<>(createdExp, HttpStatus.CREATED);
     }
 
-        @Override
-        @PutMapping("/update")
-        public ResponseEntity<ExpedientResponseDTO> update(@RequestBody ExpedientRequestDTO expedientRequestDto) {
-            logger.info("Entering update CONTROLLER method with data: {}", expedientRequestDto);
-            ExpedientResponseDTO updatedExp = expedientService.update(expedientRequestDto);
-            logger.info("Exiting update CONTROLLER method...");
-            return ResponseEntity.ok(updatedExp);
-        }
+    @Override
+    @PutMapping("/update")
+    public ResponseEntity<ExpedientResponseDTO> update(@RequestBody ExpedientRequestDTO expedientRequestDto) {
+        logger.info("Entering update CONTROLLER method with data: {}", expedientRequestDto);
+        ExpedientResponseDTO updatedExp = expedientService.update(expedientRequestDto);
+        logger.info("Exiting update CONTROLLER method...");
+        return ResponseEntity.ok(updatedExp);
+    }
 
     @Override
     @DeleteMapping("/{id}")
@@ -90,6 +91,53 @@ public class ExpedientController implements Controller<ExpedientResponseDTO, Exp
             return new ResponseEntity<>(updatedLocation, HttpStatus.OK);
         } catch (NotFoundException e) {
             logger.error("Error in editLocation CONTROLLER method: {}", e.getMessage());
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @DeleteMapping("/deleteLocation/{id}/{location}")
+    public ResponseEntity<Void> deleteLocation(@PathVariable Long id, @PathVariable String location) {
+        logger.info("Entering deleteLocation CONTROLLER method with id: {} and location: {}", id, location);
+        try {
+            expedientService.deleteLocation(id, location);
+            logger.info("Exiting deleteLocation CONTROLLER method successfully...");
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (NotFoundException e) {
+            logger.error("Error in deleteLocation CONTROLLER method: {}", e.getMessage());
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            logger.error("Unexpected error in deleteLocation CONTROLLER method: {}", e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PutMapping("/regulations/{expedientId}/{regulationId}")
+    public ResponseEntity<RegulationResponseDto> editRegulation(
+            @PathVariable Long expedientId,
+            @PathVariable String regulationId,
+            @RequestBody RegulationRequestDto regulationDto) {
+        logger.info("Entering editRegulation CONTROLLER method for expedientId: {}, regulationId: {}, and data: {}", expedientId, regulationId, regulationDto);
+        try {
+            RegulationResponseDto updatedRegulation = expedientService.editRegulation(expedientId, regulationId, regulationDto);
+            logger.info("Exiting editRegulation CONTROLLER method successfully...");
+            return new ResponseEntity<>(updatedRegulation, HttpStatus.OK);
+        } catch (NotFoundException e) {
+            logger.error("Error in editRegulation CONTROLLER method: {}", e.getMessage());
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @DeleteMapping("/regulations/{expedientId}/{regulationId}")
+    public ResponseEntity<Void> deleteRegulation(
+            @PathVariable Long expedientId,
+            @PathVariable String regulationId) {
+        logger.info("Entering deleteRegulation CONTROLLER method for expedientId: {} and regulationId: {}", expedientId, regulationId);
+        try {
+            expedientService.deleteRegulation(expedientId, regulationId);
+            logger.info("Exiting deleteRegulation CONTROLLER method successfully...");
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (NotFoundException e) {
+            logger.error("Error in deleteRegulation CONTROLLER method: {}", e.getMessage());
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }

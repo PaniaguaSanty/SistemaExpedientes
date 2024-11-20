@@ -2,6 +2,7 @@ package com.sistemaExpedientes.sistExp.service;
 
 import com.sistemaExpedientes.sistExp.dto.request.AddLocationRequestDto;
 import com.sistemaExpedientes.sistExp.dto.request.ExpedientRequestDTO;
+import com.sistemaExpedientes.sistExp.dto.request.RegulationRequestDto;
 import com.sistemaExpedientes.sistExp.dto.response.*;
 import com.sistemaExpedientes.sistExp.exception.NotFoundException;
 import com.sistemaExpedientes.sistExp.mapper.CourseMapper;
@@ -24,9 +25,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -108,8 +107,6 @@ public class ExpedientService implements CRUD<ExpedientResponseDTO, ExpedientReq
     }
 
 
-
-
     @Override
     public ExpedientResponseDTO update(ExpedientRequestDTO expedientRequestDTO) {
         logger.info("Entering in update SERVICE method with data: {} ", expedientRequestDTO);
@@ -162,7 +159,6 @@ public class ExpedientService implements CRUD<ExpedientResponseDTO, ExpedientReq
             throw new NotFoundException("Error while updating the expedient...");
         }
     }
-//nuevoCOde
 
     @Override
     public void delete(String id) {
@@ -174,6 +170,7 @@ public class ExpedientService implements CRUD<ExpedientResponseDTO, ExpedientReq
     }
 
     // Puede recibir un String "Place"
+
     public AddLocationResponseDto addLocation(Long id, AddLocationRequestDto newLocation, String newPlace) {
         logger.info("Entering in AddLocation SERVICE method...");
         Expedient expedient = expedientRepository.findById(id)
@@ -206,6 +203,58 @@ public class ExpedientService implements CRUD<ExpedientResponseDTO, ExpedientReq
         logger.info("Exiting in EditLocation SERVICE method successfully!...");
         return locationMapper.convertAddedLocationToDto(updatedLocation);
     }
+
+    public void deleteLocation(Long expedientId, String place) {
+        logger.info("Entering deleteLocation SERVICE method...");
+        Expedient expedient = expedientRepository.findById(expedientId)
+                .orElseThrow(() -> new NotFoundException("Expedient not found with ID " + expedientId));
+
+        Location location = locationRepository.findByPlaceAndExpedient(place, expedient)
+                .orElseThrow(() -> new NotFoundException("Location not found with place: " + place));
+
+        locationRepository.delete(location);
+        logger.info("Location deleted successfully from expedient with ID {}", expedientId);
+    }
+
+    public RegulationResponseDto editRegulation(Long id, String currentDescription, RegulationRequestDto regulationDetails) {
+        logger.info("Entering in editRegulation SERVICE method...");
+
+        // Buscar el expediente al que pertenece la regulación
+        Expedient expedient = expedientRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Expedient not found with ID " + id));
+
+        // Buscar la regulación a editar
+        Regulation regulationToUpdate = regulationRepository.findByDescriptionAndExpedient(currentDescription, expedient)
+                .orElseThrow(() -> new NotFoundException("Regulation not found with description: " + currentDescription));
+
+        // Actualizar los campos de la regulación
+        regulationToUpdate.setDescription(regulationDetails.getDescription());
+        regulationToUpdate.setExpedient(expedient);
+
+        // Guardar los cambios
+        Regulation updatedRegulation = regulationRepository.save(regulationToUpdate);
+
+        logger.info("Exiting editRegulation SERVICE method successfully!");
+        return regulationMapper.convertToDto(updatedRegulation);
+    }
+
+    public void deleteRegulation(Long id, String description) {
+        logger.info("Entering in deleteRegulation SERVICE method...");
+
+        // Buscar el expediente al que pertenece la regulación
+        Expedient expedient = expedientRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Expedient not found with ID " + id));
+
+        // Buscar la regulación a eliminar
+        Regulation regulationToDelete = regulationRepository.findByDescriptionAndExpedient(description, expedient)
+                .orElseThrow(() -> new NotFoundException("Regulation not found with description: " + description));
+
+        // Eliminar la regulación
+        regulationRepository.delete(regulationToDelete);
+
+        logger.info("Exiting deleteRegulation SERVICE method successfully!");
+    }
+
 
     @Override
     public ExpedientResponseDTO findOne(String id) {

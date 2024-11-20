@@ -1,8 +1,9 @@
-import { motion } from "framer-motion"
-import { Dispatch, SetStateAction, RefObject } from "react"
-import { Expediente } from '../../model/Expediente'; // Ajusta la ruta según la ubicación de tus modelos
-import { Ubicacion } from '../../model/Ubicacion'; // Ajusta la ruta según la ubicación de tus modelos
-import { Regulation } from '../../model/Regulation'; // Ajusta la ruta según la ubicación de tus modelos
+import { motion } from "framer-motion";
+import { Dispatch, SetStateAction, RefObject } from "react";
+import { Expediente } from '../../model/Expediente';
+import { Ubicacion } from '../../model/Ubicacion';
+import { Regulation } from '../../model/Regulation';
+import ExpedienteService from '../../service/ExpedienteService'; // Ajusta la ruta según la ubicación de tu servicio
 
 type DashboardEditExpedienteProps = {
   editingExpediente: Expediente;
@@ -50,12 +51,32 @@ const DashboardEditExpediente: React.FC<DashboardEditExpedienteProps> = ({
     });
   };
 
-  const handleDeleteRegulation = (index: number) => {
+  const handleDeleteRegulation = async (index: number) => {
+    const regulationId = editingExpediente.regulations[index].id;
+    await ExpedienteService.deleteRegulation(editingExpediente.id, regulationId);
     const newRegulations = editingExpediente.regulations.filter((_, i) => i !== index);
     setEditingExpediente({
       ...editingExpediente,
       regulations: newRegulations
     });
+  };
+
+  const handleDeleteLocation = async (index: number) => {
+    const location = editingExpediente.locations[index].place;
+    await ExpedienteService.deleteLocation(editingExpediente.id, location);
+    const newLocations = editingExpediente.locations.filter((_, i) => i !== index);
+    setEditingExpediente({
+      ...editingExpediente,
+      locations: newLocations
+    });
+  };
+
+  const handleEditLocation = (index: number, value: string) => {
+    const existingPlace = editingExpediente.locations[index].place;
+    const newLocations = [...editingExpediente.locations];
+    newLocations[index] = { ...newLocations[index], place: value };
+    setEditingExpediente({ ...editingExpediente, locations: newLocations });
+    ExpedienteService.editLocation(editingExpediente.id, existingPlace, { place: value });
   };
 
   return (
@@ -90,12 +111,12 @@ const DashboardEditExpediente: React.FC<DashboardEditExpedienteProps> = ({
           className="border border-gray-300 rounded-md p-2"
         />
         <input
-  type="text"
-  placeholder="Solicitud"
-  value={editingExpediente.solicitude}
-  onChange={(e) => setEditingExpediente({ ...editingExpediente, solicitude: e.target.value })}
-  className="border border-gray-300 rounded-md p-2 mb-4"
-/>
+          type="text"
+          placeholder="Solicitud"
+          value={editingExpediente.solicitude}
+          onChange={(e) => setEditingExpediente({ ...editingExpediente, solicitude: e.target.value })}
+          className="border border-gray-300 rounded-md p-2 mb-4"
+        />
         <div className="col-span-full">
           <h3 className="text-lg font-semibold mb-2">Reglamentaciones</h3>
           {editingExpediente.regulations.map((regulation, index) => (
@@ -136,18 +157,11 @@ const DashboardEditExpediente: React.FC<DashboardEditExpedienteProps> = ({
               <input
                 type="text"
                 value={location.place}
-                onChange={(e) => {
-                  const newUbicaciones = [...editingExpediente.locations];
-                  newUbicaciones[index] = { ...newUbicaciones[index], place: e.target.value };
-                  setEditingExpediente({ ...editingExpediente, locations: newUbicaciones });
-                }}
+                onChange={(e) => handleEditLocation(index, e.target.value)}
                 className="border border-gray-300 rounded-md px-2 py-1 text-sm flex-grow"
               />
               <motion.button
-                onClick={() => {
-                  const newUbicaciones = editingExpediente.locations.filter((_, i) => i !== index);
-                  setEditingExpediente({ ...editingExpediente, locations: newUbicaciones });
-                }}
+                onClick={() => handleDeleteLocation(index)}
                 className="bg-red-500 text-white px-2 py-1 rounded-md text-sm"
                 variants={buttonVariants}
                 whileHover="hover"
@@ -169,12 +183,11 @@ const DashboardEditExpediente: React.FC<DashboardEditExpedienteProps> = ({
               onClick={() => {
                 if (newUbicacion) {
                   const nuevaUbicacion: Ubicacion = {
-
                     place: newUbicacion
                   };
                   setEditingExpediente({
                     ...editingExpediente,
-                    locations: [nuevaUbicacion, ...editingExpediente.locations]
+                    locations: [...editingExpediente.locations, nuevaUbicacion]
                   });
                   setNewUbicacion("");
                 }
@@ -251,5 +264,4 @@ const DashboardEditExpediente: React.FC<DashboardEditExpedienteProps> = ({
   )
 }
 
-export default DashboardEditExpediente
-
+export default DashboardEditExpediente;

@@ -11,4 +11,5 @@ import java.util.Optional;
 public interface LocationRepository extends JpaRepository<Location, Long> {
     Optional<Location> findByPlace(String place);
 
+    Optional<Location> findByPlaceAndExpedient(String place, Expedient expedient);
 }
