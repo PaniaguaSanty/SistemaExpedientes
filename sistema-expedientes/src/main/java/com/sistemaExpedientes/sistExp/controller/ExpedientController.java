@@ -95,11 +95,13 @@ public class ExpedientController implements Controller<ExpedientResponseDTO, Exp
         }
     }
 
-    @DeleteMapping("/deleteLocation/{id}/{location}")
-    public ResponseEntity<Void> deleteLocation(@PathVariable Long id, @PathVariable String location) {
-        logger.info("Entering deleteLocation CONTROLLER method with id: {} and location: {}", id, location);
+    @DeleteMapping("/deleteLocation/{expedientId}/{locationId}")
+    public ResponseEntity<Void> deleteLocation(
+            @PathVariable Long expedientId,
+            @PathVariable Long locationId) {
+        logger.info("Entering deleteLocation CONTROLLER method with expedientId: {} and locationId: {}", expedientId, locationId);
         try {
-            expedientService.deleteLocation(id, location);
+            expedientService.deleteLocation(expedientId, locationId);
             logger.info("Exiting deleteLocation CONTROLLER method successfully...");
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (NotFoundException e) {
@@ -127,11 +129,11 @@ public class ExpedientController implements Controller<ExpedientResponseDTO, Exp
         }
     }
 
-    @DeleteMapping("/regulations/{expedientId}/{regulationId}")
+    @DeleteMapping("/deleteRegulation/{expedientId}/{regulationId}")
     public ResponseEntity<Void> deleteRegulation(
             @PathVariable Long expedientId,
-            @PathVariable String regulationId) {
-        logger.info("Entering deleteRegulation CONTROLLER method for expedientId: {} and regulationId: {}", expedientId, regulationId);
+            @PathVariable Long regulationId) {
+        logger.info("Entering deleteRegulation CONTROLLER method with expedientId: {} and regulationId: {}", expedientId, regulationId);
         try {
             expedientService.deleteRegulation(expedientId, regulationId);
             logger.info("Exiting deleteRegulation CONTROLLER method successfully...");
@@ -139,9 +141,11 @@ public class ExpedientController implements Controller<ExpedientResponseDTO, Exp
         } catch (NotFoundException e) {
             logger.error("Error in deleteRegulation CONTROLLER method: {}", e.getMessage());
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            logger.error("Unexpected error in deleteRegulation CONTROLLER method: {}", e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
     // Endpoint para subir el archivo Excel, convertir a CSV e insertar en la base de datos
     @PostMapping("/upload")
     public ResponseEntity<String> uploadExcelFile(@RequestParam("file") MultipartFile file) {
