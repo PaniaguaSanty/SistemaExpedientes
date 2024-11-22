@@ -1,3 +1,4 @@
+//DashboarEditExpediente.tsx
 import { motion } from "framer-motion";
 import { Dispatch, SetStateAction, RefObject } from "react";
 import { Expediente } from '../../model/Expediente';
@@ -113,9 +114,9 @@ const DashboardEditExpediente: React.FC<DashboardEditExpedienteProps> = ({
       if (!originalExpediente) {
         throw new Error('Expediente original no encontrado');
       }
-
+  
       await ExpedienteService.updateExpedient(expediente);
-
+  
       // Actualizar ubicaciones
       const originalLocations = originalExpediente.locations || [];
       const newLocations = expediente.locations.filter(location => !originalLocations.some(originalLocation => originalLocation.id === location.id));
@@ -123,32 +124,32 @@ const DashboardEditExpediente: React.FC<DashboardEditExpedienteProps> = ({
         const originalLocation = originalLocations.find(originalLocation => originalLocation.id === location.id);
         return originalLocation && (originalLocation.place !== location.place);
       });
-
+  
       // Eliminar ubicaciones que ya no existen en el formulario
       const deletedLocations = originalLocations.filter(originalLocation => !expediente.locations.some(location => location.id === originalLocation.id));
-
+  
       // Añadir nuevas ubicaciones
       for (const location of newLocations) {
         const newLocation = await ExpedienteService.addLocation(expediente.id, location);
-        const locationIndex = expediente.locations.findIndex(l => l === location);
+        const locationIndex = expediente.locations.findIndex(l => l.id === location.id);
         if (locationIndex !== -1) {
           expediente.locations[locationIndex] = newLocation.data;
         }
         console.log("Se añadió una nueva ubicación:", newLocation.data);
       }
-
+  
       // Editar ubicaciones existentes
       for (const location of updatedLocations) {
         console.log("Editing existing location:", location);
         await ExpedienteService.editLocation(expediente.id, location.id, location);
       }
-
+  
       // Eliminar ubicaciones eliminadas
       for (const location of deletedLocations) {
         console.log('Deleting location:', location);
         await ExpedienteService.deleteLocation(expediente.id, location.id);
       }
-
+  
       // Actualizar regulaciones
       const originalRegulations = originalExpediente.regulations || [];
       const newRegulations = expediente.regulations.filter(regulation => !originalRegulations.some(originalRegulation => originalRegulation.id === regulation.id));
@@ -156,42 +157,43 @@ const DashboardEditExpediente: React.FC<DashboardEditExpedienteProps> = ({
         const originalRegulation = originalRegulations.find(originalRegulation => originalRegulation.id === regulation.id);
         return originalRegulation && (originalRegulation.description !== regulation.description);
       });
-
+  
       const deletedRegulations = originalRegulations.filter(originalRegulation => !expediente.regulations.some(regulation => regulation.id === originalRegulation.id));
-
+  
       // Añadir nuevas regulaciones
       for (const regulation of newRegulations) {
         const newRegulation = await ExpedienteService.addRegulation(expediente.id, regulation);
-        const regulationIndex = expediente.regulations.findIndex(r => r === regulation);
+        const regulationIndex = expediente.regulations.findIndex(r => r.id === regulation.id);
         if (regulationIndex !== -1) {
           expediente.regulations[regulationIndex] = newRegulation.data;
         }
         console.log("Se añadió una nueva regulación:", newRegulation.data);
       }
-
+  
       // Editar regulaciones existentes
       for (const regulation of updatedRegulations) {
         console.log('Editing existing regulation:', regulation);
         await ExpedienteService.editRegulation(expediente.id, regulation.id, regulation);
       }
-
+  
       // Eliminar regulaciones eliminadas
       for (const regulation of deletedRegulations) {
         console.log('Deleting regulation:', regulation);
         await ExpedienteService.deleteRegulation(expediente.id, regulation.id);
       }
-
+  
       setExpedientes(prevExpedientes =>
         prevExpedientes.map(exp => (exp.id === expediente.id ? { ...exp, locations: expediente.locations, regulations: expediente.regulations } : exp))
       );
-
+  
       setEditingExpediente(null);
-
+  
     } catch (error) {
       console.error('Error al guardar cambios:', error);
       alert('Ocurrió un error al guardar los cambios. Por favor, inténtalo de nuevo.');
     }
   };
+  
 
   return (
     <motion.div
