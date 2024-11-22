@@ -187,15 +187,19 @@ public class ExpedientService implements CRUD<ExpedientResponseDTO, ExpedientReq
         return null;
     }
 
-    public AddLocationResponseDto editLocation(Long id, String existingPlace, AddLocationRequestDto locationDetails) {
+    public AddLocationResponseDto editLocation(Long expedientId, Long locationId, AddLocationRequestDto locationDetails) {
         logger.info("Entering in EditLocation SERVICE method...");
-        Expedient expedient = expedientRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Expedient not found with ID " + id));
+        Expedient expedient = expedientRepository.findById(expedientId)
+                .orElseThrow(() -> new NotFoundException("Expedient not found with ID " + expedientId));
 
-        Location locationToUpdate = locationRepository.findByPlace(existingPlace)
-                .orElseThrow(() -> new NotFoundException("Location not found with place: " + existingPlace));
+        Location locationToUpdate = locationRepository.findById(locationId)
+                .orElseThrow(() -> new NotFoundException("Location not found with ID " + locationId));
 
-        // Si en el front se bajan las ubicaciones, agregar un stream o foreach para solucionarlo
+        // Verificar que la ubicación pertenece al expediente
+        if (!locationToUpdate.getExpedient().getId().equals(expedientId)) {
+            throw new NotFoundException("La ubicación no pertenece al expediente especificado");
+        }
+
         locationToUpdate.setPlace(locationDetails.getPlace());
         locationToUpdate.setExpedient(expedient);
         Location updatedLocation = locationRepository.save(locationToUpdate);
@@ -261,6 +265,30 @@ public class ExpedientService implements CRUD<ExpedientResponseDTO, ExpedientReq
         // Eliminar la regulación
         regulationRepository.delete(regulation);
     }
+
+    //añadir regulaciones
+    public RegulationResponseDto addRegulation(Long id, RegulationRequestDto newRegulation) {
+        logger.info("Entering in addRegulation SERVICE method...");
+
+        Expedient expedient = expedientRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Expedient not found with id: " + id));
+
+        Regulation regulationToAdd = regulationMapper.convertToEntity(newRegulation);
+
+        if (expedient != null) {
+            regulationToAdd.setExpedient(expedient);
+            regulationRepository.save(regulationToAdd);
+
+            expedient.getRegulations().add(regulationToAdd);
+            expedientRepository.save(expedient);
+
+            logger.info("Exiting addRegulation SERVICE method successfully!");
+            return regulationMapper.convertToDto(regulationToAdd);
+        }
+
+        return null;
+    }
+
     @Override
     public ExpedientResponseDTO findOne(String id) {
         logger.info("Entering in findOne SERVICE method...");

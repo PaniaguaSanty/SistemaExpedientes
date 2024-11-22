@@ -27,7 +27,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/expedients")
-@CrossOrigin(origins = "http://localhost:8080")
+@CrossOrigin(origins = "http://localhost:8080")//5174 o 8080
 public class ExpedientController implements Controller<ExpedientResponseDTO, ExpedientRequestDTO> {
 
     private static final Logger logger = LoggerFactory.getLogger(ExpedientController.class);
@@ -81,12 +81,12 @@ public class ExpedientController implements Controller<ExpedientResponseDTO, Exp
         }
     }
 
-    @PutMapping("/editLocation/{id}/{existingPlace}")
-    public ResponseEntity<AddLocationResponseDto> editLocation(@PathVariable Long id, @PathVariable String existingPlace,
+    @PutMapping("/editLocation/{expedientId}/{locationId}")
+    public ResponseEntity<AddLocationResponseDto> editLocation(@PathVariable Long expedientId, @PathVariable Long locationId,
                                                                @RequestBody AddLocationRequestDto locationDetails) {
         logger.info("Entering editLocation CONTROLLER method...");
         try {
-            AddLocationResponseDto updatedLocation = expedientService.editLocation(id, existingPlace, locationDetails);
+            AddLocationResponseDto updatedLocation = expedientService.editLocation(expedientId, locationId, locationDetails);
             logger.info("Exiting editLocation CONTROLLER method successfully...");
             return new ResponseEntity<>(updatedLocation, HttpStatus.OK);
         } catch (NotFoundException e) {
@@ -113,6 +113,20 @@ public class ExpedientController implements Controller<ExpedientResponseDTO, Exp
         }
     }
 
+
+    @PostMapping("/addRegulation/{id}")
+    public ResponseEntity<RegulationResponseDto> addRegulation(@PathVariable Long id,
+                                                               @RequestBody RegulationRequestDto regulationRequestDto) {
+        logger.info("Entering addRegulation CONTROLLER method with data: {}", regulationRequestDto);
+        try {
+            RegulationResponseDto regulation = expedientService.addRegulation(id, regulationRequestDto);
+            logger.info("Exiting addRegulation CONTROLLER method successfully...");
+            return new ResponseEntity<>(regulation, HttpStatus.CREATED);
+        } catch (NotFoundException e) {
+            logger.error("Expedient with ID: {} not found", id);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
     @PutMapping("/regulations/{expedientId}/{regulationId}")
     public ResponseEntity<RegulationResponseDto> editRegulation(
             @PathVariable Long expedientId,
