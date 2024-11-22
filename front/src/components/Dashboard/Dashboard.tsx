@@ -1,5 +1,5 @@
 'use client'
-
+import { Link, useNavigate } from 'react-router-dom';
 import { useState, useMemo, useRef, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import ExpedienteService from '../../service/ExpedienteService';
@@ -10,7 +10,7 @@ import DashboardFilters from './DashboardFilters'
 import DashboardAddExpediente from './DashboardAddExpediente'
 import DashboardEditExpediente from './DashboardEditExpediente'
 import DashboardExpedientesTable from './DashboardExpedientesTable'
-import { Link } from 'react-router-dom';
+import { AxiosResponse } from 'axios';
 
 export default function Dashboard() {
   const [expedientes, setExpedientes] = useState<Expediente[]>([])
@@ -74,6 +74,7 @@ export default function Dashboard() {
   const handleAddUbicacion = (isEditing: boolean = false) => {
     if (newUbicacion) {
       const nuevaUbicacion: Ubicacion = {
+        id: null,
         place: newUbicacion
       }
       if (isEditing && editingExpediente) {
@@ -118,21 +119,6 @@ export default function Dashboard() {
 
   const handleEditExpediente = (expediente: Expediente) => {
     setEditingExpediente(expediente)
-  }
-
-  const handleSaveEdit = () => {
-    if (editingExpediente) {
-      ExpedienteService.updateExpedient(editingExpediente)
-        .then(response => {
-          setExpedientes(expedientes.map(exp =>
-            exp.id === editingExpediente.id ? response.data : exp
-          ))
-          setEditingExpediente(null)
-        })
-        .catch(error => {
-          console.error('Error updating expediente:', error)
-        })
-    }
   }
 
   const handleCancelEdit = () => {
@@ -259,13 +245,13 @@ export default function Dashboard() {
             setEditingExpediente={setEditingExpediente}
             newUbicacion={newUbicacion}
             setNewUbicacion={setNewUbicacion}
-            handleAddUbicacion={handleAddUbicacion}
-            handleSaveEdit={handleSaveEdit}
             handleCancelEdit={handleCancelEdit}
             handleFileChange={handleFileChange}
             handleDeletePDF={handleDeletePDF}
             fileInputRef={fileInputRef}
             buttonVariants={buttonVariants}
+            setExpedientes={setExpedientes}
+            expedientes={expedientes} // Pasar expedientes como prop
           />
         )}
       </AnimatePresence>
@@ -287,4 +273,8 @@ export default function Dashboard() {
       </Link>
     </motion.div>
   )
+}
+
+function setError(arg0: string) {
+  throw new Error('Function not implemented.');
 }

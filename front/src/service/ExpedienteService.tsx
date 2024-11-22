@@ -38,19 +38,21 @@ class ExpedienteService {
         }
     }
 
-    async addLocation(id: number, locationDto: Ubicacion): Promise<AxiosResponse<Ubicacion>> {
+    async addLocation(expedientId: number, locationRequest: Ubicacion): Promise<AxiosResponse<Ubicacion>> {
         try {
-            const response = await axios.put(`${API_URL}/expedients/addLocation/${id}`, locationDto);
+            const response = await axios.put(
+                `${API_URL}/expedients/addLocation/${expedientId}?newPlace=${encodeURIComponent(locationRequest.place)}`,
+                { ...locationRequest }
+            );
             return response;
         } catch (error) {
             console.error('Error adding location:', error);
             throw error;
         }
     }
-
-    async editLocation(id: number, existingPlace: string, locationDetails: Ubicacion): Promise<AxiosResponse<Ubicacion>> {
+    async editLocation(expedientId: number, locationId: number, locationRequest: Ubicacion): Promise<AxiosResponse<Ubicacion>> {
         try {
-            const response = await axios.put(`${API_URL}/expedients/editLocation/${id}/${existingPlace}`, locationDetails);
+            const response = await axios.put(`${API_URL}/expedients/editLocation/${expedientId}/${locationId}`, locationRequest);
             return response;
         } catch (error) {
             console.error('Error editing location:', error);
@@ -58,9 +60,10 @@ class ExpedienteService {
         }
     }
 
-    async deleteLocation(id: number, location: string): Promise<AxiosResponse<void>> {
+
+    async deleteLocation(expedientId: number, locationId: number): Promise<AxiosResponse<void>> {
         try {
-            const response = await axios.delete(`${API_URL}/expedients/deleteLocation/${id}/${location}`);
+            const response = await axios.delete(`${API_URL}/expedients/deleteLocation/${expedientId}/${locationId}`);
             return response;
         } catch (error) {
             console.error('Error deleting location:', error);
@@ -68,6 +71,15 @@ class ExpedienteService {
         }
     }
 
+    async addRegulation(expedientId: number, regulationDto: Regulation): Promise<AxiosResponse<Regulation>> {
+    try {
+        const response = await axios.post(`${API_URL}/expedients/addRegulation/${expedientId}`, regulationDto);
+        return response;
+    } catch (error) {
+        console.error('Error adding regulation:', error);
+        throw error;
+    }
+}
     async editRegulation(expedientId: number, regulationId: number, regulationDetails: Regulation): Promise<AxiosResponse<Regulation>> {
         try {
             const response = await axios.put(`${API_URL}/expedients/editRegulation/${expedientId}/${regulationId}`, regulationDetails);
