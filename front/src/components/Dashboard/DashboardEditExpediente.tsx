@@ -17,7 +17,7 @@ type DashboardEditExpedienteProps = {
   fileInputRef: RefObject<HTMLInputElement>;
   buttonVariants: any;
   setExpedientes: Dispatch<SetStateAction<Expediente[]>>;
-  expedientes: Expediente[]; // Añadir expedientes como prop
+  expedientes: Expediente[]; 
 };
 
 const DashboardEditExpediente: React.FC<DashboardEditExpedienteProps> = ({
@@ -31,11 +31,11 @@ const DashboardEditExpediente: React.FC<DashboardEditExpedienteProps> = ({
   fileInputRef,
   buttonVariants,
   setExpedientes,
-  expedientes, // Usar expedientes como prop
+  expedientes,
 }) => {
   const handleAddRegulation = async () => {
     const newRegulation: Regulation = {
-      id: null, // No asignes un id temporal aquí
+      id: null, 
       description: ''
     };
     const addedRegulation = await ExpedienteService.addRegulation(editingExpediente.id, newRegulation);
@@ -65,7 +65,7 @@ const DashboardEditExpediente: React.FC<DashboardEditExpedienteProps> = ({
   };
 
   const handleDeleteLocation = async (index: number) => {
-    const locationId = editingExpediente.locations[index].id; // Usar el id de la ubicación
+    const locationId = editingExpediente.locations[index].id; 
     await ExpedienteService.deleteLocation(editingExpediente.id, locationId);
     const newLocations = editingExpediente.locations.filter((_, i) => i !== index);
     setEditingExpediente({
@@ -80,7 +80,6 @@ const DashboardEditExpediente: React.FC<DashboardEditExpedienteProps> = ({
     newLocations[index] = { ...newLocations[index], place: value };
     setEditingExpediente({ ...editingExpediente, locations: newLocations });
 
-    // Asegúrate de que el objeto pasado a editLocation tenga tanto id como place
     const updatedLocation: Ubicacion = {
       id: newLocations[index].id,
       place: value
@@ -92,7 +91,7 @@ const DashboardEditExpediente: React.FC<DashboardEditExpedienteProps> = ({
   const handleAddUbicacion = async () => {
     if (newUbicacion) {
       const nuevaUbicacion: Ubicacion = {
-        id: null, // No asignes un id temporal aquí
+        id: null,
         place: newUbicacion,
       };
       try {
@@ -144,7 +143,7 @@ const DashboardEditExpediente: React.FC<DashboardEditExpedienteProps> = ({
         await ExpedienteService.editLocation(expediente.id, location.id, location);
       }
   
-      // Eliminar ubicaciones eliminadas
+      // Eliminar ubicaciones "eliminadas"
       for (const location of deletedLocations) {
         console.log('Deleting location:', location);
         await ExpedienteService.deleteLocation(expediente.id, location.id);
@@ -176,7 +175,7 @@ const DashboardEditExpediente: React.FC<DashboardEditExpedienteProps> = ({
         await ExpedienteService.editRegulation(expediente.id, regulation.id, regulation);
       }
   
-      // Eliminar regulaciones eliminadas
+      // Eliminar regulaciones "eliminadas"
       for (const regulation of deletedRegulations) {
         console.log('Deleting regulation:', regulation);
         await ExpedienteService.deleteRegulation(expediente.id, regulation.id);
@@ -276,15 +275,6 @@ const DashboardEditExpediente: React.FC<DashboardEditExpedienteProps> = ({
                 onChange={(e) => handleEditLocation(index, e.target.value)}
                 className="border border-gray-300 rounded-md px-2 py-1 text-sm flex-grow"
               />
-              <motion.button
-                onClick={() => handleDeleteLocation(index)}
-                className="bg-red-500 text-white px-2 py-1 rounded-md text-sm"
-                variants={buttonVariants}
-                whileHover="hover"
-                whileTap="tap"
-              >
-                Eliminar
-              </motion.button>
             </div>
           ))}
           <div className="flex items-center space-x-2 mt-2">
@@ -352,7 +342,7 @@ const DashboardEditExpediente: React.FC<DashboardEditExpedienteProps> = ({
             Cancelar
           </motion.button>
           <motion.button
-            onClick={() => handleSaveEdit(editingExpediente)} // Llamar a handleSaveEdit con el expediente
+            onClick={() => handleSaveEdit(editingExpediente)} 
             className="bg-green-500 text-white px-4 py-2 rounded-md"
             variants={buttonVariants}
             whileHover="hover"

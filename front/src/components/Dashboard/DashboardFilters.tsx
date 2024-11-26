@@ -35,15 +35,6 @@ const DashboardFilters: React.FC<DashboardFiltersProps> = ({
       variants={fadeInVariants}
     >
       <div className="flex items-center space-x-2">
-        <select
-          value={selectedYear || ""}
-          onChange={(e) => setSelectedYear(e.target.value ? String(e.target.value) : null)}
-          className="border border-gray-300 rounded-md p-2"
-        >
-         {years?.map((year, index) => (
-  <option key={`${year}-${index}`} value={year}>{year}</option>
-))}
-        </select>
         <input
           type="number"
           placeholder="Nuevo año"
