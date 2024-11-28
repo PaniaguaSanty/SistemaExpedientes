@@ -14,9 +14,7 @@
     <artifactId>sistema-expedientes</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>sistExp</name>
-    <description>Proyecto para el sistema de gestión de expedientes de la subsecretaria del Ministerio de Educación de
-        Posadas, Misiones.
-    </description>
+    <description>Proyecto para el sistema de gestión de expedientes de la subsecretaria del Ministerio de Educación de Posadas, Misiones.</description>
 
     <properties>
         <java.version>17</java.version>
