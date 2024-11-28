@@ -5,15 +5,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7f0c8d7e-87f1-4a4f-b3fb-27a6f3fcde9c" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/sistema-expedientes/Dockerfile" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/logs/app.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/app.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sistema-expedientes/logs/app.log" beforeDir="false" afterPath="$PROJECT_DIR$/sistema-expedientes/logs/app.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sistema-expedientes/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/sistema-expedientes/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sistema-expedientes/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/sistema-expedientes/src/main/resources/application.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Dockerfile" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
@@ -47,22 +54,23 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "Application.SistExpApplication.executor": "Run",
-    "Docker.resources/application.yml: Compose Deployment.executor": "Run",
-    "Maven.sistema-expedientes [clean,install...].executor": "Run",
-    "Maven.sistema-expedientes [clean,install].executor": "Run",
-    "Maven.sistema-expedientes [clean,package...].executor": "Run",
-    "Maven.sistema-expedientes [dependency:purge-local-repository].executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "FacuBrabranch",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "/home/facundo/Documentos/rpo/SistemaExpedientes",
-    "settings.editor.selected.configurable": "preferences.pluginManager"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;Application.SistExpApplication.executor&quot;: &quot;Run&quot;,
+    &quot;Docker.resources/application.yml: Compose Deployment.executor&quot;: &quot;Run&quot;,
+    &quot;Docker.sistema-expedientes/Dockerfile.executor&quot;: &quot;Run&quot;,
+    &quot;Maven.sistema-expedientes [clean,install...].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.sistema-expedientes [clean,install].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.sistema-expedientes [clean,package...].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.sistema-expedientes [dependency:purge-local-repository].executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;FacuBrabranch&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/facundo/Documentos/rpo/SistemaExpedientes&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
   }
-}]]></component>
+}</component>
   <component name="RunAnythingCache">
     <option name="myCommands">
       <command value="mvn dependency:purge-local-repository " />
@@ -71,7 +79,7 @@
       <command value="mvn clean package -DskipTests " />
     </option>
   </component>
-  <component name="RunManager" selected="Application.SistExpApplication">
+  <component name="RunManager" selected="Docker.sistema-expedientes/Dockerfile">
     <configuration name="SistExpApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.sistemaExpedientes.sistExp.SistExpApplication" />
       <module name="sistema-expedientes" />
@@ -91,6 +99,12 @@
       </deployment>
       <method v="2" />
     </configuration>
+    <configuration default="true" type="docker-deploy" factoryName="dockerfile" temporary="true">
+      <deployment type="dockerfile">
+        <settings />
+      </deployment>
+      <method v="2" />
+    </configuration>
     <configuration name="resources/application.yml: Compose Deployment" type="docker-deploy" factoryName="docker-compose.yml" temporary="true" server-name="Docker">
       <deployment type="docker-compose.yml">
         <settings>
@@ -99,8 +113,17 @@
       </deployment>
       <method v="2" />
     </configuration>
+    <configuration name="sistema-expedientes/Dockerfile" type="docker-deploy" factoryName="dockerfile" temporary="true" server-name="Docker">
+      <deployment type="dockerfile">
+        <settings>
+          <option name="sourceFilePath" value="sistema-expedientes/Dockerfile" />
+        </settings>
+      </deployment>
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Docker.sistema-expedientes/Dockerfile" />
         <item itemvalue="Application.SistExpApplication" />
         <item itemvalue="Docker.resources/application.yml: Compose Deployment" />
       </list>

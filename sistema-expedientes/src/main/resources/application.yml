@@ -15,14 +15,14 @@ spring:
     ansi:
       enabled: always # permite ver el log como colores
 server:
-  port: 8080
+  port: 8081
 logging:
   level:
     root: info # permite ver los logs de consola
 
 exp:
   openapi:
-    url: "http://localhost:8080"
+    url: "http://localhost:8081"
     description: "API for managing Expedient operations for the Ministerio de Educacion of Posadas Misiones, Argentina."
     contact:
       name: "Santiago Agustín Paniagua & Facundo Emanuel Pedrozo"
