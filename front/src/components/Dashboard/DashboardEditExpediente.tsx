@@ -115,17 +115,16 @@ const DashboardEditExpediente: React.FC<DashboardEditExpedienteProps> = ({
         throw new Error('Expediente original no encontrado');
       }
   
+      // Actualizar el expediente
       await ExpedienteService.updateExpedient(expediente);
   
-      // Actualizar ubicaciones
+      // Manejar ubicaciones
       const originalLocations = originalExpediente.locations || [];
       const newLocations = expediente.locations.filter(location => !originalLocations.some(originalLocation => originalLocation.id === location.id));
       const updatedLocations = expediente.locations.filter(location => {
         const originalLocation = originalLocations.find(originalLocation => originalLocation.id === location.id);
         return originalLocation && (originalLocation.place !== location.place);
       });
-  
-      // Eliminar ubicaciones que ya no existen en el formulario
       const deletedLocations = originalLocations.filter(originalLocation => !expediente.locations.some(location => location.id === originalLocation.id));
   
       // Añadir nuevas ubicaciones
@@ -150,14 +149,13 @@ const DashboardEditExpediente: React.FC<DashboardEditExpedienteProps> = ({
         await ExpedienteService.deleteLocation(expediente.id, location.id);
       }
   
-      // Actualizar regulaciones
+      // Manejar regulaciones
       const originalRegulations = originalExpediente.regulations || [];
       const newRegulations = expediente.regulations.filter(regulation => !originalRegulations.some(originalRegulation => originalRegulation.id === regulation.id));
       const updatedRegulations = expediente.regulations.filter(regulation => {
         const originalRegulation = originalRegulations.find(originalRegulation => originalRegulation.id === regulation.id);
         return originalRegulation && (originalRegulation.description !== regulation.description);
       });
-  
       const deletedRegulations = originalRegulations.filter(originalRegulation => !expediente.regulations.some(regulation => regulation.id === originalRegulation.id));
   
       // Añadir nuevas regulaciones
@@ -182,10 +180,12 @@ const DashboardEditExpediente: React.FC<DashboardEditExpedienteProps> = ({
         await ExpedienteService.deleteRegulation(expediente.id, regulation.id);
       }
   
+      // Actualizar el estado de los expedientes
       setExpedientes(prevExpedientes =>
         prevExpedientes.map(exp => (exp.id === expediente.id ? { ...exp, locations: expediente.locations, regulations: expediente.regulations } : exp))
       );
   
+      // Limpiar el expediente en edición
       setEditingExpediente(null);
   
     } catch (error) {

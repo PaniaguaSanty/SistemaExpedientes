@@ -19,14 +19,24 @@ class ExpedienteService {
     }
 
     async updateExpedient(expedientRequest: Expediente): Promise<AxiosResponse<Expediente>> {
+        // Envía solo los campos principales del expediente
+        const mainFields = {
+          id: expedientRequest.id,
+          issuer: expedientRequest.issuer,
+          organizationCode: expedientRequest.organizationCode,
+          correlativeNumber: expedientRequest.correlativeNumber,
+          solicitude: expedientRequest.solicitude,
+          year: expedientRequest.year,
+          pdfPath: expedientRequest.pdfPath,
+        };
         try {
-            const response = await axios.put(`${API_URL}/expedients/update`, expedientRequest);
-            return response;
+          const response = await axios.put(`${API_URL}/expedients/update`, mainFields);
+          return response;
         } catch (error) {
-            console.error('Error updating expedient:', error);
-            throw error;
+          console.error('Error updating expedient:', error);
+          throw error;
         }
-    }
+      }
 
     async deleteExpedient(id: string): Promise<AxiosResponse> {
         try {
