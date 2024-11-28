@@ -5,9 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7f0c8d7e-87f1-4a4f-b3fb-27a6f3fcde9c" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/sistema-expedientes/Dockerfile" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/logs/app.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/app.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sistema-expedientes/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/sistema-expedientes/Dockerfile" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sistema-expedientes/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/sistema-expedientes/src/main/resources/application.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -79,7 +79,7 @@
       <command value="mvn clean package -DskipTests " />
     </option>
   </component>
-  <component name="RunManager" selected="Docker.sistema-expedientes/Dockerfile">
+  <component name="RunManager" selected="Application.SistExpApplication">
     <configuration name="SistExpApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.sistemaExpedientes.sistExp.SistExpApplication" />
       <module name="sistema-expedientes" />
@@ -123,8 +123,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Docker.sistema-expedientes/Dockerfile" />
         <item itemvalue="Application.SistExpApplication" />
+        <item itemvalue="Docker.sistema-expedientes/Dockerfile" />
         <item itemvalue="Docker.resources/application.yml: Compose Deployment" />
       </list>
     </recent_temporary>

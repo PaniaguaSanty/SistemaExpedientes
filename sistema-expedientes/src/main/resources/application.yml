@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/expedientes_db
+    url: jdbc:postgresql://postgres:5432/expedientes_db
     username: user
     password: password
     driver-class-name: org.postgresql.Driver
@@ -15,14 +15,14 @@ spring:
     ansi:
       enabled: always # permite ver el log como colores
 server:
-  port: 8081
+  port: 8080
 logging:
   level:
     root: info # permite ver los logs de consola
 
 exp:
   openapi:
-    url: "http://localhost:8081"
+    url: "http://localhost:8080"
     description: "API for managing Expedient operations for the Ministerio de Educacion of Posadas Misiones, Argentina."
     contact:
       name: "Santiago Agustín Paniagua & Facundo Emanuel Pedrozo"

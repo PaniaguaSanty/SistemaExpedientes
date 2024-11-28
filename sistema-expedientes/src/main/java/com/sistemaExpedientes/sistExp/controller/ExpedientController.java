@@ -24,7 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-
+//NO ESTA CORRIENDO EL INTELLIJ, osea bien xdxd, deberia funcionar igual
 @RestController
 @RequestMapping("/api/expedients")
 @CrossOrigin(origins = "http://localhost:8080")//5174 o 8080

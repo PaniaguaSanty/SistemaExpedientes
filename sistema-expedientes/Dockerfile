@@ -11,4 +11,4 @@ COPY target/sistema-expedientes-0.0.1-SNAPSHOT.jar /app/expedientes.jar
 EXPOSE 8080
 
 # Comando para ejecutar la aplicación
-ENTRYPOINT ["java", "-jar", "expedientes.jar"]
+ENTRYPOINT ["java", "-Dspring.config.location=classpath:/application.yml", "-jar", "expedientes.jar"]
