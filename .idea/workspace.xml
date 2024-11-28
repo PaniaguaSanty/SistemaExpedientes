@@ -68,6 +68,7 @@
       <command value="mvn dependency:purge-local-repository " />
       <command value="mvn clean install -DskipTests " />
       <command value="mvn clean install " />
+      <command value="mvn clean package -DskipTests " />
     </option>
   </component>
   <component name="RunManager" selected="Application.SistExpApplication">
