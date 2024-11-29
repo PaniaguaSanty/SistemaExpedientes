@@ -6,9 +6,21 @@
   <component name="ChangeListManager">
     <list default="true" id="7f0c8d7e-87f1-4a4f-b3fb-27a6f3fcde9c" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/app.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/app.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sistema-expedientes/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/sistema-expedientes/Dockerfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sistema-expedientes/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/sistema-expedientes/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/dist-electron/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/front/dist-electron/main.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/electron/main.ts" beforeDir="false" afterPath="$PROJECT_DIR$/front/electron/main.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/front/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/front/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/front/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/src/components/Dashboard.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/src/components/Dashboard/Dashboard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/front/src/components/Dashboard/Dashboard.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/src/components/Dashboard/DashboardEditExpediente.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/front/src/components/Dashboard/DashboardEditExpediente.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/src/components/Dashboard/DashboardUbicaciones.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/src/components/Dashboard/ExpedienteForm.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/src/components/Dashboard/ExpedienteTable.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/src/components/Dashboard/useExpedientes.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/src/components/Pagination.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/front/src/components/Pagination.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/src/main.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/front/src/main.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/vite.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/front/vite.config.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

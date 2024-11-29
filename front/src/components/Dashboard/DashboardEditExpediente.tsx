@@ -75,7 +75,6 @@ const DashboardEditExpediente: React.FC<DashboardEditExpedienteProps> = ({
   };
 
   const handleEditLocation = (index: number, value: string) => {
-    const existingPlace = editingExpediente.locations[index].place;
     const newLocations = [...editingExpediente.locations];
     newLocations[index] = { ...newLocations[index], place: value };
     setEditingExpediente({ ...editingExpediente, locations: newLocations });

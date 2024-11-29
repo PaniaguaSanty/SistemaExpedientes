@@ -1,6 +1,6 @@
 //Dashboard.tsx
 'use client'
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useState, useMemo, useRef, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import ExpedienteService from '../../service/ExpedienteService';
@@ -11,7 +11,6 @@ import DashboardFilters from './DashboardFilters'
 import DashboardAddExpediente from './DashboardAddExpediente'
 import DashboardEditExpediente from './DashboardEditExpediente'
 import DashboardExpedientesTable from './DashboardExpedientesTable'
-import { AxiosResponse } from 'axios';
 
 export default function Dashboard() {
   const [expedientes, setExpedientes] = useState<Expediente[]>([])
@@ -276,6 +275,3 @@ export default function Dashboard() {
   )
 }
 
-function setError(arg0: string) {
-  throw new Error('Function not implemented.');
-}
