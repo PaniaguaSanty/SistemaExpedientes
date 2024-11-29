@@ -2,80 +2,155 @@ package com.sistemaExpedientes.sistExp.service;
 
 import com.sistemaExpedientes.sistExp.dto.request.AddLocationRequestDto;
 import com.sistemaExpedientes.sistExp.dto.request.ExpedientRequestDTO;
-import com.sistemaExpedientes.sistExp.dto.response.AddLocationResponseDto;
-import com.sistemaExpedientes.sistExp.dto.response.ExpedientResponseDTO;
-import com.sistemaExpedientes.sistExp.dto.response.RegulationResponseDto;
-import com.sistemaExpedientes.sistExp.dto.response.SolicitudeDto;
+import com.sistemaExpedientes.sistExp.dto.request.RegulationRequestDto;
+import com.sistemaExpedientes.sistExp.dto.response.*;
 import com.sistemaExpedientes.sistExp.exception.NotFoundException;
+import com.sistemaExpedientes.sistExp.mapper.CourseMapper;
 import com.sistemaExpedientes.sistExp.mapper.ExpedientMapper;
 import com.sistemaExpedientes.sistExp.mapper.LocationMapper;
 import com.sistemaExpedientes.sistExp.mapper.RegulationMapper;
+import com.sistemaExpedientes.sistExp.model.Course;
 import com.sistemaExpedientes.sistExp.model.Expedient;
 import com.sistemaExpedientes.sistExp.model.Location;
 import com.sistemaExpedientes.sistExp.model.Regulation;
+import com.sistemaExpedientes.sistExp.repository.CourseRepository;
 import com.sistemaExpedientes.sistExp.repository.ExpedientRepository;
 import com.sistemaExpedientes.sistExp.repository.LocationRepository;
 import com.sistemaExpedientes.sistExp.repository.RegulationRepository;
 import com.sistemaExpedientes.sistExp.util.CRUD;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class ExpedientService implements CRUD<ExpedientResponseDTO, ExpedientRequestDTO> {
 
-
     private static final Logger logger = LoggerFactory.getLogger(ExpedientService.class);
     private final ExpedientRepository expedientRepository;
     private final LocationRepository locationRepository;
+    private final CourseRepository courseRepository;
     private final ExpedientMapper expedientMapper;
     private final LocationMapper locationMapper;
     private final RegulationRepository regulationRepository;
     private final RegulationMapper regulationMapper;
+    private final CourseMapper courseMapper;
 
-    public ExpedientService(ExpedientRepository expedientRepository,
-                            LocationRepository locationRepository,
-                            ExpedientMapper expedientMapper,
-                            LocationMapper locationMapper,
-                            RegulationRepository regulationRepository,
-                            RegulationMapper regulationMapper) {
+    public ExpedientService(ExpedientRepository expedientRepository, LocationRepository locationRepository, CourseRepository courseRepository, ExpedientMapper expedientMapper, LocationMapper locationMapper, RegulationRepository regulationRepository, RegulationMapper regulationMapper, CourseMapper courseMapper) {
         this.expedientRepository = expedientRepository;
         this.locationRepository = locationRepository;
+        this.courseRepository = courseRepository;
         this.expedientMapper = expedientMapper;
         this.locationMapper = locationMapper;
         this.regulationRepository = regulationRepository;
         this.regulationMapper = regulationMapper;
+        this.courseMapper = courseMapper;
     }
 
     @Override
     public ExpedientResponseDTO create(ExpedientRequestDTO expedientRequestDTO) {
         logger.info("Entering in create SERVICE method with data: {} ", expedientRequestDTO);
         try {
+            // Verificar el contenido del DTO
+            logger.info("Locations in request DTO: {}", expedientRequestDTO.getLocations());
+
+            // Crear y guardar primero el expediente base
             Expedient expedient = expedientMapper.convertToEntity(expedientRequestDTO);
-            Expedient expedientSaved = expedientRepository.save(expedient);
-            logger.info("Exiting create SERVICE method...");
-            return expedientMapper.convertToDto(expedientSaved);
+
+            // Inicializar las colecciones
+            expedient.setLocations(new ArrayList<>());
+            expedient.setRegulations(new ArrayList<>());
+
+            // Guardar el expediente primero para tener el ID y marcarlo como final
+            final Expedient finalExpedient = expedientRepository.save(expedient);
+
+            // Asociar y guardar regulaciones
+            if (expedientRequestDTO.getRegulations() != null && !expedientRequestDTO.getRegulations().isEmpty()) {
+                List<Regulation> regulations = expedientRequestDTO.getRegulations().stream()
+                        .map(regulationDto -> {
+                            Regulation regulation = new Regulation();
+                            regulation.setDescription(regulationDto.getDescription());
+                            regulation.setExpedient(finalExpedient); // Usando la variable final
+                            return regulation;
+                        })
+                        .collect(Collectors.toList());
+                finalExpedient.setRegulations(regulations);
+            }
+
+            // Asociar y guardar ubicaciones
+            if (expedientRequestDTO.getLocations() != null && !expedientRequestDTO.getLocations().isEmpty()) {
+                List<Location> locations = expedientRequestDTO.getLocations().stream()
+                        .map(locationDto -> {
+                            Location location = new Location();
+                            location.setPlace(locationDto.getPlace());
+                            location.setExpedient(finalExpedient); // Usando la variable final
+                            return location;
+                        })
+                        .collect(Collectors.toList());
+                finalExpedient.setLocations(locations);
+            }
+
+            // Guardar el expediente con todas sus relaciones
+            Expedient savedExpedient = expedientRepository.save(finalExpedient);
+
+            logger.info("Exiting create SERVICE method with saved expedient ID: {}", savedExpedient.getId());
+            return expedientMapper.convertToDto(savedExpedient);
         } catch (Exception e) {
-            throw new NotFoundException("Error while creating the expedient...");
+            logger.error("Error while creating the expedient: {}", e.getMessage(), e);
+            throw new NotFoundException("Error while creating the expedient: " + e.getMessage());
         }
     }
+
 
     @Override
     public ExpedientResponseDTO update(ExpedientRequestDTO expedientRequestDTO) {
         logger.info("Entering in update SERVICE method with data: {} ", expedientRequestDTO);
         try {
-            Expedient existingExpedient = expedientRepository.findByCorrelativeNumber(expedientRequestDTO.getCorrelativeNumber());
+            Expedient existingExpedient = expedientRepository.findById(expedientRequestDTO.getId())
+                    .orElseThrow(() -> new NotFoundException("Expedient not found with ID " + expedientRequestDTO.getId()));
 
+            // Actualizar todos los campos proporcionados
             existingExpedient.setIssuer(expedientRequestDTO.getIssuer());
             existingExpedient.setOrganizationCode(expedientRequestDTO.getOrganizationCode());
             existingExpedient.setCorrelativeNumber(expedientRequestDTO.getCorrelativeNumber());
             existingExpedient.setSolicitude(expedientRequestDTO.getSolicitude());
             existingExpedient.setYear(expedientRequestDTO.getYear());
-            existingExpedient.setRegulations(String.valueOf(expedientRequestDTO.getRegulations()));
             existingExpedient.setPdfPath(expedientRequestDTO.getPdfPath());
+
+            // Crear y asignar regulaciones
+            List<Regulation> regulations = expedientRequestDTO.getRegulations().stream()
+                    .map(regulationDto -> {
+                        Regulation regulation = new Regulation();
+                        regulation.setDescription(regulationDto.getDescription());
+                        regulation.setExpedient(existingExpedient); // Establece la relación
+                        return regulation;
+                    })
+                    .collect(Collectors.toList());
+
+            // Crear y asignar ubicaciones
+            List<Location> locations = expedientRequestDTO.getLocations().stream()
+                    .map(locationDto -> {
+                        Location location = new Location();
+                        location.setPlace(locationDto.getPlace());
+                        location.setExpedient(existingExpedient); // Establece la relación
+                        return location;
+                    })
+                    .collect(Collectors.toList());
+
+            // Persistir en la base de datos
+            regulationRepository.saveAll(regulations);
+            locationRepository.saveAll(locations);
+
+            // Agregar relaciones a `existingExpedient`
+            existingExpedient.getRegulations().clear();
+            existingExpedient.getRegulations().addAll(regulations);
+            existingExpedient.getLocations().clear();
+            existingExpedient.getLocations().addAll(locations);
 
             Expedient updatedExpedient = expedientRepository.save(existingExpedient);
             logger.info("Exiting Update SERVICE method...");
@@ -94,34 +169,123 @@ public class ExpedientService implements CRUD<ExpedientResponseDTO, ExpedientReq
         expedientRepository.delete(expedient);
     }
 
-    public AddLocationResponseDto addLocation(Long id, AddLocationRequestDto location) {
+    // Puede recibir un String "Place"
+
+    public AddLocationResponseDto addLocation(Long id, AddLocationRequestDto newLocation, String newPlace) {
         logger.info("Entering in AddLocation SERVICE method...");
         Expedient expedient = expedientRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Expedient not found with id: " + id));
-        Location locationToAdd = locationMapper.convertAddedLocationToEntity(location);
+        Location locationToAdd = locationMapper.convertAddedLocationToEntity(newLocation);
         if (expedient != null) {
+            locationToAdd.setPlace(newPlace);
             expedient.getLocations().add(locationToAdd);
             locationToAdd.setExpedient(expedient);
-            logger.info("Exiting addLocation SERVICE method succesfully!");
+            logger.info("Exiting addLocation SERVICE method successfully!");
             locationRepository.save(locationToAdd);
             return locationMapper.convertAddedLocationToDto(locationToAdd);
         }
         return null;
     }
 
-    public AddLocationResponseDto editLocation(Long id, String existingPlace, AddLocationRequestDto locationDetails) {
+    public AddLocationResponseDto editLocation(Long expedientId, Long locationId, AddLocationRequestDto locationDetails) {
         logger.info("Entering in EditLocation SERVICE method...");
-        Expedient expedient = expedientRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Expedient not found with ID " + id));
-        Location locationToUpdate = locationRepository.findByPlace(existingPlace);
-        if (expedient != null) {
-            locationToUpdate.setPlace(locationDetails.getPlace());
-            locationToUpdate.setExpedient(expedient);
-            Location updatedLocation = locationRepository.save(locationToUpdate);
-            return locationMapper.convertAddedLocationToDto(locationToUpdate);
+        Expedient expedient = expedientRepository.findById(expedientId)
+                .orElseThrow(() -> new NotFoundException("Expedient not found with ID " + expedientId));
+
+        Location locationToUpdate = locationRepository.findById(locationId)
+                .orElseThrow(() -> new NotFoundException("Location not found with ID " + locationId));
+
+        // Verificar que la ubicación pertenece al expediente
+        if (!locationToUpdate.getExpedient().getId().equals(expedientId)) {
+            throw new NotFoundException("La ubicación no pertenece al expediente especificado");
         }
 
-        logger.info("Exiting in EditLocation SERVICE method succesfully!...");
+        locationToUpdate.setPlace(locationDetails.getPlace());
+        locationToUpdate.setExpedient(expedient);
+        Location updatedLocation = locationRepository.save(locationToUpdate);
+
+        logger.info("Exiting in EditLocation SERVICE method successfully!...");
+        return locationMapper.convertAddedLocationToDto(updatedLocation);
+    }
+
+    public void deleteLocation(Long expedientId, Long locationId) {
+        // Verificar primero que el expediente existe
+        Expedient expedient = expedientRepository.findById(expedientId)
+                .orElseThrow(() -> new NotFoundException("Expediente no encontrado"));
+
+        // Buscar la ubicación específica
+        Location location = locationRepository.findById(locationId)
+                .orElseThrow(() -> new NotFoundException("Ubicación no encontrada"));
+
+        // Verificar que la ubicación pertenece al expediente
+        if (!location.getExpedient().getId().equals(expedientId)) {
+            throw new NotFoundException("La ubicación no pertenece al expediente especificado");
+        }
+
+        // Eliminar la ubicación
+        locationRepository.delete(location);
+    }
+
+    public RegulationResponseDto editRegulation(Long id, String currentDescription, RegulationRequestDto regulationDetails) {
+        logger.info("Entering in editRegulation SERVICE method...");
+
+        // Buscar el expediente al que pertenece la regulación
+        Expedient expedient = expedientRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Expedient not found with ID " + id));
+
+        // Buscar la regulación a editar
+        Regulation regulationToUpdate = regulationRepository.findByDescriptionAndExpedient(currentDescription, expedient)
+                .orElseThrow(() -> new NotFoundException("Regulation not found with description: " + currentDescription));
+
+        // Actualizar los campos de la regulación
+        regulationToUpdate.setDescription(regulationDetails.getDescription());
+        regulationToUpdate.setExpedient(expedient);
+
+        // Guardar los cambios
+        Regulation updatedRegulation = regulationRepository.save(regulationToUpdate);
+
+        logger.info("Exiting editRegulation SERVICE method successfully!");
+        return regulationMapper.convertToDto(updatedRegulation);
+    }
+
+    public void deleteRegulation(Long expedientId, Long regulationId) {
+        // Verificar primero que el expediente existe
+        Expedient expedient = expedientRepository.findById(expedientId)
+                .orElseThrow(() -> new NotFoundException("Expediente no encontrado"));
+
+        // Buscar la regulación específica
+        Regulation regulation = regulationRepository.findById(regulationId)
+                .orElseThrow(() -> new NotFoundException("Regulación no encontrada"));
+
+        // Verificar que la regulación pertenece al expediente
+        if (!regulation.getExpedient().getId().equals(expedientId)) {
+            throw new NotFoundException("La regulación no pertenece al expediente especificado");
+        }
+
+        // Eliminar la regulación
+        regulationRepository.delete(regulation);
+    }
+
+    //añadir regulaciones
+    public RegulationResponseDto addRegulation(Long id, RegulationRequestDto newRegulation) {
+        logger.info("Entering in addRegulation SERVICE method...");
+
+        Expedient expedient = expedientRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Expedient not found with id: " + id));
+
+        Regulation regulationToAdd = regulationMapper.convertToEntity(newRegulation);
+
+        if (expedient != null) {
+            regulationToAdd.setExpedient(expedient);
+            regulationRepository.save(regulationToAdd);
+
+            expedient.getRegulations().add(regulationToAdd);
+            expedientRepository.save(expedient);
+
+            logger.info("Exiting addRegulation SERVICE method successfully!");
+            return regulationMapper.convertToDto(regulationToAdd);
+        }
+
         return null;
     }
 
@@ -138,13 +302,26 @@ public class ExpedientService implements CRUD<ExpedientResponseDTO, ExpedientReq
     public List<ExpedientResponseDTO> findAll() {
         logger.info("Entering in findAll SERVICE method...");
         List<Expedient> expedients = expedientRepository.findAll();
-        logger.info("Exiting findAll SERVICE method...");
         return expedients.stream()
                 .map(expedientMapper::convertToDto)
                 .collect(Collectors.toList());
     }
 
-    //buscar por codigo de org.
+    public Page<ExpedientResponseDTO> findAllPageable(Pageable pageable) {
+        logger.info("Entering in findAll SERVICE method with pageable: {}", pageable);
+        Page<Expedient> expedientPage = expedientRepository.findAll(pageable);
+        logger.info("Exiting findAll SERVICE method...");
+        return expedientPage.map(expedientMapper::convertToDto);
+    }
+
+    public Page<CourseResponseDto> findAllCoursesPageable(Pageable pageable) {
+        logger.info("Entering in findAllCourses SERVICE method with pageable: {}", pageable);
+        Page<Course> coursePage = courseRepository.findAll(pageable);
+        logger.info("Exiting findAllCourses SERVICE method...");
+        return coursePage.map(courseMapper::convertToDto);
+    }
+
+    // Buscar por código de organización
     public List<ExpedientResponseDTO> findByOrganizationCode(String orgCode) {
         logger.info("Entering in findByOrganizationCode SERVICE method with organization code: {}", orgCode);
         List<Expedient> expedients = expedientRepository.findByOrganizationCode(orgCode);
@@ -154,7 +331,7 @@ public class ExpedientService implements CRUD<ExpedientResponseDTO, ExpedientReq
                 .collect(Collectors.toList());
     }
 
-    //buscar por año
+    // Buscar por año
     public List<ExpedientResponseDTO> findByYear(String year) {
         logger.info("Entering in findByYear SERVICE method with year: {}", year);
         List<Expedient> expedients = expedientRepository.findByYear(year);
@@ -164,7 +341,7 @@ public class ExpedientService implements CRUD<ExpedientResponseDTO, ExpedientReq
                 .collect(Collectors.toList());
     }
 
-    //buscar por n° correlativo
+    // Buscar por número correlativo
     public ExpedientResponseDTO findByCorrelativeNumber(String number) {
         logger.info("Entering in findByCorrelativeNumber SERVICE method with correlative number: {}", number);
         Expedient expedient = expedientRepository.findByCorrelativeNumber(number);
@@ -172,7 +349,7 @@ public class ExpedientService implements CRUD<ExpedientResponseDTO, ExpedientReq
         return expedientMapper.convertToDto(expedient);
     }
 
-    //buscar por emisor
+    // Buscar por emisor
     public List<ExpedientResponseDTO> findByIssuer(String issuer) {
         logger.info("Entering in findByIssuer SERVICE method with issuer: {}", issuer);
         List<Expedient> expedients = expedientRepository.findByIssuerIgnoreCase(issuer);
@@ -182,7 +359,7 @@ public class ExpedientService implements CRUD<ExpedientResponseDTO, ExpedientReq
                 .collect(Collectors.toList());
     }
 
-    //buscar por tipo de solicitud
+    // Buscar por tipo de solicitud
     public List<ExpedientResponseDTO> findBySolicitude(String solicitude) {
         logger.info("Entering in findBySolicitude SERVICE method with solicitude: {}", solicitude);
         List<Expedient> expedients = expedientRepository.findBySolicitude(solicitude);
@@ -192,7 +369,7 @@ public class ExpedientService implements CRUD<ExpedientResponseDTO, ExpedientReq
                 .collect(Collectors.toList());
     }
 
-    //buscar por estado
+    // Buscar por estado
     public List<ExpedientResponseDTO> findByStatus(String status) {
         logger.info("Entering in findByStatus SERVICE method with status: {}", status);
         List<Expedient> expedients = expedientRepository.findByStatus(status);
@@ -204,48 +381,36 @@ public class ExpedientService implements CRUD<ExpedientResponseDTO, ExpedientReq
 
     public List<ExpedientResponseDTO> findByLocation(String location) {
         logger.info("Entering findByLocation SERVICE method with location: {}", location);
-
-        // Obtener todos los expedientes
         List<Expedient> expedients = expedientRepository.findAll();
 
-        // Filtrar los expedientes que tienen la ubicación especificada
         List<Expedient> filteredExpedients = expedients.stream()
                 .filter(expedient -> expedient.getLocations() != null &&
                         expedient.getLocations().stream()
-                                .anyMatch(loc -> loc.getPlace().equals(location)))
+                                .anyMatch(loc -> loc.getPlace() != null && loc.getPlace().equals(location)))
                 .collect(Collectors.toList());
 
         logger.info("Exiting findByLocation SERVICE method...");
-
-        // Convertir a DTOs y devolver
         return filteredExpedients.stream()
                 .map(expedientMapper::convertToDto)
                 .collect(Collectors.toList());
     }
 
-    //Buscar todas las regulaciones correspondientes a un solicitante
+    // Buscar todas las regulaciones correspondientes a un solicitante
     public List<RegulationResponseDto> findRegulationsByIssuer(String issuer) {
         logger.info("Entering findRegulationsByIssuer SERVICE method with issuer: {}", issuer);
-
-        // Obtiene todas las regulaciones y aplica el filtro de 'issuer'
         List<Regulation> filteredRegulations = regulationRepository.findAll().stream()
                 .filter(regulation -> regulation.getExpedient().getIssuer().contains(issuer))
                 .collect(Collectors.toList());
 
-        // Convierte la lista filtrada a DTOs
         return filteredRegulations.stream()
                 .map(regulationMapper::convertToDto)
                 .collect(Collectors.toList());
-
     }
 
     public List<SolicitudeDto> findSolicitudeByIssuer(String issuer) {
         logger.info("Entering findSolicitudeByIssuer SERVICE method with issuer: {}", issuer);
-
-        // Obtener la lista de expedientes según el emisor
         List<Expedient> expedients = expedientRepository.findByIssuerIgnoreCase(issuer);
 
-        // Mapear los expedientes a SolicitudeDTO
         List<SolicitudeDto> solicitudeDTOs = expedients.stream()
                 .map(expedient -> new SolicitudeDto(
                         expedient.getId(),       // expedientId
@@ -253,27 +418,18 @@ public class ExpedientService implements CRUD<ExpedientResponseDTO, ExpedientReq
                         expedient.getSolicitude() // solicitude
                 ))
                 .collect(Collectors.toList());
-
         logger.info("Exiting findSolicitudeByIssuer SERVICE method successfully with {} results", solicitudeDTOs.size());
         return solicitudeDTOs;
     }
 
     public List<RegulationResponseDto> findRegulationsByExpedientId(Long expedientId) {
         logger.info("Entering findRegulationsByExpedientId SERVICE method with expedientId: {}", expedientId);
-
-        // Obtiene todas las regulaciones que pertenecen al expediente con el ID dado
         List<Regulation> regulations = regulationRepository.findByExpedientId(expedientId);
 
-        // Mapea las regulaciones a DTOs
         List<RegulationResponseDto> regulationDTOs = regulations.stream()
                 .map(regulationMapper::convertToDto)
                 .collect(Collectors.toList());
-
         logger.info("Exiting findRegulationsByExpedientId SERVICE method successfully with {} results", regulationDTOs.size());
         return regulationDTOs;
     }
-
 }
-
-
-

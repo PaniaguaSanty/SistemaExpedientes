@@ -2,10 +2,8 @@ package com.sistemaExpedientes.sistExp.controller;
 
 import com.sistemaExpedientes.sistExp.dto.request.AddLocationRequestDto;
 import com.sistemaExpedientes.sistExp.dto.request.ExpedientRequestDTO;
-import com.sistemaExpedientes.sistExp.dto.response.AddLocationResponseDto;
-import com.sistemaExpedientes.sistExp.dto.response.ExpedientResponseDTO;
-import com.sistemaExpedientes.sistExp.dto.response.RegulationResponseDto;
-import com.sistemaExpedientes.sistExp.dto.response.SolicitudeDto;
+import com.sistemaExpedientes.sistExp.dto.request.RegulationRequestDto;
+import com.sistemaExpedientes.sistExp.dto.response.*;
 import com.sistemaExpedientes.sistExp.exception.NotFoundException;
 import com.sistemaExpedientes.sistExp.model.Expedient;
 import com.sistemaExpedientes.sistExp.service.ExcelService;
@@ -13,6 +11,10 @@ import com.sistemaExpedientes.sistExp.service.ExpedientService;
 import com.sistemaExpedientes.sistExp.util.Controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -22,10 +24,10 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-
+//NO ESTA CORRIENDO EL INTELLIJ, osea bien xdxd, deberia funcionar igual
 @RestController
 @RequestMapping("/api/expedients")
-@CrossOrigin(origins = "http://localhost:8080")
+@CrossOrigin(origins = "http://localhost:8080")//5174 o 8080
 public class ExpedientController implements Controller<ExpedientResponseDTO, ExpedientRequestDTO> {
 
     private static final Logger logger = LoggerFactory.getLogger(ExpedientController.class);
@@ -64,13 +66,13 @@ public class ExpedientController implements Controller<ExpedientResponseDTO, Exp
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    // Método para agregar una ubicación a un expediente
     @PutMapping("/addLocation/{id}")
     public ResponseEntity<AddLocationResponseDto> addLocation(@PathVariable Long id,
-                                                              @RequestBody AddLocationRequestDto locationDto) {
+                                                              @RequestBody AddLocationRequestDto locationDto,
+                                                              @RequestParam String newPlace) {
         logger.info("Entering addLocation CONTROLLER method...");
         try {
-            AddLocationResponseDto location = expedientService.addLocation(id, locationDto);
+            AddLocationResponseDto location = expedientService.addLocation(id, locationDto, newPlace);
             logger.info("Exiting addLocation CONTROLLER method successfully...");
             return new ResponseEntity<>(location, HttpStatus.CREATED);
         } catch (NotFoundException e) {
@@ -79,12 +81,12 @@ public class ExpedientController implements Controller<ExpedientResponseDTO, Exp
         }
     }
 
-    @PutMapping("/editLocation/{id}/{existingPlace}")
-    public ResponseEntity<AddLocationResponseDto> editLocation(@PathVariable Long id, @PathVariable String existingPlace,
+    @PutMapping("/editLocation/{expedientId}/{locationId}")
+    public ResponseEntity<AddLocationResponseDto> editLocation(@PathVariable Long expedientId, @PathVariable Long locationId,
                                                                @RequestBody AddLocationRequestDto locationDetails) {
         logger.info("Entering editLocation CONTROLLER method...");
         try {
-            AddLocationResponseDto updatedLocation = expedientService.editLocation(id, existingPlace, locationDetails);
+            AddLocationResponseDto updatedLocation = expedientService.editLocation(expedientId, locationId, locationDetails);
             logger.info("Exiting editLocation CONTROLLER method successfully...");
             return new ResponseEntity<>(updatedLocation, HttpStatus.OK);
         } catch (NotFoundException e) {
@@ -93,6 +95,71 @@ public class ExpedientController implements Controller<ExpedientResponseDTO, Exp
         }
     }
 
+    @DeleteMapping("/deleteLocation/{expedientId}/{locationId}")
+    public ResponseEntity<Void> deleteLocation(
+            @PathVariable Long expedientId,
+            @PathVariable Long locationId) {
+        logger.info("Entering deleteLocation CONTROLLER method with expedientId: {} and locationId: {}", expedientId, locationId);
+        try {
+            expedientService.deleteLocation(expedientId, locationId);
+            logger.info("Exiting deleteLocation CONTROLLER method successfully...");
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (NotFoundException e) {
+            logger.error("Error in deleteLocation CONTROLLER method: {}", e.getMessage());
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            logger.error("Unexpected error in deleteLocation CONTROLLER method: {}", e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
+    @PostMapping("/addRegulation/{id}")
+    public ResponseEntity<RegulationResponseDto> addRegulation(@PathVariable Long id,
+                                                               @RequestBody RegulationRequestDto regulationRequestDto) {
+        logger.info("Entering addRegulation CONTROLLER method with data: {}", regulationRequestDto);
+        try {
+            RegulationResponseDto regulation = expedientService.addRegulation(id, regulationRequestDto);
+            logger.info("Exiting addRegulation CONTROLLER method successfully...");
+            return new ResponseEntity<>(regulation, HttpStatus.CREATED);
+        } catch (NotFoundException e) {
+            logger.error("Expedient with ID: {} not found", id);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+    @PutMapping("/regulations/{expedientId}/{regulationId}")
+    public ResponseEntity<RegulationResponseDto> editRegulation(
+            @PathVariable Long expedientId,
+            @PathVariable String regulationId,
+            @RequestBody RegulationRequestDto regulationDto) {
+        logger.info("Entering editRegulation CONTROLLER method for expedientId: {}, regulationId: {}, and data: {}", expedientId, regulationId, regulationDto);
+        try {
+            RegulationResponseDto updatedRegulation = expedientService.editRegulation(expedientId, regulationId, regulationDto);
+            logger.info("Exiting editRegulation CONTROLLER method successfully...");
+            return new ResponseEntity<>(updatedRegulation, HttpStatus.OK);
+        } catch (NotFoundException e) {
+            logger.error("Error in editRegulation CONTROLLER method: {}", e.getMessage());
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @DeleteMapping("/deleteRegulation/{expedientId}/{regulationId}")
+    public ResponseEntity<Void> deleteRegulation(
+            @PathVariable Long expedientId,
+            @PathVariable Long regulationId) {
+        logger.info("Entering deleteRegulation CONTROLLER method with expedientId: {} and regulationId: {}", expedientId, regulationId);
+        try {
+            expedientService.deleteRegulation(expedientId, regulationId);
+            logger.info("Exiting deleteRegulation CONTROLLER method successfully...");
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (NotFoundException e) {
+            logger.error("Error in deleteRegulation CONTROLLER method: {}", e.getMessage());
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            logger.error("Unexpected error in deleteRegulation CONTROLLER method: {}", e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
     // Endpoint para subir el archivo Excel, convertir a CSV e insertar en la base de datos
     @PostMapping("/upload")
     public ResponseEntity<String> uploadExcelFile(@RequestParam("file") MultipartFile file) {
@@ -136,6 +203,35 @@ public class ExpedientController implements Controller<ExpedientResponseDTO, Exp
         logger.info("Exiting findAll CONTROLLER method...");
         return ResponseEntity.ok(expedients);
     }
+
+    @GetMapping("/findAllPaged")
+    public ResponseEntity<Page<ExpedientResponseDTO>> findAllPaged(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "40") int size,
+            @RequestParam(defaultValue = "id") String sort,
+            @RequestParam(defaultValue = "asc") String order) {
+
+        Sort.Direction sortDirection = order.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, sort));
+
+        Page<ExpedientResponseDTO> expedients = expedientService.findAllPageable(pageable);
+        return ResponseEntity.ok(expedients);
+    }
+
+    @GetMapping("/findAllCoursesPaged")
+    public ResponseEntity<Page<CourseResponseDto>> getAllCourses(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "40") int size,
+            @RequestParam(defaultValue = "id") String sort,
+            @RequestParam(defaultValue = "asc") String order) {
+
+        Sort.Direction sortDirection = order.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, sort));
+
+        Page<CourseResponseDto> courses = expedientService.findAllCoursesPageable(pageable);
+        return ResponseEntity.ok(courses);
+    }
+
 
     @GetMapping("/organization/{orgCode}")
     public ResponseEntity<List<ExpedientResponseDTO>> findByOrganizationCode(@PathVariable String orgCode) {
@@ -246,3 +342,5 @@ public class ExpedientController implements Controller<ExpedientResponseDTO, Exp
     }
 
 }
+
+

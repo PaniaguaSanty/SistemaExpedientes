@@ -1,60 +1,206 @@
-import { useState, useMemo, useRef, SetStateAction } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import ExpedienteForm from "../Dashboard/ExpedienteForm";
-import ExpedienteTable from "../Dashboard/ExpedienteTable";
-import StatBox from "../StatBox";
-import { Expediente } from "../../model/Expediente";
-import useExpedientes from "./useExpedientes";
+//Dashboard.tsx
+'use client'
+import { Link } from 'react-router-dom';
+import { useState, useMemo, useRef, useEffect } from "react"
+import { motion, AnimatePresence } from "framer-motion"
+import ExpedienteService from '../../service/ExpedienteService';
+import { Expediente } from '../../model/Expediente';
+import { Ubicacion } from '../../model/Ubicacion';
+import DashboardHeader from './DashboardHeader'
+import DashboardFilters from './DashboardFilters'
+import DashboardAddExpediente from './DashboardAddExpediente'
+import DashboardEditExpediente from './DashboardEditExpediente'
+import DashboardExpedientesTable from './DashboardExpedientesTable'
 
 export default function Dashboard() {
-  const {
-    expedientes,
-    setExpedientes, // Añadir setExpedientes
-    searchTerm,
-    setSearchTerm,
-    selectedYear,
-    setSelectedYear,
-    newYear,
-    setNewYear,
-    newExpediente,
-    setNewExpediente,
-    editingExpediente,
-    setEditingExpediente,
-    newUbicacion,
-    setNewUbicacion,
-    expandedUbicaciones,
-    setExpandedUbicaciones,
-    fileInputRef,
-    years,
-    filteredExpedientes,
-    handleAddYear,
-    handleAddUbicacion,
-    handleAddExpediente,
-    handleEditExpediente,
-    handleSaveEdit,
-    handleCancelEdit,
-    handleFileChange,
-    handleDeletePDF,
-    handleOpenPDF,
-    toggleUbicaciones,
-    handleEditUbicacion,
-    buttonVariants,
-    fadeInVariants,
-    listItemVariants,
-    statBoxVariants,
-    findByYear, // Añadir la función findByYear
-  } = useExpedientes();
+  const [expedientes, setExpedientes] = useState<Expediente[]>([])
+  const [searchTerm, setSearchTerm] = useState("")
+  const [selectedYear, setSelectedYear] = useState<string | null>(null)
+  const [newYear, setNewYear] = useState<string>("")
+  const [newExpediente, setNewExpediente] = useState<Partial<Expediente>>({
+    year: selectedYear || undefined,
+    locations: [],
+  })
+  const [editingExpediente, setEditingExpediente] = useState<Expediente | null>(null)
+  const [newUbicacion, setNewUbicacion] = useState<string>("")
+  const [expandedUbicaciones, setExpandedUbicaciones] = useState<number[]>([])
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
-  const handleSearchByYear = async () => {
-    if (newYear) {
-      try {
-        const response = await findByYear(newYear);
-        setExpedientes(response.data);
-      } catch (error) {
-        console.error('Error finding expedients by year:', error);
-      }
+  const years = useMemo(() => {
+    const uniqueYears = Array.from(new Set(expedientes.map(exp => exp.year)))
+    return uniqueYears.sort((a, b) => parseInt(b) - parseInt(a))
+  }, [expedientes])
+
+  const filteredExpedientes = useMemo(() => {
+    return expedientes.filter((expediente) => {
+      const matchesSearch = Object.entries(expediente).some(([, value]) => {
+        if (value === undefined || value === null) return false
+        if (Array.isArray(value)) {
+          return value.some(item =>
+            Object.values(item).some(() =>
+              value.toString().toLowerCase().includes(searchTerm.toLowerCase())
+            )
+          )
+        }
+        return value.toString().toLowerCase().includes(searchTerm.toLowerCase())
+      })
+      const matchesYear = selectedYear ? expediente.year === selectedYear : true
+      return matchesSearch && matchesYear
+    })
+  }, [expedientes, searchTerm, selectedYear])
+
+  useEffect(() => {
+    ExpedienteService.findAllExpedients()
+      .then(response => {
+        if (Array.isArray(response.data)) {
+          setExpedientes(response.data)
+        } else {
+          console.error('Invalid response format:', response.data)
+        }
+      })
+      .catch(error => {
+        console.error('Error fetching expedientes:', error)
+      })
+  }, [])
+
+  const handleAddYear = () => {
+    const yearToAdd = parseInt(newYear);
+    if (!isNaN(yearToAdd) && !years.includes(yearToAdd.toString())) {
+      setSelectedYear(yearToAdd.toString());
+      setNewYear("");
     }
+  }
+
+  const handleAddUbicacion = (isEditing: boolean = false) => {
+    if (newUbicacion) {
+      const nuevaUbicacion: Ubicacion = {
+        id: null,
+        place: newUbicacion
+      }
+      if (isEditing && editingExpediente) {
+        setEditingExpediente({
+          ...editingExpediente,
+          locations: [nuevaUbicacion, ...editingExpediente.locations]
+        })
+      } else {
+        setNewExpediente({
+          ...newExpediente,
+          locations: [nuevaUbicacion, ...(newExpediente.locations || [])]
+        })
+      }
+      setNewUbicacion("")
+    }
+  }
+
+  const handleAddExpediente = () => {
+    if (selectedYear) {
+      const newExp: Expediente = {
+        id: Date.now(),
+        organizationCode: newExpediente.organizationCode || "",
+        correlativeNumber: newExpediente.correlativeNumber || "",
+        issuer: newExpediente.issuer || "",
+        year: selectedYear,
+        regulations: newExpediente.regulations || [],
+        solicitude: newExpediente.solicitude || "",
+        locations: newExpediente.locations || [],
+        pdfPath: newExpediente.pdfPath
+      }
+
+      ExpedienteService.createExpedient(newExp)
+        .then(response => {
+          setExpedientes([...expedientes, response.data])
+          setNewExpediente({ year: selectedYear, locations: [], })
+        })
+        .catch(error => {
+          console.error('Error adding expediente:', error)
+        })
+    }
+  }
+
+  const handleEditExpediente = (expediente: Expediente) => {
+    setEditingExpediente(expediente)
+  }
+
+  const handleCancelEdit = () => {
+    setEditingExpediente(null)
+  }
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (file) {
+      const formData = new FormData()
+      formData.append('file', file)
+
+      ExpedienteService.uploadExcelFile(file)
+        .then(response => {
+          if (editingExpediente) {
+            setEditingExpediente({ ...editingExpediente, pdfPath: response.data })
+          } else {
+            setNewExpediente({ ...newExpediente, pdfPath: response.data })
+          }
+        })
+        .catch(error => {
+          console.error('Error uploading file:', error)
+        })
+    }
+  }
+
+  const handleDeletePDF = (isEditing: boolean = false) => {
+    if (isEditing && editingExpediente) {
+      setEditingExpediente({ ...editingExpediente, pdfPath: undefined })
+    } else {
+      setNewExpediente({ ...newExpediente, pdfPath: undefined })
+    }
+  }
+
+  const handleOpenPDF = (pdfPath: string) => {
+    if (pdfPath.startsWith('blob:') || pdfPath.startsWith('file:')) {
+      window.open(pdfPath, '_blank')
+    } else {
+      const fileURL = `file://${pdfPath}`
+      window.open(fileURL, '_blank')
+    }
+  }
+
+  const toggleUbicaciones = (id: number) => {
+    setExpandedUbicaciones(prev =>
+      prev.includes(id) ? prev.filter(expId => expId !== id) : [...prev, id]
+    )
+  }
+
+  const handleEditUbicacion = (expedienteId: number, ubicacionIndex: number, newLugar: string) => {
+    setExpedientes(expedientes.map(exp => {
+      if (exp.id === expedienteId) {
+        const updatedUbicaciones = [...exp.locations];
+        updatedUbicaciones[ubicacionIndex] = {
+          ...updatedUbicaciones[ubicacionIndex],
+          place: newLugar,
+        };
+        return { ...exp, locations: updatedUbicaciones };
+      }
+      return exp;
+    }));
+
+    document.getElementById(`save-button-${expedienteId}-${ubicacionIndex}`)?.classList.add('animate-pulse');
+    setTimeout(() => {
+      document.getElementById(`save-button-${expedienteId}-${ubicacionIndex}`)?.classList.remove('animate-pulse');
+    }, 1000);
   };
+
+  const buttonVariants = {
+    hover: { scale: 1.05, transition: { duration: 0.2 } },
+    tap: { scale: 0.95, transition: { duration: 0.2 } },
+  }
+
+  const fadeInVariants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1, transition: { duration: 0.5 } },
+  }
+
+  const listItemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0 },
+  }
 
   return (
     <motion.div
@@ -63,97 +209,22 @@ export default function Dashboard() {
       animate="visible"
       variants={fadeInVariants}
     >
-      <motion.h1
-        className="text-3xl font-bold mb-8 text-center text-[#1A2E4A]"
-        initial={{ y: -20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.5 }}
-      >
-        Gestión de Expedientes
-      </motion.h1>
-
-      <motion.div
-        className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8"
-        variants={fadeInVariants}
-      >
-        <StatBox title="Total Expedientes" value={filteredExpedientes.length} />
-        <StatBox title="Año Seleccionado" value={selectedYear || "N/A"} />
-        <StatBox title="Años Disponibles" value={years.length} />
-      </motion.div>
-
-      <motion.div
-        className="flex flex-col md:flex-row justify-between items-center mb-8 space-y-4 md:space-y-0"
-        variants={fadeInVariants}
-      >
-        <div className="flex items-center space-x-2">
-          <select
-            value={selectedYear || ""}
-            onChange={(e) => setSelectedYear(e.target.value ? Number(e.target.value) : null)}
-            className="border border-gray-300 rounded-md p-2"
-          >
-            <option value="">Seleccionar año</option>
-            {years.map((year) => (
-              <option key={year} value={year}>{year}</option>
-            ))}
-          </select>
-          <input
-            type="number"
-            placeholder="Nuevo año"
-            value={newYear}
-            onChange={(e) => setNewYear(e.target.value)}
-            className="border border-gray-300 rounded-md p-2 w-32"
-          />
-          <motion.button
-            onClick={handleAddYear}
-            disabled={!newYear}
-            className="bg-blue-500 text-white px-4 py-2 rounded-md disabled:opacity-50"
-            variants={buttonVariants}
-            whileHover="hover"
-            whileTap="tap"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 inline-block mr-2" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clipRule="evenodd" />
-            </svg>
-            Añadir Año
-          </motion.button>
-          <motion.button
-            onClick={handleSearchByYear}
-            disabled={!newYear}
-            className="bg-green-500 text-white px-4 py-2 rounded-md disabled:opacity-50"
-            variants={buttonVariants}
-            whileHover="hover"
-            whileTap="tap"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 inline-block mr-2" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd" />
-            </svg>
-            Buscar por Año
-          </motion.button>
-        </div>
-        <div className="flex items-center space-x-2">
-          <input
-            type="text"
-            placeholder="Buscar expedientes..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="border border-gray-300 rounded-md p-2 w-64"
-          />
-          <motion.button
-            className="border border-gray-300 rounded-md p-2"
-            variants={buttonVariants}
-            whileHover="hover"
-            whileTap="tap"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd" />
-            </svg>
-          </motion.button>
-        </div>
-      </motion.div>
-
+      <DashboardHeader />
+      <DashboardFilters
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        selectedYear={selectedYear}
+        setSelectedYear={setSelectedYear}
+        newYear={newYear}
+        setNewYear={setNewYear}
+        handleAddYear={handleAddYear}
+        years={years}
+        fadeInVariants={fadeInVariants}
+      />
       <AnimatePresence>
         {selectedYear && !editingExpediente && (
-          <ExpedienteForm
+          <DashboardAddExpediente
+            selectedYear={selectedYear}
             newExpediente={newExpediente}
             setNewExpediente={setNewExpediente}
             newUbicacion={newUbicacion}
@@ -162,43 +233,45 @@ export default function Dashboard() {
             handleAddExpediente={handleAddExpediente}
             handleFileChange={handleFileChange}
             handleDeletePDF={handleDeletePDF}
+            fileInputRef={fileInputRef}
             buttonVariants={buttonVariants}
-            fadeInVariants={fadeInVariants} setExpediente={function (value: SetStateAction<Expediente | null>): void {
-              throw new Error("Function not implemented.");
-            } }          />
+          />
         )}
       </AnimatePresence>
-
       <AnimatePresence>
         {editingExpediente && (
-          <ExpedienteForm
-            isEditing
-            expediente={editingExpediente}
-            setExpediente={setEditingExpediente}
+          <DashboardEditExpediente
+            editingExpediente={editingExpediente}
+            setEditingExpediente={setEditingExpediente}
             newUbicacion={newUbicacion}
             setNewUbicacion={setNewUbicacion}
-            handleAddUbicacion={handleAddUbicacion}
-            handleSaveEdit={handleSaveEdit}
             handleCancelEdit={handleCancelEdit}
             handleFileChange={handleFileChange}
             handleDeletePDF={handleDeletePDF}
+            fileInputRef={fileInputRef}
             buttonVariants={buttonVariants}
-            fadeInVariants={fadeInVariants} setNewExpediente={function (value: SetStateAction<Partial<Expediente>>): void {
-              throw new Error("Function not implemented.");
-            } }          />
+            setExpedientes={setExpedientes}
+            expedientes={expedientes} // Pasar expedientes como prop
+          />
         )}
       </AnimatePresence>
-
-      <ExpedienteTable
+      <DashboardExpedientesTable
         expedientes={filteredExpedientes}
+        setExpedientes={setExpedientes}
         handleEditExpediente={handleEditExpediente}
-        handleOpenPDF={handleOpenPDF}
         handleEditUbicacion={handleEditUbicacion}
-        toggleUbicaciones={toggleUbicaciones}
+        handleOpenPDF={handleOpenPDF}
         expandedUbicaciones={expandedUbicaciones}
+        setExpandedUbicaciones={setExpandedUbicaciones}
+        toggleUbicaciones={toggleUbicaciones}
         buttonVariants={buttonVariants}
         listItemVariants={listItemVariants}
+        fadeInVariants={fadeInVariants}
       />
+      <Link to="/course-upload" className="bg-green-500 text-white p-2 mt-4 inline-block">
+        Subir Archivo de Cursos
+      </Link>
     </motion.div>
-  );
+  )
 }
+

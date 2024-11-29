@@ -2,13 +2,15 @@ import axios, { AxiosResponse } from 'axios';
 import { Expediente } from '../model/Expediente'; // Ajusta la ruta según la ubicación de tus modelos
 import { Ubicacion } from '../model/Ubicacion';
 import { Regulation } from '../model/Regulation';
+import { Course } from '../model/Course';
 
-const API_URL = 'http://localhost:8080/api/expedients';
+const API_URL = 'http://localhost:8080/api';
 
 class ExpedienteService {
+
     async createExpedient(expedientRequest: Expediente): Promise<AxiosResponse<Expediente>> {
         try {
-            const response = await axios.post(`${API_URL}/create`, expedientRequest);
+            const response = await axios.post(`${API_URL}/expedients/create`, expedientRequest);
             return response;
         } catch (error) {
             console.error('Error creating expedient:', error);
@@ -18,17 +20,18 @@ class ExpedienteService {
 
     async updateExpedient(expedientRequest: Expediente): Promise<AxiosResponse<Expediente>> {
         try {
-            const response = await axios.put(`${API_URL}/update`, expedientRequest);
-            return response;
+          const response = await axios.put(`${API_URL}/expedients/update`, expedientRequest);
+          return response;
         } catch (error) {
-            console.error('Error updating expedient:', error);
-            throw error;
+          console.error('Error updating expedient:', error);
+          throw error;
         }
-    }
+      }
+      
 
     async deleteExpedient(id: string): Promise<AxiosResponse> {
         try {
-            const response = await axios.delete(`${API_URL}/${id}`);
+            const response = await axios.delete(`${API_URL}/expedients/${id}`);
             return response;
         } catch (error) {
             console.error('Error deleting expedient:', error);
@@ -36,19 +39,21 @@ class ExpedienteService {
         }
     }
 
-    async addLocation(id: number, locationDto: Ubicacion): Promise<AxiosResponse<Ubicacion>> {
+    async addLocation(expedientId: number, locationRequest: Ubicacion): Promise<AxiosResponse<Ubicacion>> {
         try {
-            const response = await axios.put(`${API_URL}/addLocation/${id}`, locationDto);
+            const response = await axios.put(
+                `${API_URL}/expedients/addLocation/${expedientId}?newPlace=${encodeURIComponent(locationRequest.place)}`,
+                { ...locationRequest }
+            );
             return response;
         } catch (error) {
             console.error('Error adding location:', error);
             throw error;
         }
     }
-
-    async editLocation(id: number, existingPlace: string, locationDetails: Ubicacion): Promise<AxiosResponse<Ubicacion>> {
+    async editLocation(expedientId: number, locationId: number, locationRequest: Ubicacion): Promise<AxiosResponse<Ubicacion>> {
         try {
-            const response = await axios.put(`${API_URL}/editLocation/${id}/${existingPlace}`, locationDetails);
+            const response = await axios.put(`${API_URL}/expedients/editLocation/${expedientId}/${locationId}`, locationRequest);
             return response;
         } catch (error) {
             console.error('Error editing location:', error);
@@ -56,11 +61,52 @@ class ExpedienteService {
         }
     }
 
+
+    async deleteLocation(expedientId: number, locationId: number): Promise<AxiosResponse<void>> {
+        try {
+            const response = await axios.delete(`${API_URL}/expedients/deleteLocation/${expedientId}/${locationId}`);
+            return response;
+        } catch (error) {
+            console.error('Error deleting location:', error);
+            throw error;
+        }
+    }
+
+    async addRegulation(expedientId: number, regulationDto: Regulation): Promise<AxiosResponse<Regulation>> {
+    try {
+        const response = await axios.post(`${API_URL}/expedients/addRegulation/${expedientId}`, regulationDto);
+        return response;
+    } catch (error) {
+        console.error('Error adding regulation:', error);
+        throw error;
+    }
+}
+    async editRegulation(expedientId: number, regulationId: number, regulationDetails: Regulation): Promise<AxiosResponse<Regulation>> {
+        try {
+            const response = await axios.put(`${API_URL}/expedients/editRegulation/${expedientId}/${regulationId}`, regulationDetails);
+            return response;
+        } catch (error) {
+            console.error('Error editing regulation:', error);
+            throw error;
+        }
+    }
+
+    async deleteRegulation(expedientId: number, regulationId: number): Promise<AxiosResponse<void>> {
+        try {
+            const response = await axios.delete(`${API_URL}/expedients/deleteRegulation/${expedientId}/${regulationId}`);
+            return response;
+        } catch (error) {
+            console.error('Error deleting regulation:', error);
+            throw error;
+        }
+    }
+
+
     async uploadExcelFile(file: File): Promise<AxiosResponse<string>> {
         try {
             const formData = new FormData();
             formData.append('file', file);
-            const response = await axios.post(`${API_URL}/upload`, formData, {
+            const response = await axios.post(`${API_URL}/expedients/upload`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
@@ -76,7 +122,7 @@ class ExpedienteService {
         try {
             const formData = new FormData();
             formData.append('file', file);
-            const response = await axios.post(`${API_URL}/upload-courses`, formData, {
+            const response = await axios.post(`${API_URL}/expedients/upload-courses`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
@@ -90,7 +136,7 @@ class ExpedienteService {
 
     async findExpedientById(id: string): Promise<AxiosResponse<Expediente>> {
         try {
-            const response = await axios.get(`${API_URL}/${id}`);
+            const response = await axios.get(`${API_URL}/expedients/${id}`);
             return response;
         } catch (error) {
             console.error('Error finding expedient by ID:', error);
@@ -100,7 +146,7 @@ class ExpedienteService {
 
     async findAllExpedients(): Promise<AxiosResponse<Expediente[]>> {
         try {
-            const response = await axios.get(`${API_URL}/findAll`);
+            const response = await axios.get(`${API_URL}/expedients/findAll`);
             return response;
         } catch (error) {
             console.error('Error finding all expedients:', error);
@@ -108,9 +154,35 @@ class ExpedienteService {
         }
     }
 
+    async findAllExpedientsPageable(page: number, size: number): Promise<{ data: Expediente[], totalItems: number }> {
+        try {
+            const response = await axios.get(`${API_URL}/expedients?page=${page}&size=${size}`);
+            return {
+                data: response.data.content, // Ajusta según la estructura de tu respuesta
+                totalItems: response.data.totalElements, // Asegúrate de que esto esté presente
+            };
+        } catch (error) {
+            console.error('Error finding all expedients pageable:', error);
+            throw error;
+        }
+    }
+
+    async fetchCourses(page: number, size: number): Promise<{ data: Course[], totalItems: number }> {
+        try {
+            const response = await axios.get(`${API_URL}/expedients/findAllCoursesPaged?page=${page}&size=${size}`);
+            return {
+                data: response.data.content, // Ajusta según la estructura de tu respuesta
+                totalItems: response.data.totalElements, // Asegúrate de que esto esté presente
+            };
+        } catch (error) {
+            console.error('Error fetching courses:', error);
+            throw error;
+        }
+    }
+
     async findByOrganizationCode(orgCode: string): Promise<AxiosResponse<Expediente[]>> {
         try {
-            const response = await axios.get(`${API_URL}/organization/${orgCode}`);
+            const response = await axios.get(`${API_URL}/expedients/organization/${orgCode}`);
             return response;
         } catch (error) {
             console.error('Error finding expedients by organization code:', error);
@@ -120,7 +192,7 @@ class ExpedienteService {
 
     async findByYear(year: string): Promise<AxiosResponse<Expediente[]>> {
         try {
-            const response = await axios.get(`${API_URL}/year/${year}`);
+            const response = await axios.get(`${API_URL}/expedients/year/${year}`);
             return response;
         } catch (error) {
             console.error('Error finding expedients by year:', error);
@@ -130,7 +202,7 @@ class ExpedienteService {
 
     async findByCorrelativeNumber(number: string): Promise<AxiosResponse<Expediente>> {
         try {
-            const response = await axios.get(`${API_URL}/correlative/${number}`);
+            const response = await axios.get(`${API_URL}/expedients/correlative/${number}`);
             return response;
         } catch (error) {
             console.error('Error finding expedient by correlative number:', error);
@@ -140,7 +212,7 @@ class ExpedienteService {
 
     async findByIssuer(issuer: string): Promise<AxiosResponse<Expediente[]>> {
         try {
-            const response = await axios.get(`${API_URL}/issuer/${issuer}`);
+            const response = await axios.get(`${API_URL}/expedients/issuer/${issuer}`);
             return response;
         } catch (error) {
             console.error('Error finding expedients by issuer:', error);
@@ -150,7 +222,7 @@ class ExpedienteService {
 
     async findByLocation(location: string): Promise<AxiosResponse<Expediente[]>> {
         try {
-            const response = await axios.get(`${API_URL}/location/${location}`);
+            const response = await axios.get(`${API_URL}/expedients/location/${location}`);
             return response;
         } catch (error) {
             console.error('Error finding expedients by location:', error);
@@ -160,7 +232,7 @@ class ExpedienteService {
 
     async findRegulationsByExpedientId(expedientId: number): Promise<AxiosResponse<Regulation[]>> {
         try {
-            const response = await axios.get(`${API_URL}/regulations/${expedientId}`);
+            const response = await axios.get(`${API_URL}/expedients/regulations/${expedientId}`);
             return response;
         } catch (error) {
             console.error('Error finding regulations by expedient ID:', error);
@@ -170,7 +242,7 @@ class ExpedienteService {
 
     async findSolicitudeByIssuer(issuer: string): Promise<AxiosResponse<Expediente[]>> {
         try {
-            const response = await axios.get(`${API_URL}/solicitudes/${issuer}`);
+            const response = await axios.get(`${API_URL}/expedients/solicitudes/${issuer}`);
             return response;
         } catch (error) {
             console.error('Error finding solicitudes by issuer:', error);
@@ -180,7 +252,7 @@ class ExpedienteService {
 
     async findBySolicitude(solicitude: string): Promise<AxiosResponse<Expediente[]>> {
         try {
-            const response = await axios.get(`${API_URL}/solicitude/${solicitude}`);
+            const response = await axios.get(`${API_URL}/expedients/solicitude/${solicitude}`);
             return response;
         } catch (error) {
             console.error('Error finding expedients by solicitude:', error);
@@ -190,7 +262,7 @@ class ExpedienteService {
 
     async findByStatus(status: string): Promise<AxiosResponse<Expediente[]>> {
         try {
-            const response = await axios.get(`${API_URL}/status/${status}`);
+            const response = await axios.get(`${API_URL}/expedients/status/${status}`);
             return response;
         } catch (error) {
             console.error('Error finding expedients by status:', error);
@@ -200,7 +272,7 @@ class ExpedienteService {
 
     async getAllExpedientes(): Promise<AxiosResponse<Expediente[]>> {
         try {
-            const response = await axios.get(`${API_URL}/getAll`);
+            const response = await axios.get(`${API_URL}/expedients/getAll`);
             return response;
         } catch (error) {
             console.error('Error getting all expedientes:', error);
@@ -210,7 +282,7 @@ class ExpedienteService {
 
     async findRegulationsByIssuer(issuer: string): Promise<AxiosResponse<Regulation[]>> {
         try {
-            const response = await axios.get(`${API_URL}/findRegulationsByIssuer/${issuer}`);
+            const response = await axios.get(`${API_URL}/expedients/findRegulationsByIssuer/${issuer}`);
             return response;
         } catch (error) {
             console.error('Error finding regulations by issuer:', error);
