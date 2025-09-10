@@ -55,5 +55,4 @@ Este proyecto está bajo la licencia MIT
 👨‍💻 Autor
 
 Santiago Paniagua
-LinkedIn
- · GitHub
+LinkedIn: https://www.linkedin.com/in/santiago-paniagua-9066a6252/
