@@ -50,3 +50,10 @@ Este proyecto está bajo la licencia MIT
 
 # Listado de expedientes: 
 <img width="1919" height="954" alt="image" src="https://github.com/user-attachments/assets/f4a66bfd-6ea1-4ae9-8383-e60aa5624d03" />
+
+
+👨‍💻 Autor
+
+Santiago Paniagua
+LinkedIn
+ · GitHub
